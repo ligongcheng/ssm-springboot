@@ -1,0 +1,96 @@
+<div class="panel-body" style="padding-bottom:0px;">
+
+    <div id="toolbar" class="btn-group">
+        <button id="btn_add" type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+        </button>
+        <button id="btn_edit" type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 修改
+        </button>
+        <button id="btn_delete" type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 冻结
+        </button>
+    </div>
+    <table id="userTable"></table>
+</div>
+
+<div class="modal fade" id="addUserModal">
+    <div class="modal-dialog animated" style="width: 300px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title text-center">添加用户</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form">
+                    <form id="addUserForm">
+                        <div class="form-group">
+                            <label>用户名:</label>
+                            <input id="user" class="form-control" type="text" placeholder="用户名" name="username">
+                        </div>
+                        <div class="form-group">
+                            <label>密码:</label>
+                            <input id="password" class="form-control" type="text" placeholder="密码" name="password">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="doAddUser">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document" style="width: 500px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title text-center" id="exampleModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                <form id="userEditForm">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="userId" name="id">
+                        <label for="userName" class="control-label">用户名称:</label>
+                        <input type="text" class="form-control" id="userName" name="username" value="">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">昵称:</label>
+                        <input type="text" class="form-control" id="nickname" name="nickname" value="">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">角色:</label>
+                        <select class="form-control" id="roleId" name="roleId">
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">年龄:</label>
+                        <input type="text" class="form-control" id="age" name="age" value=""/>
+                    </div>
+                    <div class="form-group">
+                        <label>性别:</label>
+                        <input type="radio" id="female" name="sex" value="0"/><label>女 </label>
+                        <input type="radio" id="male" name="sex" value="1"/><label>男 </label>
+                        <input type="radio" checked="checked" id="fm" name="sex" value="2"/><label>保密 </label>
+                    </div>
+                    <div class="form-group">
+                        <label>是否有效:</label>
+                        <select class="form-control" name="isDelete" id="isDelete">
+                            <option value="0">有效</option>
+                            <option value="1">冻结</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="submit">确定</button>
+            </div>
+        </div>
+    </div>
+</div>

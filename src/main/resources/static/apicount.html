@@ -1,0 +1,23 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <p class="panel-title"><i class="fa fa-th-list" aria-hidden="true"></i> API调用统计</p>
+    </div>
+    <div class="panel-body">
+        <form id="formSearch" class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-sm-1" for="apitime">时间-秒</label>
+                <div class="col-sm-3">
+                    <select class="form-control " id="apitime" name="apitime"></select>
+                </div>
+                <label class="control-label col-sm-1" for="apilist">api地址</label>
+                <div class="col-sm-3">
+                    <select class="form-control " id="apilist" name="apilist"></select>
+                </div>
+                <div class="col-sm-4">
+                    <button type="button" id="btn-api" class="btn btn-primary">查询</button>
+                </div>
+            </div>
+        </form>
+        <table id="api-table"></table>
+    </div>
+</div>

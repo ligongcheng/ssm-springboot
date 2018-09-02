@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration  scan="true" scanPeriod="60 seconds" debug="false">
+    <contextName>ssm</contextName>
+    <property name="log.path" value="log" />
+    <!--日志级别：TRACE < DEBUG < INFO < WARN < ERROR-->
+    <!--输出到控制台-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+<!--         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+             <level>ERROR</level>
+         </filter>-->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--输出到文件 包含warn-->
+    <appender name="file-warn" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--输出到文件 包含info-->
+    <appender name="file-info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="console" />
+    </root>
+
+    <logger name="cn.it.ssm.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="console"/>
+    </logger>
+
+    <logger name="com.alibaba.druid" level="DEBUG" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file-info"/>
+        <appender-ref ref="file-warn"/>
+    </logger>
+
+    <logger name="cn.it.ssm" level="INFO" additivity="true">
+        <appender-ref ref="file-info"/>
+        <appender-ref ref="file-warn"/>
+    </logger>
+
+</configuration>

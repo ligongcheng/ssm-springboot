@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.it.ssm.mapper.SysUserMapperFix">
+
+    <select id="findRolesByUsername" resultType="cn.it.ssm.domain.auto.SysRole">
+        SELECT
+            r.id,
+            r.name,
+            r.available
+        FROM
+            sys_role r
+            LEFT JOIN sys_user_role ur
+                ON r.id = ur.sys_role_id
+            LEFT JOIN sys_user u
+                ON ur.sys_user_id = u.id
+        WHERE u.username = #{username}
+    </select>
+
+    <select id="findRolesByPrimaryKey" parameterType="string" resultType="cn.it.ssm.domain.auto.SysRole">
+        SELECT
+            r.id,
+            r.name
+        FROM
+            sys_role r
+        WHERE r.available = 1
+              AND r.id =
+                  (SELECT ur.sys_role_id
+                   FROM
+                       sys_user_role ur
+                   WHERE ur.sys_user_id = #{id})
+
+    </select>
+
+    <select id="findPermissionsByRoleId" parameterType="arraylist" resultType="cn.it.ssm.domain.auto.SysPermission">
+        SELECT p.*
+        FROM sys_permission p,sys_role_permission rp
+        WHERE rp.sys_role_id
+        IN
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND rp.sys_permission_id=p.id
+    </select>
+
+
+    <select id="findUserWithRole" resultType="cn.it.ssm.domain.vo.SysUserWithRole">
+        SELECT
+        u.id,
+        u.username,
+        u.age,
+        u.sex,
+        u.nickname,
+        u.is_delete,
+        r.id roleId,
+        r.name roleName
+        FROM
+        sys_user u
+        LEFT JOIN sys_user_role ur
+        ON (u.id = ur.sys_user_id)
+        LEFT JOIN sys_role r
+        ON (ur.sys_role_id = r.id)
+        <where>
+            <if test="id !=null and id !='' ">
+                AND u.id = #{id}
+            </if>
+            <if test="username != null and username != '' ">
+                AND u.username = #{username}
+            </if>
+        </where>
+        order by u.id
+    </select>
+
+</mapper>
