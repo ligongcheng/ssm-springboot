@@ -12,6 +12,7 @@ import cn.it.ssm.domain.auto.SysUser;
 import cn.it.ssm.domain.vo.SysUserWithRole;
 import cn.it.ssm.service.manager.IUserService;
 import cn.it.ssm.service.manager.impl.SessionService;
+import com.github.botaruibo.xvcode.generator.Generator;
 import com.github.botaruibo.xvcode.generator.GifVCGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +42,7 @@ public class UserController extends BaseController {
      * captcha 可以进行配置 查看 captchaConfig
      */
     @Autowired
-    GifVCGenerator gifVCGenerator;
+    Generator captchaGenerator;
 
     @Autowired
     private IUserService userService;
@@ -102,20 +103,21 @@ public class UserController extends BaseController {
      * @param response
      */
     @GetMapping(value = "gifCode")
-    public void getGifCode(HttpServletResponse response) {
+    public void getCaptchaCode(HttpServletResponse response) {
         try {
             response.setHeader("Pragma", "No-cache");
             response.setHeader("Cache-Control", "no-cache");
             response.setDateHeader("Expires", 0);
-            response.setContentType("image/gif");
+            //response.setContentType("image/gif");
+            response.setContentType("image/png");
 
-            gifVCGenerator.write2out(response.getOutputStream());
+            captchaGenerator.write2out(response.getOutputStream());
 
             Session session = super.getSession();
             session.removeAttribute("_code");
-            session.setAttribute("_code", gifVCGenerator.text().toLowerCase());
+            session.setAttribute("_code", captchaGenerator.text().toLowerCase());
         } catch (Exception e) {
-            log.error("generater gifCode error");
+            log.error("generater captchaCode error");
         }
     }
 

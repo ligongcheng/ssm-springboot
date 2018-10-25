@@ -1,6 +1,7 @@
 package cn.it.ssm.config;
 
-import com.github.botaruibo.xvcode.generator.GifVCGenerator;
+import com.github.botaruibo.xvcode.generator.Generator;
+import com.github.botaruibo.xvcode.generator.PngVCGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,7 @@ public class CaptchaConfig {
     private Integer len;
 
     @Bean
-    public GifVCGenerator gifVCGenerator() {
-        return new GifVCGenerator(width, height, len);
+    public Generator captchaGenerator() {
+        return new PngVCGenerator(width, height, len);
     }
 }
