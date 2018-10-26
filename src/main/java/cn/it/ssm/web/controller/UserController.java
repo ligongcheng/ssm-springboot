@@ -80,6 +80,7 @@ public class UserController extends BaseController {
                 user.setLastLoginIp(session.getHost());
                 user.setLastLoginTime(session.getLastAccessTime());
                 userService.updateUserLoginInfo(user);
+                session.setAttribute("user", user);
                 result = true;
             }
             log.info("用户[{}]:登录系统成功", username);

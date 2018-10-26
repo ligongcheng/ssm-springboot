@@ -5,7 +5,10 @@ import cn.it.ssm.common.shiro.filter.ExtAuthenticationFilter;
 import cn.it.ssm.common.shiro.filter.KickoutSessionControlFilter;
 import cn.it.ssm.common.shiro.realm.RetryLimitHashedCredentialsMatcher;
 import cn.it.ssm.common.shiro.realm.UserRealm;
+import cn.it.ssm.common.shiro.session.ShiroSessionListener;
+import cn.it.ssm.common.shiro.session.ShiroSessionManager;
 import cn.it.ssm.common.shiro.util.ShiroEnum;
+import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -13,7 +16,6 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.Cookie;
 import org.apache.shiro.web.servlet.SimpleCookie;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -24,6 +26,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.servlet.Filter;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -44,7 +47,6 @@ public class ShiroConfig {
 
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager());
-
         // filterChainDefinitions拦截器=map必须用：LinkedHashMap，因为它必须保证有序
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         LinkedHashMap<String, Filter> filterMap = new LinkedHashMap<>();
@@ -58,6 +60,9 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/dubbo", "anon");
         filterChainDefinitionMap.put("/assert/**", "anon");
         filterChainDefinitionMap.put("/assets/**", "anon");
+        filterChainDefinitionMap.put("/dist/**", "anon");
+        filterChainDefinitionMap.put("/includ/**", "anon");
+        filterChainDefinitionMap.put("/plugins/**", "anon");
         filterChainDefinitionMap.put("/gifCode", "anon");
         filterChainDefinitionMap.put("/login.html", "anon");
         filterChainDefinitionMap.put("/kickout.html", "anon");
@@ -115,7 +120,7 @@ public class ShiroConfig {
         //userRealm.setCacheManager(ehCacheManager());
         userRealm.setCredentialsMatcher(credentialsMatcher());
         userRealm.setCachingEnabled(true);
-        userRealm.setAuthenticationCachingEnabled(true);
+        userRealm.setAuthenticationCachingEnabled(false);
         userRealm.setAuthenticationCacheName(ShiroEnum.AUTHENTICATION_CACHE.getCacheName());
         userRealm.setAuthorizationCachingEnabled(true);
         userRealm.setAuthorizationCacheName(ShiroEnum.AUTHENTIZATION_CACHE.getCacheName());
@@ -187,17 +192,20 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public DefaultWebSessionManager sessionManager() {
-        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+    public SessionManager sessionManager() {
+        //DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        ShiroSessionManager sessionManager = new ShiroSessionManager();
+        ShiroSessionListener sessionListener = new ShiroSessionListener(shiroRedisCacheManager());
+        sessionManager.setSessionListeners(Collections.singleton(sessionListener));
         sessionManager.setSessionIdCookie(sessionIdCookie());
         sessionManager.setSessionIdCookieEnabled(true);
         sessionManager.setSessionIdUrlRewritingEnabled(false);// 去掉 url中sessionId后缀
         sessionManager.setSessionDAO(sessionDAO());
         // 全局会话超时时间，单位：毫秒  20m=1200000, 30m=1800000, 60m=3600000 3天：3*24*60*60*1000
-        sessionManager.setGlobalSessionTimeout(36000000); //10小时
+        sessionManager.setGlobalSessionTimeout(200000); //10小时
         sessionManager.setDeleteInvalidSessions(true);
         sessionManager.setSessionValidationSchedulerEnabled(true);
-        sessionManager.setSessionValidationInterval(1800000);
+        sessionManager.setSessionValidationInterval(100000);
         return sessionManager;
     }
 

@@ -4,30 +4,30 @@
 
     <select id="findRolesByUsername" resultType="cn.it.ssm.domain.auto.SysRole">
         SELECT
-            r.id,
-            r.name,
-            r.available
+        r.id,
+        r.name,
+        r.available
         FROM
-            sys_role r
-            LEFT JOIN sys_user_role ur
-                ON r.id = ur.sys_role_id
-            LEFT JOIN sys_user u
-                ON ur.sys_user_id = u.id
+        sys_role r
+        LEFT JOIN sys_user_role ur
+        ON r.id = ur.sys_role_id
+        LEFT JOIN sys_user u
+        ON ur.sys_user_id = u.id
         WHERE u.username = #{username}
     </select>
 
     <select id="findRolesByPrimaryKey" parameterType="string" resultType="cn.it.ssm.domain.auto.SysRole">
         SELECT
-            r.id,
-            r.name
+        r.id,
+        r.name
         FROM
-            sys_role r
+        sys_role r
         WHERE r.available = 1
-              AND r.id =
-                  (SELECT ur.sys_role_id
-                   FROM
-                       sys_user_role ur
-                   WHERE ur.sys_user_id = #{id})
+        AND r.id =
+        (SELECT ur.sys_role_id
+        FROM
+        sys_user_role ur
+        WHERE ur.sys_user_id = #{id})
 
     </select>
 

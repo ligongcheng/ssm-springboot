@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-
+/**
+ * 拓展AuthenticationFilter，使其支持ajax请求
+ */
 public class ExtAuthenticationFilter extends AuthenticationFilter {
 
     private static final Logger log = LoggerFactory.getLogger(ExtAuthenticationFilter.class);
@@ -22,8 +24,10 @@ public class ExtAuthenticationFilter extends AuthenticationFilter {
     }
 
     /**
-     * isAccessAllowed为false时会调用的方法。
-     */
+     * isAccessAllowed为false时会调用的方法
+     * @return true 放行，flase 拦截
+     *
+     **/
     @Override
     protected boolean onAccessDenied(ServletRequest request,
                                      ServletResponse response) throws Exception {

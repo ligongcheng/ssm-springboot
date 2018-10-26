@@ -56,11 +56,7 @@ public class ApiLimitAspect {
     }
 
     private boolean isLimited(ProceedingJoinPoint joinPoint) {
-        SysUser user = ShiroUtils.getCurrentUser();
-        if (user == null || StringUtils.isEmpty(user.getUsername())) {
-            user = new SysUser();
-            user.setUsername("unLoginUser");
-        }
+        SysUser user = ShiroUtils.getUserOrAnonymous();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         String methodName = signature.getName();

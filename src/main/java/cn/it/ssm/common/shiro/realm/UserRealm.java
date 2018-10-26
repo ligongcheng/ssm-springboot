@@ -99,22 +99,6 @@ public class UserRealm extends AuthorizingRealm {
 
     @Override
     public void clearCache(PrincipalCollection principals) {
-        //重写清除缓存的方法，清除缓存时从kickout-cache去除该用户的session
-        SysUser sysUser = (SysUser) principals.getPrimaryPrincipal();
-        Cache<String, Deque<Serializable>> cache = getCacheManager().getCache(ShiroEnum.KICKOUT_SESSION.getCacheName());
-        Deque<Serializable> deque = null;
-        if (cache != null) {
-            deque = cache.get(sysUser.getUsername());
-            if (deque != null && deque.size() > 0) {
-                Session session = SecurityUtils.getSubject().getSession();
-                deque.remove(session.getId());
-                if (deque.size() == 0) {
-                    cache.remove(sysUser.getUsername());
-                } else {
-                    cache.put(sysUser.getUsername(), deque);
-                }
-            }
-        }
         //调用父类方法，清除缓存
         super.clearCache(principals);
     }

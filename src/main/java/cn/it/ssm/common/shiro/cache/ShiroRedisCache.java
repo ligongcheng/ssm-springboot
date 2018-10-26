@@ -37,23 +37,23 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
     @Override
     public V get(K key) throws CacheException {
         if (log.isDebugEnabled()) {
-            log.debug("Key: {}", key);
+            log.warn("getKey: {}", key);
         }
+        log.warn("getKey: {}", key);
         if (key == null) {
             return null;
         }
         Object cacheKey = getRedisCacheKey(key);
         V vl = (V) hashOperations.get(prefix, cacheKey);
-
         return vl;
     }
 
     @Override
     public V put(K key, V value) throws CacheException {
         if (log.isDebugEnabled()) {
-            log.debug("Key: {}, value: {}", key, value);
+            log.warn("putKey: {}, value: {}", key, value);
         }
-
+        log.warn("putKey: {}, value: {}", key, value);
         if (key == null || value == null) {
             return null;
         }
@@ -73,7 +73,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
         }
         String cacheKey = getRedisCacheKey(key);
         V v = (V) hashOperations.get(prefix, cacheKey);
-        hashOperations.delete(prefix, key);
+        hashOperations.delete(prefix, cacheKey);
         return v;
     }
 
