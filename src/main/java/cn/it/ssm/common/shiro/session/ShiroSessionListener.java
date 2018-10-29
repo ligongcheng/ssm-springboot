@@ -1,13 +1,11 @@
 package cn.it.ssm.common.shiro.session;
 
-import cn.it.ssm.common.shiro.util.ShiroEnum;
-import cn.it.ssm.common.shiro.util.ShiroUtils;
+import cn.it.ssm.common.shiro.util.ShiroConst;
 import cn.it.ssm.domain.auto.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
-import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.SessionListener;
 
@@ -49,7 +47,7 @@ public class ShiroSessionListener implements SessionListener {
     private void clearKickoutCache(Session session) {
         try {
             SysUser sysUser = (SysUser) session.getAttribute("user");
-            Cache<String, Deque<Serializable>> cache = cacheManager.getCache(ShiroEnum.KICKOUT_SESSION.getCacheName());
+            Cache<String, Deque<Serializable>> cache = cacheManager.getCache(ShiroConst.KICKOUT_SESSION);
             Deque<Serializable> deque = null;
             if (cache != null) {
                 deque = cache.get(sysUser.getUsername());

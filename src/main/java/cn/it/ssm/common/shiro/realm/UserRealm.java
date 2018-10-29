@@ -2,23 +2,17 @@ package cn.it.ssm.common.shiro.realm;
 
 
 import cn.it.ssm.common.shiro.util.MySimpleByteSource;
-import cn.it.ssm.common.shiro.util.ShiroEnum;
 import cn.it.ssm.domain.auto.SysPermission;
 import cn.it.ssm.domain.auto.SysRole;
 import cn.it.ssm.domain.auto.SysUser;
 import cn.it.ssm.service.manager.IUserService;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.cache.Cache;
 import org.apache.shiro.realm.AuthorizingRealm;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.Serializable;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 

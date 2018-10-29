@@ -7,7 +7,7 @@ import cn.it.ssm.common.shiro.realm.RetryLimitHashedCredentialsMatcher;
 import cn.it.ssm.common.shiro.realm.UserRealm;
 import cn.it.ssm.common.shiro.session.ShiroSessionListener;
 import cn.it.ssm.common.shiro.session.ShiroSessionManager;
-import cn.it.ssm.common.shiro.util.ShiroEnum;
+import cn.it.ssm.common.shiro.util.ShiroConst;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -27,6 +27,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.servlet.Filter;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -105,6 +106,15 @@ public class ShiroConfig {
     public ShiroRedisCacheManager shiroRedisCacheManager() {
         RedisTemplate redisTemplate = RedisHolder.getShiroRedisTemplate();
         ShiroRedisCacheManager redisCacheManager = new ShiroRedisCacheManager(redisTemplate);
+        redisCacheManager.setGlobalTimeout(1800);
+        HashMap<String, Long> map = new HashMap<>();
+        //设置各种缓存的有效时间,单位为秒
+        map.put(ShiroConst.SESSION_CACHE, 1800L);
+        map.put(ShiroConst.AUTHENTICATION_CACHE, 300L);
+        map.put(ShiroConst.AUTHENTIZATION_CACHE, 300L);
+        map.put(ShiroConst.KICKOUT_SESSION, 1800L);
+        map.put(ShiroConst.PASSWORDRETRY_CACHE, 600L);
+        redisCacheManager.setTimeMap(map);
         return redisCacheManager;
     }
 
@@ -120,10 +130,10 @@ public class ShiroConfig {
         //userRealm.setCacheManager(ehCacheManager());
         userRealm.setCredentialsMatcher(credentialsMatcher());
         userRealm.setCachingEnabled(true);
-        userRealm.setAuthenticationCachingEnabled(false);
-        userRealm.setAuthenticationCacheName(ShiroEnum.AUTHENTICATION_CACHE.getCacheName());
+        userRealm.setAuthenticationCachingEnabled(true);
+        userRealm.setAuthenticationCacheName(ShiroConst.AUTHENTICATION_CACHE);
         userRealm.setAuthorizationCachingEnabled(true);
-        userRealm.setAuthorizationCacheName(ShiroEnum.AUTHENTIZATION_CACHE.getCacheName());
+        userRealm.setAuthorizationCacheName(ShiroConst.AUTHENTIZATION_CACHE);
         return userRealm;
     }
 
@@ -182,7 +192,7 @@ public class ShiroConfig {
     public EnterpriseCacheSessionDAO sessionDAO() {
         EnterpriseCacheSessionDAO enterpriseCacheSessionDAO = new EnterpriseCacheSessionDAO();
         //添加ehcache活跃缓存名称（必须和ehcache缓存名称一致）
-        enterpriseCacheSessionDAO.setActiveSessionsCacheName(ShiroEnum.SESSION_CACHE.getCacheName());
+        enterpriseCacheSessionDAO.setActiveSessionsCacheName(ShiroConst.SESSION_CACHE);
         return enterpriseCacheSessionDAO;
     }
 
@@ -202,10 +212,10 @@ public class ShiroConfig {
         sessionManager.setSessionIdUrlRewritingEnabled(false);// 去掉 url中sessionId后缀
         sessionManager.setSessionDAO(sessionDAO());
         // 全局会话超时时间，单位：毫秒  20m=1200000, 30m=1800000, 60m=3600000 3天：3*24*60*60*1000
-        sessionManager.setGlobalSessionTimeout(200000); //10小时
+        sessionManager.setGlobalSessionTimeout(1800000); //20m
         sessionManager.setDeleteInvalidSessions(true);
-        sessionManager.setSessionValidationSchedulerEnabled(true);
-        sessionManager.setSessionValidationInterval(100000);
+        sessionManager.setSessionValidationSchedulerEnabled(false);
+        sessionManager.setSessionValidationInterval(1800000);
         return sessionManager;
     }
 

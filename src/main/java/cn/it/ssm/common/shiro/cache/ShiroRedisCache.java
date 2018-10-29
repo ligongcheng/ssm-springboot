@@ -1,119 +1,130 @@
 package cn.it.ssm.common.shiro.cache;
 
 import cn.it.ssm.domain.auto.SysUser;
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.*;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 public class ShiroRedisCache<K, V> implements Cache<K, V> {
 
     private static final Logger log = LoggerFactory.getLogger(ShiroRedisCache.class);
 
-    private HashOperations<String, String, Object> hashOperations;
-    private String prefix = "shiro_redis:";
+    private RedisTemplate<String, Object> redisTemplate;
+    private ValueOperations<String, Object> ops;
+    private String prefix;
+    private long timeout;
 
-    public ShiroRedisCache(RedisTemplate<String, Object> redisTemplate) {
-        this.hashOperations = redisTemplate.opsForHash();
-    }
-
-    public ShiroRedisCache(RedisTemplate redisTemplate, String prefix) {
-        this(redisTemplate);
+    public ShiroRedisCache(RedisTemplate redisTemplate, String prefix, long timeout) {
+        this.redisTemplate = redisTemplate;
+        this.ops = redisTemplate.opsForValue();
         this.prefix = prefix;
+        this.timeout = timeout;
     }
 
 
     @Override
     public V get(K key) throws CacheException {
-        if (log.isDebugEnabled()) {
-            log.warn("getKey: {}", key);
-        }
         log.warn("getKey: {}", key);
         if (key == null) {
             return null;
         }
         Object cacheKey = getRedisCacheKey(key);
-        V vl = (V) hashOperations.get(prefix, cacheKey);
+        V vl = (V) ops.get(cacheKey);
         return vl;
     }
 
     @Override
     public V put(K key, V value) throws CacheException {
-        if (log.isDebugEnabled()) {
-            log.warn("putKey: {}, value: {}", key, value);
-        }
         log.warn("putKey: {}, value: {}", key, value);
         if (key == null || value == null) {
             return null;
         }
         String cacheKey = getRedisCacheKey(key);
-        hashOperations.put(prefix, cacheKey, value);
+        ops.set(cacheKey, value, timeout, TimeUnit.SECONDS);
         return value;
     }
 
     @Override
     public V remove(K key) throws CacheException {
-        if (log.isDebugEnabled()) {
-            log.debug("Key: {}", key);
-        }
+        log.warn("removeKey: {}", key);
 
         if (key == null) {
             return null;
         }
         String cacheKey = getRedisCacheKey(key);
-        V v = (V) hashOperations.get(prefix, cacheKey);
-        hashOperations.delete(prefix, cacheKey);
+        V v = get(key);
+        ops.getOperations().delete(cacheKey);
         return v;
     }
 
     @Override
     public void clear() throws CacheException {
-        hashOperations.delete(prefix, keys());
+        log.warn("clear cache");
+        try {
+            redisTemplate.delete((Collection<String>) keys());
+        } catch (Exception e) {
+
+        }
     }
 
     @Override
     public int size() {
-        Long size = hashOperations.size(prefix);
-        return size.intValue();
+        log.warn("size");
+        return keys().size();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public Set<K> keys() {
-        Set<K> keys = null;
+        log.warn("keys");
+        Set<Object> objkeys = null;
+        Set<K> ks = Collections.emptySet();
         try {
-            keys = (Set<K>) hashOperations.keys(prefix);
+            objkeys = redisTemplate.execute(new RedisCallback<Set<Object>>() {
+
+                @Override
+                public Set<Object> doInRedis(RedisConnection connection) throws DataAccessException {
+
+                    Set<Object> binaryKeys = new HashSet<>();
+
+                    Cursor<byte[]> cursor = connection.scan(new ScanOptions.ScanOptionsBuilder().match(prefix + "*").count(10000).build());
+                    while (cursor.hasNext()) {
+                        binaryKeys.add(new String(cursor.next()));
+                    }
+                    return binaryKeys;
+                }
+            });
         } catch (Exception e) {
-            if (log.isDebugEnabled()) {
-                log.debug("keys: {} ,error", prefix);
-            }
+            log.debug("keys: {} ,error", prefix);
         }
-        if (CollectionUtils.isEmpty(keys)) {
+        if (CollectionUtils.isEmpty(objkeys) || !prefix.contains("session")) {
             return Collections.emptySet();
         }
-        return keys;
+        try {
+            ks = (Set<K>) objkeys;
+        } catch (Exception e) {
+        }
+        return ks;
     }
 
     @Override
     public Collection<V> values() {
+        log.warn("session values");
         List<V> values = null;
         try {
-            values = (List<V>) hashOperations.values(prefix);
+            values = (List<V>) ops.multiGet((Collection<String>) keys());
         } catch (Exception e) {
-            if (log.isDebugEnabled()) {
-                log.debug("values: {} ,error", prefix);
-            }
+            log.debug("values: {} ,error", prefix);
         }
         return values;
     }
@@ -126,9 +137,9 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
         if (key instanceof PrincipalCollection) {
             Object primaryPrincipal = ((PrincipalCollection) key).getPrimaryPrincipal();
             SysUser sysUser = (SysUser) primaryPrincipal;
-            redisKey = sysUser.getUsername();
+            redisKey = prefix + sysUser.getUsername();
         } else {
-            redisKey = key.toString();
+            redisKey = prefix + key.toString();
         }
         return redisKey;
 

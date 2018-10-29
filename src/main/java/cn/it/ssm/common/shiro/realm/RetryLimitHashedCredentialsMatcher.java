@@ -1,6 +1,6 @@
 package cn.it.ssm.common.shiro.realm;
 
-import cn.it.ssm.common.shiro.util.ShiroEnum;
+import cn.it.ssm.common.shiro.util.ShiroConst;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
@@ -20,7 +20,7 @@ public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher
     private Cache<String, AtomicInteger> passwordRetryCache;
 
     public RetryLimitHashedCredentialsMatcher(CacheManager cacheManager) {
-        passwordRetryCache = cacheManager.getCache(ShiroEnum.PASSWORDRETRY_CACHE.getCacheName());
+        passwordRetryCache = cacheManager.getCache(ShiroConst.PASSWORDRETRY_CACHE);
     }
 
     @Override

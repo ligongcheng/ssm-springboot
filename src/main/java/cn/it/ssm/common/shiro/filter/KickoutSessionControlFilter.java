@@ -1,7 +1,7 @@
 package cn.it.ssm.common.shiro.filter;
 
 import cn.it.ssm.common.shiro.util.ShiroAjaxUtils;
-import cn.it.ssm.common.shiro.util.ShiroEnum;
+import cn.it.ssm.common.shiro.util.ShiroConst;
 import cn.it.ssm.domain.auto.SysUser;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
@@ -16,7 +16,6 @@ import org.apache.shiro.web.util.WebUtils;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -53,7 +52,7 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
 
     public void setCacheManager(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
-        this.cache = cacheManager.getCache(ShiroEnum.KICKOUT_SESSION.getCacheName());
+        this.cache = cacheManager.getCache(ShiroConst.KICKOUT_SESSION);
     }
 
     public void setSessionDAO(SessionDAO sessionDAO) {
@@ -86,7 +85,7 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
             }
         }
 
-        Collection<Session> activeSessions = sessionDAO.getActiveSessions();
+        //Collection<Session> activeSessions = sessionDAO.getActiveSessions();
         //如果队列里没有此sessionId，且用户没有被踢出；放入队列
         if (!deque.contains(sessionId) && session.getAttribute("kickout") == null) {
             deque.push(sessionId);
