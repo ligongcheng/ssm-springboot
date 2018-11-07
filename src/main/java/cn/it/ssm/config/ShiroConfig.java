@@ -109,11 +109,11 @@ public class ShiroConfig {
         redisCacheManager.setGlobalTimeout(1800);
         HashMap<String, Long> map = new HashMap<>();
         //设置各种缓存的有效时间,单位为秒
-        map.put(ShiroConst.SESSION_CACHE, 1800L);
-        map.put(ShiroConst.AUTHENTICATION_CACHE, 300L);
-        map.put(ShiroConst.AUTHENTIZATION_CACHE, 300L);
-        map.put(ShiroConst.KICKOUT_SESSION, 1800L);
-        map.put(ShiroConst.PASSWORDRETRY_CACHE, 600L);
+        map.put(ShiroConst.SESSION_CACHE, 600L);
+        map.put(ShiroConst.AUTHENTICATION_CACHE, 600L);
+        map.put(ShiroConst.AUTHENTIZATION_CACHE, 600L);
+        map.put(ShiroConst.KICKOUT_SESSION, 36000L);
+        map.put(ShiroConst.PASSWORDRETRY_CACHE, 120L);
         redisCacheManager.setTimeMap(map);
         return redisCacheManager;
     }

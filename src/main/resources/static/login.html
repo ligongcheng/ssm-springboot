@@ -9,13 +9,11 @@
     <meta name="author" content="">
 
     <title>系统登录</title>
-
-    <link href="assets/bootstrap/css/bootstrap.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/metisMenu/metisMenu.css"/>
-    <link rel="stylesheet" href="assets/sidebar.css"/>
-    <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css"/>
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="dist/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/toastr/toastr.min.css"/>
-
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,7 +21,12 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    <script>
+        if (window.parent != window) { //在框架内
+            top.location.href="/login.html" //整个页面跳转
+            debugger
+        }
+    </script>
 </head>
 
 <body>
@@ -31,7 +34,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
-            <div class="login-panel panel panel-info">
+            <div class="login-panel panel panel-info" style="margin-top: 25%;">
                 <div class="panel-heading">
                     <h3 class="panel-title">系统登录</h3>
                 </div>
@@ -47,8 +50,8 @@
                             <div class="form-group">
                                 <input class="form-control" placeholder="验证码" type="text" name="code"
                                        style="width:120px; display:inline-block"/>
-                                <img src="/gifCode" id="validateCodeImg" onclick="reloadCode()"
-                                     style="display:inline-block"/>
+                                <a href="javascript:void(0)"><img src="/gifCode" id="validateCodeImg" onclick="reloadCode()"
+                                        style="display:inline-block"/></a>
                             </div>
                             <!--<div class="checkbox">
                                 <label>
@@ -56,7 +59,7 @@
                                 </label>
                             </div>-->
                             <!-- Change this to a button or input when using this as a form -->
-                            <input class="btn btn-lg btn-success btn-block" type="button" value="登录">
+                            <input class="btn btn-lg btn-success btn-block" type="button" onclick="login()" value="登录">
                         </fieldset>
                     </form>
                 </div>
@@ -65,9 +68,11 @@
     </div>
 </div>
 
-<script src="assets/jquery-1.11.0.js"></script>
-<script src="assets/bootstrap/js/bootstrap.js"></script>
-<script src="assets/metisMenu/metisMenu.js"></script>
+
+<!-- jQuery 2.2.3 -->
+<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/bootstrap-table/bootstrap-table.js"></script>
 <script src="assets/bootstrap-table/bootstrap-table-zh-CN.js"></script>
 <script src="assets/toastr/toastr.min.js"></script>
@@ -80,8 +85,14 @@
         $("#validateCodeImg").attr("src", "/gifCode?data=" + new Date().getTime());
     }
 
-    var submit = $('input[type=button]');
-    submit.click(function () {
+    document.onkeydown = function(e){
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            login();
+        }
+    }
+
+    function login() {
         $.ajax({
             url: "/login/userlogin",
             type: "post",
@@ -90,9 +101,12 @@
                 if (item.code == 200) {
                     window.location = "/";
                 }
+                if (item.code == 400) {
+                    reloadCode();
+                }
             }
         });
-    });
+    }
 
 </script>
 

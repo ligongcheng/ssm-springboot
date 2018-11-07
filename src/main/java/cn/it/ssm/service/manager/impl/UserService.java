@@ -150,7 +150,7 @@ public class UserService implements IUserService {
             if (tableRequest.getPageSize() == null) tableRequest.setPageSize(5);
         }
         PageHelper.startPage(tableRequest.getPageNum(), tableRequest.getPageSize());
-        List<SysUserWithRole> userWithRoleList = sysUserMapperFix.findUserWithRole(null);
+        List<SysUserWithRole> userWithRoleList = sysUserMapperFix.findUserListWithRoles(tableRequest.getSearch());
         PageInfo<SysUserWithRole> pageInfo = new PageInfo<>(userWithRoleList);
         PageListVO pageListVO = new PageListVO();
         pageListVO.setRows(pageInfo.getList());

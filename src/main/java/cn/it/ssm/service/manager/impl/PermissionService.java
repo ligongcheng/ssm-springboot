@@ -51,13 +51,32 @@ public class PermissionService implements IPermissionService {
 
     @Override
     @Transactional(readOnly = false)
-    public boolean deletePermission(List<SysPermission> permissionList) {
+    public boolean deletePermission(Integer id) {
+        return sysPermissionMapper.deleteByPrimaryKey(id)>0;
+    }
 
-        ArrayList<Integer> list = new ArrayList<>();
-        for (SysPermission p : permissionList) {
-            list.add(p.getId());
-        }
+    @Override
+    public List<SysPermission> findPermMenuList() {
+        SysPermissionExample example = new SysPermissionExample();
+        example.createCriteria().andTypeEqualTo(1);
+        List<SysPermission> list = sysPermissionMapper.selectByExample(example);
+        return list;
+    }
 
-        return sysPermissionMapper.deletePermission(list) != 0;
+    @Override
+    @Transactional(readOnly = false)
+    public boolean addPerm(SysPermission permission) {
+        return sysPermissionMapper.insertSelective(permission)>0;
+    }
+
+    @Override
+    public SysPermission findPermission(Integer id) {
+        return sysPermissionMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Boolean editPermission(SysPermission permission) {
+        return sysPermissionMapper.updateByPrimaryKeySelective(permission)>0;
     }
 }

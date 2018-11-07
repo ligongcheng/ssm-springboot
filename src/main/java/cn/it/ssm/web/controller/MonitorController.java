@@ -1,5 +1,6 @@
 package cn.it.ssm.web.controller;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import cn.it.ssm.common.monitor.ApiEnum;
 import cn.it.ssm.common.vo.ApiMonitorVO;
 import cn.it.ssm.common.vo.RedisConstants;
@@ -29,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
-public class ApiMonitorController implements ApplicationContextAware {
+public class MonitorController implements ApplicationContextAware {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -192,6 +193,20 @@ public class ApiMonitorController implements ApplicationContextAware {
         });
         return monitorVOArrayList;
 
+    }
+
+    @RequestMapping("/redisInfo")
+    @ResponseBody
+    public Properties getRedisInfo(){
+        Properties info = stringRedisTemplate.execute(new RedisCallback<Properties>() {
+            @Override
+            public Properties doInRedis(RedisConnection connection) throws DataAccessException {
+                Properties info = connection.info();
+                //System.out.println(info);
+                return info;
+            }
+        });
+        return info;
     }
 
     @Override

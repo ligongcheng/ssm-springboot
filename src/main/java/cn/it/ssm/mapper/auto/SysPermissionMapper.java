@@ -15,18 +15,6 @@ public interface SysPermissionMapper {
 
     int deleteByPrimaryKey(Integer id);
 
-    @Update("<script>" +
-            "UPDATE \n" +
-            " sys_permission p \n" +
-            "SET\n" +
-            "  p.`available` = 0 \n" +
-            "WHERE p.`id` IN \n" +
-            "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>" +
-            "#{item}" +
-            "</foreach>" +
-            "</script>")
-    int deletePermission(@Param("list") List<Integer> list);
-
     int insert(SysPermission record);
 
     int insertSelective(SysPermission record);

@@ -1139,12 +1139,36 @@ $(function () {
     var _href = that.attr("href");
     if (!$("#navTabs li[url='"+_href+"']").length) {
 
-
+        if (_href.substr(0,5) == "http:" || _href.substr(0,6) == "https:") {
           var html = '<iframe src="'+_href+'" style="width:100%;height:100%;" frameborder="no" border="0" marginwidth="0" marginheight="0"></iframe>';
           $("#navTabs").append('<li url="'+_href+'"><span>'+_text+'</span><a href="javascript:void(0);" class="fa fa-close"></a></li>');
           $("#content").append('<div class="tabs-panel">'+html+'</div>');
-          showTab($("#navTabs li[url='"+_href+"']"));
-
+          showTab($("#navTabs li[url='"+_href+"']"));  
+        }else{
+        /*$("#loading").show();
+        $.ajax({
+          url:_href,
+          dataType:"html",
+          success:function(result){
+            $("#loading").hide();
+            var path = _href.indexOf("?") ? _href.substring(0,_href.indexOf("?")):_href;
+            if ($("#navTabs li[url*='"+path+"']").length) {
+                var itab = $("#navTabs li[url*='"+path+"']").eq(0);
+                itab.attr("url",_href);
+                $("#content .tabs-panel").eq(itab.index()).html(result);
+                showTab(itab);  
+            }else{
+              $("#navTabs").append('<li url="'+_href+'"><span>'+_text+'</span><a href="javascript:void(0);" class="fa fa-close"></a></li>');
+              $("#content").append('<div class="tabs-panel">'+result+'</div>');
+              showTab($("#navTabs li[url='"+_href+"']"));   
+            }
+          },
+          error:function(err){
+            $("#loading").hide();
+            console.log(err)
+          }
+        })*/
+       } 
     }else{
       showTab($("#navTabs li[url='"+_href+"']"));      
     }

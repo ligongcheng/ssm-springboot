@@ -34,12 +34,14 @@
     <select id="findPermissionsByRoleId" parameterType="arraylist" resultType="cn.it.ssm.domain.auto.SysPermission">
         SELECT p.*
         FROM sys_permission p,sys_role_permission rp
-        WHERE rp.sys_role_id
+        WHERE
+          rp.sys_permission_id=p.id
+        AND p.available=1
+        AND rp.sys_role_id
         IN
         <foreach collection="array" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
-        AND rp.sys_permission_id=p.id
     </select>
 
 
@@ -65,6 +67,30 @@
             </if>
             <if test="username != null and username != '' ">
                 AND u.username = #{username}
+            </if>
+        </where>
+        order by u.id
+    </select>
+
+    <select id="findUserListWithRoles" resultType="cn.it.ssm.domain.vo.SysUserWithRole">
+        SELECT
+        u.id,
+        u.username,
+        u.age,
+        u.sex,
+        u.nickname,
+        u.is_delete,
+        r.id roleId,
+        r.name roleName
+        FROM
+        sys_user u
+        LEFT JOIN sys_user_role ur
+        ON (u.id = ur.sys_user_id)
+        LEFT JOIN sys_role r
+        ON (ur.sys_role_id = r.id)
+        <where>
+            <if test="search !=null and search !='' ">
+                AND u.username LIKE '%${search}%'
             </if>
         </where>
         order by u.id

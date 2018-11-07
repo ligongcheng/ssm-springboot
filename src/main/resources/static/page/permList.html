@@ -40,31 +40,59 @@
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除
         </button>
     </div>
-    <table id="roleTable"></table>
+    <table id="permTable"></table>
 </div>
 
-<div class="modal fade" id="addRoleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog" role="document" style="width: 300px">
+<div class="modal fade" id="permModal" tabindex="-1" role="dialog" aria-labelledby="permTitle">
+    <div class="modal-dialog" role="document" style="width: 500px">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title text-center" id="exampleModalLabel"></h4>
+                <h4 class="modal-title text-center" id="permTitle"></h4>
             </div>
             <div class="modal-body">
-                <form id="roleAddForm">
+                <form id="permForm">
                     <div class="form-group">
                         <!-- <label for="id" class="control-label">id号:</label>-->
-                        <input type="hidden" class="form-control" id="roleId" name="id" value="">
+                        <input type="hidden" class="form-control" id="permId" name="id" />
                     </div>
                     <div class="form-group">
-                        <label for="roleName" class="control-label">角色名称:</label>
-                        <input type="text" class="form-control" id="roleName" name="name" value="">
+                        <label for="permName" class="control-label">权限名称:</label>
+                        <input type="text" class="form-control" id="permName" name="name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="permType">权限类型:</label>
+                        <select name="type" id = "permType" class="form-control">
+                            <option value="1">菜单</option>
+                            <option value="2">普通链接（按钮，link等）</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>权限URI:</label>
+                        <input name="url" id="permUri" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>权限字符串:</label>
+                        <input name="percode" id="percode" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>父级权限:</label>
+                        <select name="parentid" id="parentid" class="form-control">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>排序号（数字）:</label>
+                        <input name="sort" id="sort" type="text" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label>是否有效:</label>
-                        <input name="available" checked="checked" type="radio" value="1"/><label>有效</label>
-                        <input name="available" type="radio" value="0"/><label>无效</label>
+                        <input name="available" id="available-1" type="radio" checked value="1"/><label>有效</label>
+                        <input name="available" id="available-0" type="radio" value="0"/><label>无效</label>
+                    </div>
+                    <div class="form-group">
+                        <label>权限描述:</label>
+                        <input name="description" id="description" type="text" class="form-control" />
                     </div>
                 </form>
             </div>
@@ -76,38 +104,62 @@
     </div>
 </div>
 
-<div class="modal fade" id="editRoleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+<div class="modal fade" id="editPermModal" tabindex="-1" role="dialog" aria-labelledby="editPermTitle">
     <div class="modal-dialog" role="document" style="width: 500px">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title text-center" id="exampleModalLabel"></h4>
+                <h4 class="modal-title text-center" id="editPermTitle"></h4>
             </div>
             <div class="modal-body">
-                <form id="roleEditForm">
+                <form id="editPermForm">
                     <div class="form-group">
                         <!-- <label for="id" class="control-label">id号:</label>-->
-                        <input type="hidden" class="form-control" id="roleId" name="id" value="">
+                        <input type="hidden" class="form-control" id="editPermId" name="id" />
                     </div>
                     <div class="form-group">
-                        <label for="roleName" class="control-label">角色名称:</label>
-                        <input type="text" class="form-control" id="roleName" name="name" value="">
+                        <label for="permName" class="control-label">权限名称:</label>
+                        <input type="text" class="form-control" id="editPermName" name="name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="permType">权限类型:</label>
+                        <select name="type" id = "editPermType" class="form-control">
+                            <option value="1">菜单</option>
+                            <option value="2">普通链接（按钮，link等）</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>权限URI:</label>
+                        <input name="url" id="editPermUri" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>权限字符串:</label>
+                        <input name="percode" id="editPercode" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>父级权限:</label>
+                        <select name="parentid" id="editParentid" class="form-control">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>排序号（数字）:</label>
+                        <input name="sort" id="editSort" type="text" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label>是否有效:</label>
-                        <input name="available" id="available-1" type="radio" value="1"/><label>有效</label>
+                        <input name="available" id="available-1" type="radio" checked value="1"/><label>有效</label>
                         <input name="available" id="available-0" type="radio" value="0"/><label>无效</label>
                     </div>
                     <div class="form-group">
-                        <label>权限设置:</label>
-                        <div id="permTree"></div>
+                        <label>权限描述:</label>
+                        <input name="description" id="editDescription" type="text" class="form-control" />
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" id="submit">确定</button>
+                <button type="button" class="btn btn-primary" id="editSubmit">确定</button>
             </div>
         </div>
     </div>
@@ -126,7 +178,7 @@
 <script src="../assets/app.js"></script>
 <script src="../assets/jsTree/jstree.js"></script>
 <script>
-    loadUser()
+    loadPerm()
 </script>
 </body>
 </html>

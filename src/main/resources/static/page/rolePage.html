@@ -1,3 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>用户列表</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" type="image/x-icon" href="../dist/img/favicon.ico">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../dist/css/font-awesome.min.css">
+    <!-- 以上为公共css -->
+
+    <!-- app css -->
+    <link rel="stylesheet" href="../assets/bootstrap-table/bootstrap-table.css"/>
+    <link rel="stylesheet" href="../assets/toastr/toastr.min.css"/>
+    <link rel="stylesheet" href="../assets/jsTree/jstree.style.min.css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
 <div class="panel-body" style="padding-bottom:0px;">
 
     <div id="toolbar" class="btn-group">
@@ -20,17 +49,17 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title text-center" id="exampleModalLabel"></h4>
+                <h4 class="modal-title text-center" id="addRoleTitle"></h4>
             </div>
             <div class="modal-body">
                 <form id="roleAddForm">
                     <div class="form-group">
                         <!-- <label for="id" class="control-label">id号:</label>-->
-                        <input type="hidden" class="form-control" id="roleId" name="id" value="">
+                        <input type="hidden" class="form-control" id="addRoleId" name="id" value="">
                     </div>
                     <div class="form-group">
                         <label for="roleName" class="control-label">角色名称:</label>
-                        <input type="text" class="form-control" id="roleName" name="name" value="">
+                        <input type="text" class="form-control" id="addRoleName" name="name" value="">
                     </div>
                     <div class="form-group">
                         <label>是否有效:</label>
@@ -41,7 +70,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" id="submit">确定</button>
+                <button type="button" class="btn btn-primary" id="addSubmit">确定</button>
             </div>
         </div>
     </div>
@@ -72,7 +101,7 @@
                     </div>
                     <div class="form-group">
                         <label>权限设置:</label>
-                        <div id="permTree"></div>
+                        <div id="rolePermTree"></div>
                     </div>
                 </form>
             </div>
@@ -83,3 +112,21 @@
         </div>
     </div>
 </div>
+
+<!-- jQuery 2.2.3 -->
+<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--app js -->
+<script src="../assets/bootstrap-table/bootstrap-table.js"></script>
+<script src="../assets/bootstrap-table/bootstrap-table-zh-CN.js"></script>
+<script src="../assets/toastr/toastr.min.js"></script>
+<script src="../assets/bootbox/bootbox.js"></script>
+<script src="../assets/ExTable.js"></script>
+<script src="../assets/app.js"></script>
+<script src="../assets/jsTree/jstree.js"></script>
+<script>
+    loadRole()
+</script>
+</body>
+</html>

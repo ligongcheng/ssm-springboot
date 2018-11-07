@@ -12,5 +12,13 @@ public interface IPermissionService {
 
     List<SysPermission> findPermissionList();
 
-    boolean deletePermission(List<SysPermission> permissionList);
+    boolean deletePermission(Integer id);
+
+    List<SysPermission> findPermMenuList();
+
+    boolean addPerm(SysPermission permission);
+
+    SysPermission findPermission(Integer id);
+
+    Boolean editPermission(SysPermission permission);
 }
