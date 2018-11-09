@@ -34,7 +34,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
 
     @Override
     public V get(K key) throws CacheException {
-        log.warn("getKey: {}", key);
+        log.debug("getKey: {}", key);
         if (key == null) {
             return null;
         }
@@ -45,7 +45,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
 
     @Override
     public V put(K key, V value) throws CacheException {
-        log.warn("putKey: {}, value: {}", key, value);
+        log.debug("putKey: {}, value: {}", key, value);
         if (key == null || value == null) {
             return null;
         }
@@ -56,7 +56,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
 
     @Override
     public V remove(K key) throws CacheException {
-        log.warn("removeKey: {}", key);
+        log.debug("removeKey: {}", key);
 
         if (key == null) {
             return null;
@@ -69,7 +69,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
 
     @Override
     public void clear() throws CacheException {
-        log.warn("clear cache");
+        log.debug("clear cache");
         try {
             redisTemplate.delete((Collection<String>) keys());
         } catch (Exception e) {
@@ -77,16 +77,15 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
         }
     }
 
-    @Override
-    public int size() {
-        log.warn("size");
+    @Override    public int size() {
+        log.debug("size");
         return keys().size();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public Set<K> keys() {
-        log.warn("keys");
+        log.debug("keys");
         Set<Object> objkeys = null;
         Set<K> ks = Collections.emptySet();
         try {
@@ -119,7 +118,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
 
     @Override
     public Collection<V> values() {
-        log.warn("session values");
+        log.debug("session values");
         List<V> values = null;
         try {
             values = (List<V>) ops.multiGet((Collection<String>) keys());

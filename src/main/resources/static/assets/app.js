@@ -16,7 +16,7 @@ $.ajaxSetup({
         var sessionstatus = XMLHttpRequest.getResponseHeader("session-status");
         if (sessionstatus === "timeout") {
             //如果超时就处理 ，指定要跳转的页面(比如登陆页)
-            window.top.location.href = '/';
+            window.top.location.href = "/login.html?_" + new Date().getTime();
         }
     }
 });
@@ -124,34 +124,19 @@ function loadUser() {
 
     $remove.click(function () {
         var rows = getRowSelections("#userTable");
-        if (rows.length !== 0) {
-            bootbox.confirm({
-                size: "small",
-                message: "确定提交当前操作吗?",
-                buttons: {
-                    cancel: {
-                        className: 'btn-success',
-                        label: '<i class="fa fa-times"></i> 取消'
-                    },
-                    confirm: {
-                        className: 'btn-danger',
-                        label: '<i class="fa fa-check"></i> 确定'
-                    }
-                },
-                callback: function (result) {
-                    if (result) {
-                        $.ajax({
-                            url: "/userList",
-                            contentType: "application/json",
-                            data: JSON.stringify(rows),
-                            type: "delete",
-                            success: function (da) {
-                                $userTable.bootstrapTable("refresh");
-                            }
-                        });
-                    }
+        var s = function () {
+            $.ajax({
+                url: "/userList",
+                contentType: "application/json",
+                data: JSON.stringify(rows),
+                type: "delete",
+                success: function (da) {
+                    $userTable.bootstrapTable("refresh");
                 }
             });
+        };
+        if (rows.length !== 0) {
+            tip.confirm(s);
         } else {
             toastr.warning('请选择数据');
         }
@@ -289,32 +274,17 @@ function loadPerm() {
     var $editPermModal = $("#editPermModal");
     $remove.click(function () {
         var rows = getIdSelections("#permTable");
-        if (rows.length !== 0) {
-            bootbox.confirm({
-                size: "small",
-                message: "确定提交当前操作吗?",
-                buttons: {
-                    cancel: {
-                        className: 'btn-success',
-                        label: '<i class="fa fa-times"></i> 取消'
-                    },
-                    confirm: {
-                        className: 'btn-danger',
-                        label: '<i class="fa fa-check"></i> 确定'
-                    }
-                },
-                callback: function (result) {
-                    if (result) {
-                        $.ajax({
-                            url: "/perm/" + rows[0],
-                            type: "delete",
-                            success: function (da) {
-                                $permTable.bootstrapTable("refresh");
-                            }
-                        });
-                    }
+        var s = function () {
+            $.ajax({
+                url: "/perm/" + rows[0],
+                type: "delete",
+                success: function (da) {
+                    $permTable.bootstrapTable("refresh");
                 }
             });
+        };
+        if (rows.length !== 0) {
+            tip.confirm(s);
         } else {
             toastr.warning('请选择数据');
         }
@@ -405,6 +375,7 @@ function loadRole() {
     var $role = $('#roleTable');
     var settings = {
         url: "/roleList",
+        singleSelect : true,
         sidePagination: "client",
         queryParams: function (params) {
             return {
@@ -423,14 +394,14 @@ function loadRole() {
             field: 'name',
             title: '角色名称'
         }, {
+            field: 'id',
+            title: 'id号'
+        }, {
             field: 'available',
             title: '是否有效',
             formatter: function (s) {
                 return s == "1" ? "<span class=\"label label-success\">有效</span>" : "<span class=\"label label-warning\">无效</span>"
             }
-        }, {
-            field: 'id',
-            title: 'id号'
         }]
     };
     $ExTable.initTable($role, settings);
@@ -446,7 +417,7 @@ function loadRole() {
 
     $add.click(function () {
         $addRoleModal.find("#addRoleTitle").text("新增角色");
-        $addRoleModal.find("#addRoleId").attr("disabled", "true");
+        $addRoleModal.find("#addRoleId").prop("disabled", "true");
         $addRoleModal.find("#addRoleName").val("");
         $addRoleModal.modal("show");
     });
@@ -500,7 +471,7 @@ function loadRole() {
 
     $remove.click(function () {
         var rows = getRowSelections("#roleTable");
-        if (rows.length !== 0) {
+        var s = function () {
             $.ajax({
                 url: "/role",
                 contentType: "application/json",
@@ -511,6 +482,9 @@ function loadRole() {
                     $role.bootstrapTable("refresh");
                 }
             });
+        };
+        if (rows.length !== 0) {
+            tip.confirm(s);
         } else {
             toastr.warning('请选择要删除的数据');
         }
@@ -843,4 +817,82 @@ function getIdSelections(table) {
 
 function getRowSelections(table) {
     return $(table).bootstrapTable('getSelections')
+}
+
+var $ExTable = (function () {
+    var bootstrapTable_default = {
+        method: 'get',
+        striped: false,
+        cache: false,
+        pagination: true,
+        toolbar: '#toolbar',
+        sortable: false,
+        sidePagination: "server",
+        pageNumber: 1,
+        pageSize: 5,
+        pageList: [5, 10, 25, 50, 100],
+        search: true,
+        strictSearch: false,
+        showColumns: true,
+        showRefresh: true,
+        minimumCountColumns: 2,
+        clickToSelect: true,
+        idField: "id",
+        uniqueId: "id",
+        cardView: false,
+        detailView: false,
+        smartDisplay: false,
+        queryParams: function (params) {
+            return {
+                pageSize: params.limit,
+                pageNum: params.offset / params.limit + 1,
+                search: params.search
+            };
+        }
+    };
+
+    function _initTable(id, settings) {
+        var params = $.extend({}, bootstrapTable_default, settings);
+        if (typeof params.url == 'undefined') {
+            throw '初始化表格失败，请配置url参数！';
+        }
+        if (typeof params.columns == 'undefined') {
+            throw '初始化表格失败，请配置columns参数！';
+        }
+        $(id).bootstrapTable(params);
+    }
+
+    return {
+        initTable: function (id, settings) {
+            _initTable(id, settings);
+        },
+        refreshTable: function (id) {
+            $(id).bootstrapTable('refresh');
+        }
+    }
+})($);
+
+var tip={};
+
+tip.confirm = function(oper) {
+    var operation = oper;
+    bootbox.confirm({
+        size: "small",
+        message: "确定提交当前操作吗?",
+        buttons: {
+            cancel: {
+                className: 'btn-success',
+                label: '<i class="fa fa-times"></i> 取消'
+            },
+            confirm: {
+                className: 'btn-danger',
+                label: '<i class="fa fa-check"></i> 确定'
+            }
+        },
+        callback: function (res) {
+            if (res) {
+                oper();
+            }
+        }
+    });
 }
