@@ -8,12 +8,14 @@ import cn.it.ssm.common.vo.ConResult;
 import cn.it.ssm.common.vo.OnlineUserVO;
 import cn.it.ssm.common.vo.PageListVO;
 import cn.it.ssm.common.vo.TableRequest;
+import cn.it.ssm.config.CaptchaFactory;
 import cn.it.ssm.domain.auto.SysUser;
 import cn.it.ssm.domain.vo.SysUserWithRole;
 import cn.it.ssm.service.manager.IUserService;
 import cn.it.ssm.service.manager.impl.SessionService;
 import com.github.botaruibo.xvcode.generator.Generator;
 import com.github.botaruibo.xvcode.generator.GifVCGenerator;
+import com.github.botaruibo.xvcode.generator.PngVCGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
@@ -26,9 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -42,7 +42,7 @@ public class UserController extends BaseController {
      * captcha 可以进行配置 查看 captchaConfig
      */
     @Autowired
-    Generator captchaGenerator;
+    CaptchaFactory captchaFactory;
 
     @Autowired
     private IUserService userService;
@@ -111,12 +111,12 @@ public class UserController extends BaseController {
             response.setDateHeader("Expires", 0);
             //response.setContentType("image/gif");
             response.setContentType("image/png");
-
-            captchaGenerator.write2out(response.getOutputStream());
+            PngVCGenerator generator = captchaFactory.pngVCGenerator();
+            generator.write2out(response.getOutputStream());
 
             Session session = super.getSession();
             session.removeAttribute("_code");
-            session.setAttribute("_code", captchaGenerator.text().toLowerCase());
+            session.setAttribute("_code", generator.text().toLowerCase());
         } catch (Exception e) {
             log.error("generater captchaCode error");
         }
@@ -162,6 +162,13 @@ public class UserController extends BaseController {
     @GetMapping("/user/{id}")
     @ResponseBody
     public SysUser findByUserId(@PathVariable("id") String id) throws Exception {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return 0;
+            }
+        });
         return userService.findByUserId(id);
     }
 

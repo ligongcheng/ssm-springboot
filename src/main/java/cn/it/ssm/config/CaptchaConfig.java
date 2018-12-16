@@ -20,7 +20,7 @@ public class CaptchaConfig {
     private Integer len;
 
     @Bean
-    public Generator captchaGenerator() {
-        return new PngVCGenerator(width, height, len);
+    public CaptchaFactory captchaFactory() {
+        return new CaptchaFactory(width, height, len);
     }
 }
