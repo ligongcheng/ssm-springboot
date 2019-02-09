@@ -27,13 +27,13 @@ public class ShiroSessionListener implements SessionListener {
     @Override
     public void onStart(Session session) {
         sessionCount.incrementAndGet();
-        log.warn("session:{} start", session.getId());
+        log.info("session:{} start", session.getId());
     }
 
     @Override
     public void onStop(Session session) {
         sessionCount.decrementAndGet();
-        log.warn("session:{} stop", session.getId());
+        log.info("session:{} stop", session.getId());
         clearKickoutCache(session);
     }
 
@@ -41,7 +41,7 @@ public class ShiroSessionListener implements SessionListener {
     public void onExpiration(Session session) {
         sessionCount.decrementAndGet();
         clearKickoutCache(session);
-        log.warn("session:{} expiration", session.getId());
+        log.info("session:{} expiration", session.getId());
     }
 
     private void clearKickoutCache(Session session) {

@@ -448,7 +448,6 @@ function loadRole() {
             $editRoleModal.find("#roleName").val(rows[0].name);
             $editRoleModal.find("#available-1").prop("checked", rows[0].available === 1);
             $editRoleModal.find("#available-0").prop("checked", rows[0].available === 0);
-            //$editRoleModal.find("#permTree").jstree.destroy();
             permTree("#rolePermTree", rows[0].id);
             $editRoleModal.modal("show");
         } else {
@@ -456,10 +455,9 @@ function loadRole() {
         }
     });
     $editRoleModal.find("#submit").click(function () {
-        //alert($("#roleEditForm").serialize() +"&rolePermIds="+ $("#permTree").jstree(true).get_selected(false));
         $.ajax({
             url: "/role",
-            data: $("#roleEditForm").serialize() + "&rolePermIds=" + $("#permTree").jstree(true).get_selected(false),
+            data: $("#roleEditForm").serialize() + "&rolePermIds=" + $("#rolePermTree").jstree(true).get_selected(false),
             type: "post",
             success: function (da) {
                 $remove.prop('disabled', true);
