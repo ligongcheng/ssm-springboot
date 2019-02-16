@@ -42,16 +42,16 @@ public class GlobalExceptionHandler {
         return ConResult.error().addMsg("应用错误!");
     }
 
+
     /**
      * 处理 未授权 异常
      * @param e
      * @return
      */
     @ExceptionHandler(UnauthorizedException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ConResult handleUnauthorizedException(UnauthorizedException e) {
         log.error(e.getMessage(), e);
-        return ConResult.error().addMsg("Unauthorized!");
+        return ConResult.error().addMsg("没有权限！");
     }
 
     /**
@@ -60,6 +60,7 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(ApiLimitedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ConResult handleApiLimitedException(ApiLimitedException e) {
         //log.error(e.getMessage(), e);
         return ConResult.error().addMsg("接口调用太频繁");

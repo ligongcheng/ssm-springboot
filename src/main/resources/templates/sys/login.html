@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 
     <meta charset="utf-8">
@@ -23,7 +23,7 @@
     <![endif]-->
     <script>
         if (window.parent != window) { //在框架内
-            top.location.href="/login.html" //整个页面跳转
+            top.location.href="/" //整个页面跳转
             debugger
         }
     </script>
@@ -94,14 +94,14 @@
 
     function login() {
         $.ajax({
-            url: "/login/userlogin",
+            url: "/sys/login",
             type: "post",
             data: $("#loginForm").serialize(),
             success: function (item) {
                 if (item.code == 200) {
                     window.location = "/";
-                }
-                if (item.code == 400) {
+                } else {
+                    toastr.warning('请重新输入');
                     reloadCode();
                 }
             }

@@ -35,4 +35,10 @@ public interface IUserService {
     PageListVO findUserWithRoleList(TableRequest tableRequest);
 
     boolean updateUserLoginInfo(SysUser user);
+
+    int deleteUser(String id);
+
+    int disableUser(String id);
+
+    int enableUser(String id);
 }

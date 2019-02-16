@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -65,17 +65,14 @@
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                            <span class="hidden-xs">管理员</span>
+                            <span class="hidden-xs" th:text="${session.user.username}">员工</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
                                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
-                                <p>
-                                    超级管理员
-                                    <small>2016-09 加入</small>
-                                </p>
+                                <p th:text="${session.role.name}">员工</p>
                             </li>
                             <!-- Menu Body -->
                             <li class="user-body">
@@ -98,7 +95,7 @@
                                     <a href="#" class="btn btn-default btn-flat">简介</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">退出</a>
+                                    <a href="/logout" class="btn btn-default btn-flat">退出</a>
                                 </div>
                             </li>
                         </ul>
@@ -116,15 +113,15 @@
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
             <!-- Sidebar user panel -->
-            <div class="user-panel">
-                <div class="pull-left image">
-                    <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                </div>
-                <div class="pull-left info">
-                    <p>管理员</p>
-                    <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
-                </div>
-            </div>
+            <!--<div class="user-panel">-->
+                <!--<div class="pull-left image">-->
+                    <!--<img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">-->
+                <!--</div>-->
+                <!--<div class="pull-left info">-->
+                    <!--<p th:text="${session.user.username}">员</p>-->
+                    <!--<a href="#"><i class="fa fa-circle text-success"></i> 在线</a>-->
+                <!--</div>-->
+            <!--</div>-->
             <!-- search form -->
             <form action="#" method="get" class="sidebar-form">
                 <div class="input-group">
@@ -140,7 +137,7 @@
             <ul class="sidebar-menu">
                 <li class="header">主导航</li>
                 <li class="active">
-                    <a href="index.html">
+                    <a href="/">
                         <i class="fa fa-dashboard"></i>
                         <span>主页</span>
                     </a>
@@ -154,12 +151,12 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a target="navTab" href="./page/userlist.html"><i class="fa fa-circle-o"></i> 用户管理</a>
+                        <li shiro:hasPermission="sys:user:list"><a target="navTab" href="sys/userPage"><i class="fa fa-circle-o"></i> 用户管理</a>
                         </li>
-                        <li><a target="navTab" href="./page/rolePage.html"><i class="fa fa-circle-o"></i>
+                        <li shiro:hasPermission="sys:role:list"><a target="navTab" href="sys/rolePage"><i class="fa fa-circle-o"></i>
                             角色管理</a>
                         </li>
-                        <li><a target="navTab" href="./page/permList.html"><i class="fa fa-circle-o"></i> 权限管理</a>
+                        <li shiro:hasPermission="sys:perm:list"><a target="navTab" href="sys/permPage"><i class="fa fa-circle-o"></i> 权限管理</a>
                         </li>
                     </ul>
                 </li>
@@ -172,12 +169,12 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a target="navTab" href="./page/api.html"><i class="fa fa-circle-o"></i> api信息</a>
+                        <li><a target="navTab" href="/sys/apiInfoPage"><i class="fa fa-circle-o"></i> api信息</a>
                         </li>
-                        <li><a target="navTab" href="./page/apicount.html"><i class="fa fa-circle-o"></i>
+                        <li><a target="navTab" href="/sys/apiCountPage"><i class="fa fa-circle-o"></i>
                             api调用统计</a>
                         </li>
-                        <li><a target="navTab" href="./page/onlinePage.html"><i class="fa fa-circle-o"></i>
+                        <li><a target="navTab" href="/sys/onlinePage"><i class="fa fa-circle-o"></i>
                             在线用户</a></li>
                     </ul>
                 </li>

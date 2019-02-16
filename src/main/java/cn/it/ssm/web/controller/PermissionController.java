@@ -12,12 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/perm")
 public class PermissionController {
 
     @Autowired
@@ -26,13 +24,18 @@ public class PermissionController {
     @Autowired
     private IRoleService roleService;
 
+    @GetMapping("sys/permPage")
+    public String perm() {
+        return "sys/perm";
+    }
+
     /**
      * 分页查询权限列表
      *
      * @param tableRequest
      * @return
      */
-    @GetMapping("/list")
+    @GetMapping("sys/perm")
     @ResponseBody
     public PageListVO getPermList(TableRequest tableRequest) {
         if (tableRequest == null) {
@@ -45,21 +48,21 @@ public class PermissionController {
         return pageListVO;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("sys/perm/{id}")
     @ResponseBody
     public SysPermission findPerm(@PathVariable Integer id) {
         SysPermission permission = permissionService.findPermission(id);
         return permission;
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("sys/perm/{id}")
     @ResponseBody
     public ConResult editPerm(SysPermission permission) {
         permissionService.editPermission(permission);
         return ConResult.success();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("sys/perm/{id}")
     @ResponseBody
     public ConResult deletePerm(@PathVariable Integer id) {
         boolean b = permissionService.deletePermission(id);
@@ -69,14 +72,14 @@ public class PermissionController {
         return ConResult.error();
     }
 
-    @GetMapping("/tree")
+    @GetMapping("sys/perm/tree")
     @ResponseBody
     public PermNode permTree() {
         List<SysPermission> permissionList = permissionService.findPermissionList();
         return PermTreeUtils.permTree(permissionList);
     }
 
-    @PostMapping("/add")
+    @PostMapping("sys/perm")
     @ResponseBody
     public ConResult addPerm(SysPermission permission){
         permission.setId(null);
@@ -86,7 +89,7 @@ public class PermissionController {
         return ConResult.success();
     }
 
-    @GetMapping("/menuList")
+    @GetMapping("sys/perm/menuList")
     @ResponseBody
     public List<SysPermission> permMenuList() {
         List<SysPermission> permissionList = permissionService.findPermMenuList();

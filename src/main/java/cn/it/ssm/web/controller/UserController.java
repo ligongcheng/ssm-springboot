@@ -9,12 +9,11 @@ import cn.it.ssm.common.vo.OnlineUserVO;
 import cn.it.ssm.common.vo.PageListVO;
 import cn.it.ssm.common.vo.TableRequest;
 import cn.it.ssm.config.CaptchaFactory;
+import cn.it.ssm.domain.auto.SysRole;
 import cn.it.ssm.domain.auto.SysUser;
 import cn.it.ssm.domain.vo.SysUserWithRole;
 import cn.it.ssm.service.manager.IUserService;
 import cn.it.ssm.service.manager.impl.SessionService;
-import com.github.botaruibo.xvcode.generator.Generator;
-import com.github.botaruibo.xvcode.generator.GifVCGenerator;
 import com.github.botaruibo.xvcode.generator.PngVCGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +46,23 @@ public class UserController extends BaseController {
     @Autowired
     private IUserService userService;
 
+    @RequestMapping("/")
+    public String index() {
+        return "index";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "/sys/login";
+    }
+
+    @RequiresPermissions("sys:user:list")
+    @GetMapping("/sys/userPage")
+    public String user() {
+        return "/sys/user";
+    }
+
+
     /**
      * 用户登录
      *
@@ -54,7 +70,7 @@ public class UserController extends BaseController {
      * @return
      */
     @Log("用户登录")
-    @PostMapping("/login/userlogin")
+    @PostMapping("/sys/login")
     @ResponseBody
     public ConResult login(String username, String password, String code) {
         ConResult rs = ConResult.error();
@@ -80,7 +96,9 @@ public class UserController extends BaseController {
                 user.setLastLoginIp(session.getHost());
                 user.setLastLoginTime(session.getLastAccessTime());
                 userService.updateUserLoginInfo(user);
+                SysRole role = userService.findRoles(username).get(0);
                 session.setAttribute("user", user);
+                session.setAttribute("role", role);
                 result = true;
             }
             log.info("用户[{}]:登录系统成功", username);
@@ -128,7 +146,8 @@ public class UserController extends BaseController {
      * @param user
      * @return
      */
-    @PostMapping("/login/userregister")
+    @PostMapping("/sys/user/register")
+    @RequiresPermissions("sys:user:add")
     @ResponseBody
     public ConResult register(@Valid SysUser user) {
         ConResult rs = ConResult.error();
@@ -159,36 +178,55 @@ public class UserController extends BaseController {
      * @throws Exception
      */
     //@Cacheable
-    @GetMapping("/user/{id}")
+    @GetMapping("/sys/user/{id}")
+    @RequiresPermissions("sys:user:list")
     @ResponseBody
-    public SysUser findByUserId(@PathVariable("id") String id) throws Exception {
-        ArrayList<Integer> list = new ArrayList<>();
-        list.sort(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return 0;
-            }
-        });
+    public SysUser findByUserId(@PathVariable("id") String id) {
         return userService.findByUserId(id);
     }
 
+    /**
+     * 修改用户信息
+     * @param user
+     * @return
+     */
     //@CacheEvict(key = "#root.targetClass.name + ':getUserPageList:@'")
-    @PutMapping("/user")
+    @RequiresPermissions("sys:user:update")
+    @PutMapping("/sys/user")
     @ResponseBody
     public ConResult editUserInfo(SysUserWithRole user) {
         if (userService.editUserInfo(user)) return ConResult.success();
         return ConResult.error();
     }
 
-    @DeleteMapping("/userList")
+    @DeleteMapping("/sys/user/{id}")
+    @RequiresPermissions("sys:user:delete")
     @ApiLimit("10,2") //每个用户，5秒，只能调用6次
     @ResponseBody
-    public ConResult deleteUserList(@RequestBody(required = false) List<SysUser> userList) {
-        if (userList == null || userList.size() == 0) return ConResult.error();
-        if (userService.deleteUserList(userList)) {
-            return ConResult.success();
-        }
-        return ConResult.error();
+    public ConResult deleteUser(@PathVariable String id) {
+        userService.deleteUser(id);
+        return ConResult.success();
+    }
+
+    @PutMapping("/sys/user/{id}/disable")
+    @RequiresPermissions("sys:user:update")
+    @ResponseBody
+    public ConResult disableUser(@PathVariable String id) {
+        userService.disableUser(id);
+        return ConResult.success();
+    }
+
+    @PutMapping("/sys/user/{id}/enable")
+    @RequiresPermissions("sys:user:update")
+    @ResponseBody
+    public ConResult enableUser(@PathVariable String id) {
+        userService.enableUser(id);
+        return ConResult.success();
+    }
+
+    @GetMapping("/sys/onlinePage")
+    public String onlinePage() {
+        return "/sys/onlinePage";
     }
 
     /**
@@ -196,7 +234,7 @@ public class UserController extends BaseController {
      *
      * @return
      */
-    @RequestMapping("/online")
+    @GetMapping("/sys/online")
     @ResponseBody
     public List<OnlineUserVO> onlineUser() {
         List<OnlineUserVO> onlineUser = sessionService.getOnlineUser();
@@ -208,7 +246,7 @@ public class UserController extends BaseController {
      *
      * @param id
      */
-    @RequestMapping("/forcelogout")
+    @RequestMapping("/sys/forcelogout")
     @ResponseBody
     public void forcelogout(String id) {
         sessionService.kickOut(id);
@@ -219,10 +257,10 @@ public class UserController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("user:list")
+    @RequiresPermissions("sys:user:list")
     @Log("获取用户列表")
-    @ApiLimit("5,6") //每个用户，5秒，只能调用6次
-    @GetMapping("/userList")
+    @ApiLimit("3,1") //每个用户，5秒，只能调用6次
+    @GetMapping("/sys/user")
     @ResponseBody
     public PageListVO getUserWithRoleList(TableRequest tableRequest) {
         PageListVO pageListVO = userService.findUserWithRoleList(tableRequest);

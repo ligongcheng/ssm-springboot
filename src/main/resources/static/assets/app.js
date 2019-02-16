@@ -2,21 +2,27 @@
 toastr.options.timeOut = 3000;
 //全局的ajax访问设置
 $.ajaxSetup({
-
-    complete: function (XMLHttpRequest, textStatus) {
+    dataType: "json",
+    complete: function (XMLHttpRequest) {
+        var date = undefined;
+        try {
+            date = JSON.parse(XMLHttpRequest.responseText);
+        } catch (e) {
+        }
+        var status = XMLHttpRequest.status;
         //通过code取得操作状态，并提示
-        XMLHttpRequest.success(function (da) {
-            if (da.code == 200) {
+        if (date != undefined){
+            if (date.code == 200) {
                 toastr.success('操作成功');
-            } else if (da.code == 400) {
-                toastr.error(da.msg)
+            } else if (date.code != undefined && date.msg != undefined){
+                toastr.error(date.msg)
             }
-        });
+        }
         //通过XMLHttpRequest取得响应头，sessionstatus，
         var sessionstatus = XMLHttpRequest.getResponseHeader("session-status");
         if (sessionstatus === "timeout") {
             //如果超时就处理 ，指定要跳转的页面(比如登陆页)
-            window.top.location.href = "/login.html?_" + new Date().getTime();
+            window.top.location.href = "/login?_" + new Date().getTime();
         }
     }
 });
@@ -24,7 +30,7 @@ $.ajaxSetup({
 function permTree(ele, roleId) {
     var rolePermIds;
     $.ajax({
-        url: "/rolePermIds",
+        url: "/sys/rolePermIds",
         type: "get",
         data: {id: roleId},
         async: false,
@@ -33,7 +39,7 @@ function permTree(ele, roleId) {
         }
     });
     $.ajax({
-        url: "/perm/tree",
+        url: "/sys/perm/tree",
         type: "get",
         success: function (da) {
             $(ele).jstree("destroy");
@@ -42,6 +48,9 @@ function permTree(ele, roleId) {
                     'data': da.children
                 },
                 "plugins": ["checkbox", "wholerow"],
+                "checkbox": {
+                    "three_state": false // 取消选择父节点后选中所有子节点
+                }
                 /*'state': {
                     "opened": true
                 }*/
@@ -58,7 +67,7 @@ function loadUser() {
 
     var $userTable = $('#userTable');
     var settings = {
-        url: "/userList",
+        url: "/sys/user",
         singleSelect : true,
         queryParams: function (params) {
             return {
@@ -123,19 +132,17 @@ function loadUser() {
     //var $modal = $('#modal');
 
     $remove.click(function () {
-        var rows = getRowSelections("#userTable");
+        var ids = getIdSelections("#userTable");
         var s = function () {
             $.ajax({
-                url: "/userList",
-                contentType: "application/json",
-                data: JSON.stringify(rows),
+                url: "/sys/user/" + ids[0] ,
                 type: "delete",
                 success: function (da) {
                     $userTable.bootstrapTable("refresh");
                 }
             });
         };
-        if (rows.length !== 0) {
+        if (ids.length !== 0) {
             tip.confirm(s);
         } else {
             toastr.warning('请选择数据');
@@ -176,7 +183,7 @@ function loadUser() {
 
     $userEditModal.find('#submit').click(function () {
         $.ajax({
-            url: "/user",
+            url: "/sys/user",
             data: $("#userEditForm").serialize(),
             type: "put",
             success: function (da) {
@@ -192,7 +199,7 @@ function loadUser() {
 
     $addUserModal.find("#doAddUser").click(function () {
         $.ajax({
-            url: "/login/userregister",
+            url: "/sys/login/register",
             data: $("#addUserForm").serialize(),
             type: "post",
             success: function (da) {
@@ -207,7 +214,7 @@ function loadUser() {
 function loadRoleList() {
     var roleList = [];
     $.ajax({
-        url: "/roleList",
+        url: "/sys/role",
         async: false,
         type: "get",
         success: function (da) {
@@ -220,7 +227,7 @@ function loadRoleList() {
 function loadPerm() {
     var $permTable = $('#permTable');
     var settings = {
-        url: "/perm/list",
+        url: "/sys/perm",
         singleSelect : true,
         queryParams: function (params) {
             return {
@@ -276,7 +283,7 @@ function loadPerm() {
         var rows = getIdSelections("#permTable");
         var s = function () {
             $.ajax({
-                url: "/perm/" + rows[0],
+                url: "/sys/perm/" + rows[0],
                 type: "delete",
                 success: function (da) {
                     $permTable.bootstrapTable("refresh");
@@ -297,7 +304,7 @@ function loadPerm() {
         $parentid.empty();
         $parentid.append($('<option value="0">根节点</option>'));
         $.ajax({
-            url : "/perm/menuList",
+            url : "/sys/perm/menuList",
             type : "get",
             success : function (item) {
                 $.each(item,function (i, n) {
@@ -309,7 +316,7 @@ function loadPerm() {
     });
     $permModal.find("#submit").click(function () {
         $.ajax({
-            url : "/perm/add",
+            url : "/sys/perm",
             type : "post",
             data : $("#permForm").serialize(),
             success : function () {
@@ -328,7 +335,7 @@ function loadPerm() {
         if (rows.length>0) {
             $editParentid.append($('<option value="0">根节点</option>'));
             $.ajax({
-                url : "/perm/menuList",
+                url : "/sys/perm/menuList",
                 type : "get",
                 success : function (item) {
                     $.each(item,function (i, n) {
@@ -339,7 +346,7 @@ function loadPerm() {
                 }
             });
             $.ajax({
-                url : "/perm/" + rows[0],
+                url : "/sys/perm/" + rows[0],
                 type : "get",
                 success : function (res) {
                     $("#editPermType").find('option[value="' + res.type + '"]').prop("selected",true);
@@ -360,7 +367,7 @@ function loadPerm() {
     $editPermModal.find("#editSubmit").click(function () {
         var rows = getIdSelections($permTable);
         $.ajax({
-            url : "/perm/" + rows[0],
+            url : "/sys/perm/" + rows[0],
             type : "put",
             data : $("#editPermForm").serialize(),
             success : function () {
@@ -374,7 +381,7 @@ function loadPerm() {
 function loadRole() {
     var $role = $('#roleTable');
     var settings = {
-        url: "/roleList",
+        url: "/sys/role",
         singleSelect : true,
         sidePagination: "client",
         queryParams: function (params) {
@@ -423,7 +430,7 @@ function loadRole() {
     });
     $addRoleModal.find("#addSubmit").click(function () {
         $.ajax({
-            url: "/role",
+            url: "/sys/role",
             data: $("#roleAddForm").serialize(),
             type: "put",
             success: function (da) {
@@ -456,7 +463,7 @@ function loadRole() {
     });
     $editRoleModal.find("#submit").click(function () {
         $.ajax({
-            url: "/role",
+            url: "/sys/role",
             data: $("#roleEditForm").serialize() + "&rolePermIds=" + $("#rolePermTree").jstree(true).get_selected(false),
             type: "post",
             success: function (da) {
@@ -471,7 +478,7 @@ function loadRole() {
         var rows = getRowSelections("#roleTable");
         var s = function () {
             $.ajax({
-                url: "/role",
+                url: "/sys/role",
                 contentType: "application/json",
                 data: JSON.stringify(rows),
                 type: "delete",
@@ -543,7 +550,7 @@ function loadOnline() {
             visible: false
         }],
         //data: online
-        url: "/online"
+        url: "/sys/online"
     });
 
     //var $table = $("#online");
@@ -558,7 +565,7 @@ function loadOnline() {
         var ids = getIdSelections("#online");
         if (ids.length != 0) {
             $.ajax({
-                url: "/forcelogout",
+                url: "/sys/forcelogout",
                 data: {id: ids.toString()},
                 type: "post",
                 success: function () {
@@ -586,7 +593,7 @@ function dateFormatter(time) {
 
 function loadapicount() {
     $.ajax({
-        url: "/apitimelist",
+        url: "/sys/apitimelist",
         type: "post",
         success: function (data) {
             $.each(data, function (i, n) {
@@ -596,7 +603,7 @@ function loadapicount() {
     });
 
     $.ajax({
-        url: "/apiurilist",
+        url: "/sys/apiurilist",
         type: "post",
         success: function (data) {
             $.each(data, function (i, n) {
@@ -608,7 +615,7 @@ function loadapicount() {
     var apiresult;
     $("#btn-api").click(function () {
         $.ajax({
-            url: "/apimonitor",
+            url: "/sys/apimonitor",
             type: "post",
             data: $("#formSearch").serialize(),
             success: function (data) {
@@ -646,7 +653,7 @@ function loadApiPage() {
     };
 
     $('#api').bootstrapTable({
-        url: '/getAllUrlMap', // 请求后台的URL（*）
+        url: '/sys/getAllUrlMap', // 请求后台的URL（*）
         method: 'get', // 请求方式（*）
         // toolbar: '#toolbar', //工具按钮用哪个容器
         striped: true, // 是否显示行间隔色
@@ -828,7 +835,7 @@ var $ExTable = (function () {
         sidePagination: "server",
         pageNumber: 1,
         pageSize: 5,
-        pageList: [5, 10, 25, 50, 100],
+        pageList: [5, 15, 25, 50, 100],
         search: true,
         strictSearch: false,
         showColumns: true,

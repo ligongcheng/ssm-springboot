@@ -20,13 +20,18 @@ public class RoleController {
     @Autowired
     private IRoleService roleService;
 
-    @RequestMapping("/roleList")
+    @GetMapping("sys/rolePage")
+    public String role() {
+        return "sys/role";
+    }
+
+    @GetMapping("sys/role")
     @ResponseBody
     public List<SysRole> roleList() {
         return roleService.findAllRoleList();
     }
 
-    @PutMapping("/role")
+    @PutMapping("sys/role")
     @ResponseBody
     public ConResult addRole(SysRole role) {
         if (role == null) return ConResult.error();
@@ -37,7 +42,7 @@ public class RoleController {
         return ConResult.error();
     }
 
-    @PostMapping("/role")
+    @PostMapping("sys/role")
     @ResponseBody
     public ConResult editRole(SysRole role, @RequestParam(required = false) Integer[] rolePermIds) {
         roleService.editRole(role);
@@ -48,7 +53,7 @@ public class RoleController {
         return ConResult.success();
     }
 
-    @DeleteMapping("/role")
+    @DeleteMapping("sys/role")
     @ResponseBody
     public ConResult deleteRole(@RequestBody List<SysRole> role) {
         if (role == null || role.size() == 0) return ConResult.error();
@@ -63,7 +68,7 @@ public class RoleController {
         return ConResult.error();
     }
 
-    @RequestMapping("/rolePermIds")
+    @GetMapping("sys/rolePermIds")
     @ResponseBody
     public Integer[] getRolePerms(SysRole sysRole) {
         List<SysPermission> rolePermsList = roleService.findRolePermsByRoleId(sysRole);

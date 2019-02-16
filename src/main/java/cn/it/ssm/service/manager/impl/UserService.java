@@ -168,5 +168,29 @@ public class UserService implements IUserService {
         return true;
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public int deleteUser(String id) {
+        return sysUserMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public int disableUser(String id) {
+        SysUser user = new SysUser();
+        user.setId(id);
+        user.setIsDelete(1);
+        return sysUserMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public int enableUser(String id) {
+        SysUser user = new SysUser();
+        user.setId(id);
+        user.setIsDelete(0);
+        return sysUserMapper.updateByPrimaryKeySelective(user);
+    }
+
 
 }

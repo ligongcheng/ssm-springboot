@@ -1,5 +1,6 @@
 package cn.it.ssm.config;
 
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import cn.it.ssm.common.shiro.cache.ShiroRedisCacheManager;
 import cn.it.ssm.common.shiro.filter.ExtAuthenticationFilter;
 import cn.it.ssm.common.shiro.filter.KickoutSessionControlFilter;
@@ -36,6 +37,11 @@ public class ShiroConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
 
+    @Bean
+    public ShiroDialect shiroDialect() {
+        return new ShiroDialect();
+    }
+
     /**
      * ShiroFilterFactoryBean 处理拦截资源文件过滤器
      * 1,配置shiro安全管理器接口securityManage;
@@ -65,8 +71,9 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/includ/**", "anon");
         filterChainDefinitionMap.put("/plugins/**", "anon");
         filterChainDefinitionMap.put("/gifCode", "anon");
-        filterChainDefinitionMap.put("/login.html", "anon");
-        filterChainDefinitionMap.put("/kickout.html", "anon");
+        filterChainDefinitionMap.put("/login", "anon");
+        filterChainDefinitionMap.put("/sys/login", "anon");
+        filterChainDefinitionMap.put("/kickout", "anon");
 
 
         filterChainDefinitionMap.put("/logout", "logout");
@@ -77,12 +84,12 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/**", "kickOut,extAuthc");
 
         // 登录url，如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
-        shiroFilterFactoryBean.setLoginUrl("/login.html");
+        shiroFilterFactoryBean.setLoginUrl("/login");
         // 登录成功后要跳转的链接
-        shiroFilterFactoryBean.setSuccessUrl("/index.html");
+        shiroFilterFactoryBean.setSuccessUrl("/");
 
         //未授权界面;
-        shiroFilterFactoryBean.setUnauthorizedUrl("/login.html");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/login");
 
         shiroFilterFactoryBean.setFilters(filterMap);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
@@ -130,9 +137,9 @@ public class ShiroConfig {
         //userRealm.setCacheManager(ehCacheManager());
         userRealm.setCredentialsMatcher(credentialsMatcher());
         userRealm.setCachingEnabled(true);
-        userRealm.setAuthenticationCachingEnabled(true);
+        userRealm.setAuthenticationCachingEnabled(false);
         userRealm.setAuthenticationCacheName(ShiroConst.AUTHENTICATION_CACHE);
-        userRealm.setAuthorizationCachingEnabled(true);
+        userRealm.setAuthorizationCachingEnabled(false);
         userRealm.setAuthorizationCacheName(ShiroConst.AUTHENTIZATION_CACHE);
         return userRealm;
     }

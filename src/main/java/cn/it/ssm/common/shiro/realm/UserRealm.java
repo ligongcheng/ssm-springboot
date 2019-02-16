@@ -98,11 +98,17 @@ public class UserRealm extends AuthorizingRealm {
     }
 
     public void clearAllCachedAuthorizationInfo() {
-        getAuthorizationCache().clear();
+        try {
+            getAuthorizationCache().clear();
+        } catch (Exception e) {
+        }
     }
 
     public void clearAllCachedAuthenticationInfo() {
-        getAuthenticationCache().clear();
+        try {
+            getAuthenticationCache().clear();
+        } catch (Exception e) {
+        }
     }
 
     public void clearAllCache() {
