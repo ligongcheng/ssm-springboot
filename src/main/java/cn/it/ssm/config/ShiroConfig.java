@@ -113,14 +113,14 @@ public class ShiroConfig {
     public ShiroRedisCacheManager shiroRedisCacheManager() {
         RedisTemplate redisTemplate = RedisHolder.getShiroRedisTemplate();
         ShiroRedisCacheManager redisCacheManager = new ShiroRedisCacheManager(redisTemplate);
-        redisCacheManager.setGlobalTimeout(1800);
+        redisCacheManager.setGlobalTimeout(36000);
         HashMap<String, Long> map = new HashMap<>();
         //设置各种缓存的有效时间,单位为秒
-        map.put(ShiroConst.SESSION_CACHE, 600L);
-        map.put(ShiroConst.AUTHENTICATION_CACHE, 600L);
-        map.put(ShiroConst.AUTHENTIZATION_CACHE, 600L);
+        map.put(ShiroConst.SESSION_CACHE, 36000L);
+        map.put(ShiroConst.AUTHENTICATION_CACHE, 36000L);
+        map.put(ShiroConst.AUTHENTIZATION_CACHE, 36000L);
         map.put(ShiroConst.KICKOUT_SESSION, 36000L);
-        map.put(ShiroConst.PASSWORDRETRY_CACHE, 120L);
+        map.put(ShiroConst.PASSWORDRETRY_CACHE, 360L);
         redisCacheManager.setTimeMap(map);
         return redisCacheManager;
     }
@@ -219,10 +219,10 @@ public class ShiroConfig {
         sessionManager.setSessionIdUrlRewritingEnabled(false);// 去掉 url中sessionId后缀
         sessionManager.setSessionDAO(sessionDAO());
         // 全局会话超时时间，单位：毫秒  20m=1200000, 30m=1800000, 60m=3600000 3天：3*24*60*60*1000
-        sessionManager.setGlobalSessionTimeout(1800000); //20m
+        sessionManager.setGlobalSessionTimeout(36000000); //20m
         sessionManager.setDeleteInvalidSessions(true);
         sessionManager.setSessionValidationSchedulerEnabled(false);
-        sessionManager.setSessionValidationInterval(1800000);
+        sessionManager.setSessionValidationInterval(600000);
         return sessionManager;
     }
 
@@ -246,7 +246,7 @@ public class ShiroConfig {
         filter.setKickoutUrl("/kickout.html");
         //被踢出后重定向到的地址；
         filter.setSessionDAO(sessionDAO());
-        filter.setMaxSession(2);
+        filter.setMaxSession(5);
         return filter;
     }
 

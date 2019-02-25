@@ -184,6 +184,7 @@
     </dependencies>
 
     <build>
+        <finalName>ssm</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

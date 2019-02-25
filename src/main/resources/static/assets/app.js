@@ -616,7 +616,7 @@ function loadapicount() {
     $("#btn-api").click(function () {
         $.ajax({
             url: "/sys/apimonitor",
-            type: "post",
+            type: "get",
             data: $("#formSearch").serialize(),
             success: function (data) {
                 apiresult = data;

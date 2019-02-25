@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Controller
 @Slf4j
@@ -46,20 +48,20 @@ public class UserController extends BaseController {
     @Autowired
     private IUserService userService;
 
-    @RequestMapping("/")
+    @RequestMapping({"/", "/index"})
     public String index() {
         return "index";
     }
 
     @GetMapping("/login")
     public String login() {
-        return "/sys/login";
+        return "sys/login";
     }
 
     @RequiresPermissions("sys:user:list")
-    @GetMapping("/sys/userPage")
+    @GetMapping("sys/userPage")
     public String user() {
-        return "/sys/user";
+        return "sys/user";
     }
 
 
@@ -70,7 +72,7 @@ public class UserController extends BaseController {
      * @return
      */
     @Log("用户登录")
-    @PostMapping("/sys/login")
+    @PostMapping("sys/login")
     @ResponseBody
     public ConResult login(String username, String password, String code) {
         ConResult rs = ConResult.error();
@@ -86,7 +88,7 @@ public class UserController extends BaseController {
             Session session = super.getSession();
             String sessionCode = (String) session.getAttribute("_code");
             if (!code.toLowerCase().equals(sessionCode)) {
-                return rs.addMsg("验证码错误！");
+                return rs.addMsg("验证码错误,请重新输入");
             }
             UsernamePasswordToken token = new UsernamePasswordToken(username, password);
             subject.login(token);
@@ -146,7 +148,7 @@ public class UserController extends BaseController {
      * @param user
      * @return
      */
-    @PostMapping("/sys/user/register")
+    @PostMapping("sys/user/register")
     @RequiresPermissions("sys:user:add")
     @ResponseBody
     public ConResult register(@Valid SysUser user) {
@@ -178,7 +180,7 @@ public class UserController extends BaseController {
      * @throws Exception
      */
     //@Cacheable
-    @GetMapping("/sys/user/{id}")
+    @GetMapping("sys/user/{id}")
     @RequiresPermissions("sys:user:list")
     @ResponseBody
     public SysUser findByUserId(@PathVariable("id") String id) {
@@ -192,14 +194,14 @@ public class UserController extends BaseController {
      */
     //@CacheEvict(key = "#root.targetClass.name + ':getUserPageList:@'")
     @RequiresPermissions("sys:user:update")
-    @PutMapping("/sys/user")
+    @PutMapping("sys/user")
     @ResponseBody
     public ConResult editUserInfo(SysUserWithRole user) {
         if (userService.editUserInfo(user)) return ConResult.success();
         return ConResult.error();
     }
 
-    @DeleteMapping("/sys/user/{id}")
+    @DeleteMapping("sys/user/{id}")
     @RequiresPermissions("sys:user:delete")
     @ApiLimit("10,2") //每个用户，5秒，只能调用6次
     @ResponseBody
@@ -208,7 +210,7 @@ public class UserController extends BaseController {
         return ConResult.success();
     }
 
-    @PutMapping("/sys/user/{id}/disable")
+    @PutMapping("sys/user/{id}/disable")
     @RequiresPermissions("sys:user:update")
     @ResponseBody
     public ConResult disableUser(@PathVariable String id) {
@@ -216,7 +218,7 @@ public class UserController extends BaseController {
         return ConResult.success();
     }
 
-    @PutMapping("/sys/user/{id}/enable")
+    @PutMapping("sys/user/{id}/enable")
     @RequiresPermissions("sys:user:update")
     @ResponseBody
     public ConResult enableUser(@PathVariable String id) {
@@ -224,9 +226,9 @@ public class UserController extends BaseController {
         return ConResult.success();
     }
 
-    @GetMapping("/sys/onlinePage")
+    @GetMapping("sys/onlinePage")
     public String onlinePage() {
-        return "/sys/onlinePage";
+        return "sys/onlinePage";
     }
 
     /**
@@ -234,7 +236,7 @@ public class UserController extends BaseController {
      *
      * @return
      */
-    @GetMapping("/sys/online")
+    @GetMapping("sys/online")
     @ResponseBody
     public List<OnlineUserVO> onlineUser() {
         List<OnlineUserVO> onlineUser = sessionService.getOnlineUser();
@@ -246,7 +248,7 @@ public class UserController extends BaseController {
      *
      * @param id
      */
-    @RequestMapping("/sys/forcelogout")
+    @RequestMapping("sys/forcelogout")
     @ResponseBody
     public void forcelogout(String id) {
         sessionService.kickOut(id);
@@ -260,7 +262,7 @@ public class UserController extends BaseController {
     @RequiresPermissions("sys:user:list")
     @Log("获取用户列表")
     @ApiLimit("3,1") //每个用户，5秒，只能调用6次
-    @GetMapping("/sys/user")
+    @GetMapping("sys/user")
     @ResponseBody
     public PageListVO getUserWithRoleList(TableRequest tableRequest) {
         PageListVO pageListVO = userService.findUserWithRoleList(tableRequest);

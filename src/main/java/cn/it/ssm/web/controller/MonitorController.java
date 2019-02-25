@@ -37,14 +37,14 @@ public class MonitorController implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
-    @GetMapping("/sys/apiCountPage")
+    @GetMapping("sys/apiCountPage")
     public String apiCount(){
-        return "/sys/apiCountPage";
+        return "sys/apiCountPage";
     }
 
-    @GetMapping("/sys/apiInfoPage")
+    @GetMapping("sys/apiInfoPage")
     public String apiInfo(){
-        return "/sys/apiInfoPage";
+        return "sys/apiInfoPage";
     }
 
     /**
@@ -53,7 +53,7 @@ public class MonitorController implements ApplicationContextAware {
      * @param request
      * @return
      */
-    @RequestMapping("/sys/cacheAllUrl")
+    @RequestMapping("sys/cacheAllUrl")
     @ResponseBody
     public Set<String> getAllUrl(HttpServletRequest request) {
         final Set<String> result = new HashSet<String>();
@@ -84,7 +84,7 @@ public class MonitorController implements ApplicationContextAware {
      * @param request
      * @return
      */
-    @RequestMapping("/sys/getAllUrlMap")
+    @RequestMapping("sys/getAllUrlMap")
     @ResponseBody
     public ArrayList<RequestMappingDetail> getAllUrlMap(HttpServletRequest request) {
         ArrayList<RequestMappingDetail> requestMappingDetail = new ArrayList<RequestMappingDetail>();
@@ -136,7 +136,7 @@ public class MonitorController implements ApplicationContextAware {
      *
      * @return
      */
-    @RequestMapping("/sys/apitimelist")
+    @RequestMapping("sys/apitimelist")
     @ResponseBody
     public Integer[] getApiTime() {
         return RedisConstants.PRECISION;
@@ -148,7 +148,7 @@ public class MonitorController implements ApplicationContextAware {
      *
      * @return
      */
-    @RequestMapping("/sys/apiurilist")
+    @RequestMapping("sys/apiurilist")
     @ResponseBody
     public Set<String> getApiList() {
         Set<String> apiList = stringRedisTemplate.opsForZSet().range(ApiEnum.API_URI.getApiValue(), 0, -1);
@@ -164,14 +164,14 @@ public class MonitorController implements ApplicationContextAware {
      * @return
      * @throws ParseException
      */
-    @RequestMapping("/sys/apimonitor")
+    @RequestMapping("sys/apimonitor")
     @ResponseBody
     public ArrayList<ApiMonitorVO> getApiMonitor(String apitime, String apilist) throws ParseException {
         if (apitime == null || apilist == null) {
             return null;
         }
         ArrayList<ApiMonitorVO> monitorVOArrayList = new ArrayList<>();
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         //count:18000:/getAllUrlMap
         Map<Object, Object> map = stringRedisTemplate.opsForHash().entries(ApiEnum.API_COUNT_PREFIX.getApiValue() + apitime + ":" + apilist);
@@ -205,7 +205,7 @@ public class MonitorController implements ApplicationContextAware {
 
     }
 
-    @RequestMapping("/sys/redisInfo")
+    @RequestMapping("sys/redisInfo")
     @ResponseBody
     public Properties getRedisInfo(){
         Properties info = stringRedisTemplate.execute(new RedisCallback<Properties>() {
