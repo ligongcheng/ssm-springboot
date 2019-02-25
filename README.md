@@ -9,7 +9,7 @@
 
 # 技术概览
 
-#### 后端
+### 后端
 - 基础框架：Spring Boot 2
 
 - 持久层框架：Mybatis
@@ -26,7 +26,7 @@
 
 - 其他：fastjson，poi，javacsv，quartz等。
 
-#### 前端
+### 前端
  
 - 基础框架：Bootstrap 3
 
@@ -38,7 +38,7 @@
 
 - 表格插件：BootstrapTable
 
-#### 开发环境
+### 开发环境
 
 - 语言：Java 8
 
