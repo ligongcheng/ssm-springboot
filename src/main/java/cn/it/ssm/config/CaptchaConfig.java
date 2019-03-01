@@ -1,26 +1,21 @@
 package cn.it.ssm.config;
 
-import com.github.botaruibo.xvcode.generator.Generator;
-import com.github.botaruibo.xvcode.generator.PngVCGenerator;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@EnableConfigurationProperties(CaptchaProperties.class)
 public class CaptchaConfig {
 
-    //TODO 必须配置 才能使用验证码
-    @Value("${captcha.width}")
-    private Integer width;
+    private CaptchaProperties captchaProperties;
 
-    @Value("${captcha.height}")
-    private Integer height;
-
-    @Value("${captcha.len}")
-    private Integer len;
+    public CaptchaConfig(CaptchaProperties captchaProperties) {
+        this.captchaProperties = captchaProperties;
+    }
 
     @Bean
     public CaptchaFactory captchaFactory() {
-        return new CaptchaFactory(width, height, len);
+        return new CaptchaFactory(captchaProperties.width, captchaProperties.height, captchaProperties.len);
     }
 }

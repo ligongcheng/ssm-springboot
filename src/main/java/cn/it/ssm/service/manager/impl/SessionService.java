@@ -3,6 +3,8 @@ package cn.it.ssm.service.manager.impl;
 import cn.it.ssm.common.vo.OnlineUserVO;
 import cn.it.ssm.domain.auto.SysUser;
 import cn.it.ssm.service.manager.ISessionService;
+import cn.it.ssm.web.ExceptionHandler.AppException;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -51,6 +53,9 @@ public class SessionService implements ISessionService {
 
     @Override
     public void kickOut(String id){
+        if (SecurityUtils.getSubject().getSession().getId().equals(id)) {
+            throw new AppException("不能下线自己的账号");
+        }
         Session session = null;
         try {
             session = sessionDAO.readSession(id);

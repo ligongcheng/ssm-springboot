@@ -139,7 +139,7 @@ public class ShiroConfig {
         userRealm.setCachingEnabled(true);
         userRealm.setAuthenticationCachingEnabled(false);
         userRealm.setAuthenticationCacheName(ShiroConst.AUTHENTICATION_CACHE);
-        userRealm.setAuthorizationCachingEnabled(false);
+        userRealm.setAuthorizationCachingEnabled(true);
         userRealm.setAuthorizationCacheName(ShiroConst.AUTHENTIZATION_CACHE);
         return userRealm;
     }

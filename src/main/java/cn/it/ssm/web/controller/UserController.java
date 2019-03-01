@@ -55,6 +55,9 @@ public class UserController extends BaseController {
 
     @GetMapping("/login")
     public String login() {
+        if (getSubject().isAuthenticated() || getSubject().isRemembered()) {
+            return "redirect:/";
+        }
         return "sys/login";
     }
 
@@ -251,6 +254,7 @@ public class UserController extends BaseController {
     @RequestMapping("sys/forcelogout")
     @ResponseBody
     public void forcelogout(String id) {
+
         sessionService.kickOut(id);
     }
 

@@ -77,7 +77,8 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
         }
     }
 
-    @Override    public int size() {
+    @Override
+    public int size() {
         log.debug("size");
         return keys().size();
     }

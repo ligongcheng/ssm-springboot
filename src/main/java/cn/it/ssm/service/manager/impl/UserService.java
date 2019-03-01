@@ -9,6 +9,7 @@ import cn.it.ssm.mapper.SysUserMapperFix;
 import cn.it.ssm.mapper.auto.SysUserMapper;
 import cn.it.ssm.mapper.auto.SysUserRoleMapper;
 import cn.it.ssm.service.manager.IUserService;
+import cn.it.ssm.web.ExceptionHandler.AccountChangeException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -171,6 +172,18 @@ public class UserService implements IUserService {
     @Override
     @Transactional(readOnly = false)
     public int deleteUser(String id) {
+        SysUserRoleExample example = new SysUserRoleExample();
+        example.createCriteria().andSysRoleIdEqualTo(1);
+        //查询系统管理员个数，<= 1 则禁止删除管理员
+        List<SysUserRole> roles = sysUserRoleMapper.selectByExample(example);
+        if (roles.size() < 2) {
+            throw new AccountChangeException("不能删除唯一的系统管理员");
+        }
+        //删除用户角色关联表信息
+        SysUserRoleExample example1 = new SysUserRoleExample();
+        example1.createCriteria().andSysUserIdEqualTo(id);
+        sysUserRoleMapper.deleteByExample(example1);
+        //删除用户表用户信息
         return sysUserMapper.deleteByPrimaryKey(id);
     }
 

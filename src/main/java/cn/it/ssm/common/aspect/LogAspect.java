@@ -6,7 +6,6 @@ import cn.it.ssm.common.shiro.util.IPUtils;
 import cn.it.ssm.common.shiro.util.ShiroUtils;
 import cn.it.ssm.common.shiro.util.SysLog;
 import cn.it.ssm.domain.auto.SysUser;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -46,14 +45,10 @@ public class LogAspect {
     }
 
     @Around("pointcut()")
-    public Object around(ProceedingJoinPoint point) {
+    public Object around(ProceedingJoinPoint point) throws Throwable {
         Object result = null;
         long beginTime = System.currentTimeMillis();
-        try {
-            result = point.proceed();
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
+        result = point.proceed();
         long time = System.currentTimeMillis() - beginTime;
         saveLog(point, time);
         return result;

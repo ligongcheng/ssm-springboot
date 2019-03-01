@@ -40,16 +40,12 @@ public class ApiLimitAspect {
     }
 
     @Around("pointcut()")
-    public Object around(ProceedingJoinPoint point) {
+    public Object around(ProceedingJoinPoint point) throws Throwable {
         Object result = null;
         boolean isLimited = isLimited(point);
         if (!isLimited) {
-            try {
-                result = point.proceed();
-                return result;
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
+            result = point.proceed();
+            return result;
         } else {
             throw new ApiLimitedException();
         }

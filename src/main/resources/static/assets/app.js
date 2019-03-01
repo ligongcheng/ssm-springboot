@@ -199,7 +199,7 @@ function loadUser() {
 
     $addUserModal.find("#doAddUser").click(function () {
         $.ajax({
-            url: "/sys/login/register",
+            url: "/sys/user/register",
             data: $("#addUserForm").serialize(),
             type: "post",
             success: function (da) {
