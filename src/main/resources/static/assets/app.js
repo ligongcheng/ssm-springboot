@@ -526,6 +526,10 @@ function loadOnline() {
             align: 'center',
             valign: 'middle'
         }, {
+            field: 'id',
+            title: '会话id',
+            visible: true
+        }, {
             field: 'principal',
             title: '用户名'
         }, {
@@ -545,9 +549,6 @@ function loadOnline() {
         }, {
             field: 'ip',
             title: '登录ip'
-        }, {
-            field: 'id',
-            visible: false
         }],
         //data: online
         url: "/sys/online"

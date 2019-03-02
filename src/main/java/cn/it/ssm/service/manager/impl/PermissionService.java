@@ -4,7 +4,9 @@ import cn.it.ssm.common.vo.PageListVO;
 import cn.it.ssm.common.vo.TableRequest;
 import cn.it.ssm.domain.auto.SysPermission;
 import cn.it.ssm.domain.auto.SysPermissionExample;
+import cn.it.ssm.domain.auto.SysRolePermissionExample;
 import cn.it.ssm.mapper.auto.SysPermissionMapper;
+import cn.it.ssm.mapper.auto.SysRolePermissionMapper;
 import cn.it.ssm.service.manager.IPermissionService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -14,7 +16,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -24,6 +25,9 @@ public class PermissionService implements IPermissionService {
 
     @Autowired
     private SysPermissionMapper sysPermissionMapper;
+
+    @Autowired
+    private SysRolePermissionMapper sysRolePermissionMapper;
 
     @Override
     public PageListVO findPermissionList(TableRequest tableRequest) {
@@ -52,7 +56,12 @@ public class PermissionService implements IPermissionService {
     @Override
     @Transactional(readOnly = false)
     public boolean deletePermission(Integer id) {
-        return sysPermissionMapper.deleteByPrimaryKey(id)>0;
+        //删除sys_role_perm表数据
+        SysRolePermissionExample example = new SysRolePermissionExample();
+        example.createCriteria().andSysPermissionIdEqualTo(id);
+        sysRolePermissionMapper.deleteByExample(example);
+        //删除sys_perm表数据
+        return sysPermissionMapper.deleteByPrimaryKey(id) > 0;
     }
 
     @Override
@@ -66,7 +75,7 @@ public class PermissionService implements IPermissionService {
     @Override
     @Transactional(readOnly = false)
     public boolean addPerm(SysPermission permission) {
-        return sysPermissionMapper.insertSelective(permission)>0;
+        return sysPermissionMapper.insertSelective(permission) > 0;
     }
 
     @Override
@@ -77,6 +86,6 @@ public class PermissionService implements IPermissionService {
     @Override
     @Transactional(readOnly = false)
     public Boolean editPermission(SysPermission permission) {
-        return sysPermissionMapper.updateByPrimaryKeySelective(permission)>0;
+        return sysPermissionMapper.updateByPrimaryKeySelective(permission) > 0;
     }
 }

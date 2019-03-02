@@ -8,6 +8,7 @@ import cn.it.ssm.common.vo.TableRequest;
 import cn.it.ssm.domain.auto.SysPermission;
 import cn.it.ssm.service.manager.IPermissionService;
 import cn.it.ssm.service.manager.IRoleService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
+@Slf4j
 public class PermissionController {
 
     @Autowired
@@ -86,6 +88,13 @@ public class PermissionController {
         permission.setCreateTime(new Date());
         permission.setUpdateTime(new Date());
         permissionService.addPerm(permission);
+        //添加权限时将权限分配给系统管理员
+        List<SysPermission> permissionList = permissionService.findPermissionList();
+        Integer[] permIds = new Integer[permissionList.size()];
+        for (int i = 0; i < permissionList.size(); i++) {
+            permIds[i] = permissionList.get(i).getId();
+        }
+        roleService.saveRolePermsByPermIds(1, permIds);
         return ConResult.success();
     }
 

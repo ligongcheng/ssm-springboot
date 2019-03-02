@@ -1,11 +1,9 @@
 package cn.it.ssm.service.manager.impl;
 
 
-import cn.it.ssm.domain.auto.SysPermission;
-import cn.it.ssm.domain.auto.SysRole;
-import cn.it.ssm.domain.auto.SysUserRole;
-import cn.it.ssm.domain.auto.SysUserRoleExample;
+import cn.it.ssm.domain.auto.*;
 import cn.it.ssm.mapper.auto.SysRoleMapper;
+import cn.it.ssm.mapper.auto.SysRolePermissionMapper;
 import cn.it.ssm.mapper.auto.SysUserRoleMapper;
 import cn.it.ssm.service.manager.IRoleService;
 import com.github.pagehelper.PageHelper;
@@ -27,6 +25,9 @@ public class RoleService implements IRoleService {
 
     @Autowired
     private SysUserRoleMapper sysUserRoleMapper;
+
+    @Autowired
+    private SysRolePermissionMapper sysRolePermissionMapper;
 
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
@@ -53,8 +54,15 @@ public class RoleService implements IRoleService {
     public boolean deleteRole(List<SysRole> role) {
         SysRoleMapper templateMapper = sqlSessionTemplate.getMapper(SysRoleMapper.class);
         for (SysRole sysRole : role) {
+            //删除角色权限
+            SysRolePermissionExample example = new SysRolePermissionExample();
+            example.createCriteria().andSysRoleIdEqualTo(sysRole.getId());
+            sysRolePermissionMapper.deleteByExample(example);
+            //删除角色
             templateMapper.deleteByPrimaryKey(sysRole.getId());
         }
+
+
         return true;
     }
 
