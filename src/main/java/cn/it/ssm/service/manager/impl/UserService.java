@@ -22,7 +22,7 @@ import java.util.List;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
-@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = true)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class, Error.class}, readOnly = true)
 public class UserService implements IUserService {
 
     @Autowired

@@ -3,7 +3,8 @@ package cn.it.ssm.common.shiro.util;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 
-import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PasswordUtil {
 
@@ -21,8 +22,17 @@ public class PasswordUtil {
     }
 
     public static void main(String[] args) {
-        SecureRandom random = new SecureRandom();
-        int i = random.nextInt();
-        System.out.println(i);
+
+        List<String> a = new ArrayList<String>();
+        ;
+        test(a);
+        System.out.println(a.size());
+
+
+    }
+
+    public static void test(List<String> a) {
+
+        a.add("abc");
     }
 }
