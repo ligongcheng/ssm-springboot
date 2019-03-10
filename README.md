@@ -1,5 +1,4 @@
-# ssm-springboot
-基于springboot的权限管理系统
+# 基于springboot的权限管理系统
 
 # 功能概要
 - RBAC权限管理
