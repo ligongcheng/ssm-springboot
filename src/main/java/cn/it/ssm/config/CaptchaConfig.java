@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(CaptchaProperties.class)
 public class CaptchaConfig {
 
-    private CaptchaProperties captchaProperties;
+    private final CaptchaProperties captchaProperties;
 
     public CaptchaConfig(CaptchaProperties captchaProperties) {
         this.captchaProperties = captchaProperties;
