@@ -11,11 +11,11 @@ import java.util.List;
 
 public interface SysUserMapperFix {
 
-    List<SysRole> findRolesByUsername(String username);
+    List<SysRole> findRolesByUsername(@Param("username") String username);
 
-    List<SysRole> findRolesByPrimaryKey(String id);
+    List<SysRole> findRolesByUserId(String id);
 
-    List<SysPermission> findPermissionsByRoleId(Integer[] id);
+    List<SysPermission> findPermissionsByRoleId(@Param("roleId") Integer[] id);
 
     List<SysUserWithRole> findUserWithRole(SysUser sysUser);
 

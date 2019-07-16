@@ -3,35 +3,30 @@
 <mapper namespace="cn.it.ssm.mapper.SysUserMapperFix">
 
     <select id="findRolesByUsername" resultType="cn.it.ssm.domain.auto.SysRole">
-        SELECT
-        r.id,
-        r.name,
-        r.available
-        FROM
-        sys_role r
-        LEFT JOIN sys_user_role ur
-        ON r.id = ur.sys_role_id
-        LEFT JOIN sys_user u
-        ON ur.sys_user_id = u.id
-        WHERE u.username = #{username}
+        SELECT r.id,
+               r.name,
+               r.available
+        FROM sys_role r
+                 JOIN
+             sys_user_role ur ON r.id = ur.sys_role_id
+                 JOIN
+             sys_user u
+             ON ur.sys_user_id = u.id
+                 AND u.username = #{username}
     </select>
 
-    <select id="findRolesByPrimaryKey" parameterType="string" resultType="cn.it.ssm.domain.auto.SysRole">
-        SELECT
-        r.id,
-        r.name
-        FROM
-        sys_role r
-        WHERE r.available = 1
-        AND r.id =
-        (SELECT ur.sys_role_id
-        FROM
-        sys_user_role ur
-        WHERE ur.sys_user_id = #{id})
+    <select id="findRolesByUserId" parameterType="string" resultType="cn.it.ssm.domain.auto.SysRole">
+        SELECT r.id,
+               r.name
+        FROM sys_role r
+                 INNER JOIN
+             sys_user_role sur
+             ON sur.sys_user_id = #{id}
+                 AND r.available = 1 AND r.id = sur.sys_role_id
 
     </select>
 
-    <select id="findPermissionsByRoleId" parameterType="arraylist" resultType="cn.it.ssm.domain.auto.SysPermission">
+    <select id="findPermissionsByRoleId" resultType="cn.it.ssm.domain.auto.SysPermission">
         SELECT p.*
         FROM sys_permission p,sys_role_permission rp
         WHERE
@@ -39,7 +34,7 @@
         AND p.available=1
         AND rp.sys_role_id
         IN
-        <foreach collection="array" item="item" open="(" separator="," close=")">
+        <foreach collection="roleId" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>

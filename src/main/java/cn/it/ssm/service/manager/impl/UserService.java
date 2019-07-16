@@ -84,7 +84,6 @@ public class UserService implements IUserService {
         for (int i = 0; i < roleList.size(); i++) {
             roleId[i] = roleList.get(i).getId();
         }
-
         return sysUserMapperFix.findPermissionsByRoleId(roleId);
     }
 

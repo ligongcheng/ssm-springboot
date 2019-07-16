@@ -3,6 +3,7 @@ package cn.it.ssm.common.shiro.session;
 import cn.it.ssm.common.shiro.util.ShiroConst;
 import cn.it.ssm.domain.auto.SysUser;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
@@ -49,7 +50,7 @@ public class ShiroSessionListener implements SessionListener {
             SysUser sysUser = (SysUser) session.getAttribute("user");
             Cache<String, Deque<Serializable>> cache = cacheManager.getCache(ShiroConst.KICKOUT_SESSION);
             Deque<Serializable> deque = null;
-            if (cache != null) {
+            if (cache != null && StringUtils.isNotBlank(sysUser.getUsername())) {
                 deque = cache.get(sysUser.getUsername());
                 if (deque != null && deque.size() > 0) {
                     deque.remove(session.getId());
@@ -62,6 +63,8 @@ public class ShiroSessionListener implements SessionListener {
             }
         } catch (CacheException e) {
             log.error("clearKickoutCache error:{}", e.getCause());
+        } catch (Exception e) {
+            //pass
         }
     }
 }

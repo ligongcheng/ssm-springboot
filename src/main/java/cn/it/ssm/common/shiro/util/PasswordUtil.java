@@ -4,7 +4,9 @@ import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PasswordUtil {
 
@@ -24,15 +26,13 @@ public class PasswordUtil {
     public static void main(String[] args) {
 
         List<String> a = new ArrayList<String>();
-        ;
-        test(a);
-        System.out.println(a.size());
+        a.add("1");
+        a.add("7");
+        a.add("3");
+        a.add("13");
+        List<String> collect = a.stream().filter(s -> s.length() < 2).sorted(Comparator.comparing(Integer::valueOf)).collect(Collectors.toList());
+        System.out.println(collect);
 
 
-    }
-
-    public static void test(List<String> a) {
-
-        a.add("abc");
     }
 }

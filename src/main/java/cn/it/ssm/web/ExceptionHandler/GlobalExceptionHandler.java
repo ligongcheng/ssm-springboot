@@ -36,10 +36,14 @@ public class GlobalExceptionHandler {
 
 
     /**
-     * 处理 未授权 异常
-     * @param e
-     * @return
-     */
+     * @return cn.it.ssm.common.vo.ConResult
+     * @Author cheng tao
+     * @Description //TODO
+     * @Date 2019/3/15 12:16
+     * @Param [e]
+     **/
+
+
     @ExceptionHandler(UnauthorizedException.class)
     public ConResult handleUnauthorizedException(Exception e) {
         log.error(e.getMessage(), e);

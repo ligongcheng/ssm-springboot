@@ -67,13 +67,14 @@ public class UserController extends BaseController {
         return "sys/user";
     }
 
-
     /**
-     * 用户登录
-     *
-     * @param
-     * @return
-     */
+     * @author cheng tao
+     * @Description
+     * @Date 2019/3/15 12:34
+     * @Param [username, password, code]
+     * @return cn.it.ssm.common.vo.ConResult
+     **/
+
     @Log("用户登录")
     @PostMapping("sys/login")
     @ResponseBody

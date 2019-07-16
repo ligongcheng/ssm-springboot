@@ -64,6 +64,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/druid/**", "anon");
         filterChainDefinitionMap.put("/health", "anon");
+        filterChainDefinitionMap.put("/actuator", "anon");
         filterChainDefinitionMap.put("/dubbo", "anon");
         filterChainDefinitionMap.put("/assert/**", "anon");
         filterChainDefinitionMap.put("/assets/**", "anon");

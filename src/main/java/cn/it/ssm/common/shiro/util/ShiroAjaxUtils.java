@@ -41,6 +41,9 @@ public class ShiroAjaxUtils {
     public static void outAndRedirect(ServletResponse servletResponse, String redirectUrl) {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         response.setCharacterEncoding("UTF-8");
+        //设置跨域请求
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Origin", response.getHeader("Origin"));
         //在响应头设置session状态
         response.setHeader("session-status", "timeout");
         //在响应头设置redirectUrl
