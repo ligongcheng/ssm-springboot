@@ -15,14 +15,14 @@ import com.github.pagehelper.PageInfo;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
-@Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class, Error.class}, readOnly = true)
+@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class, readOnly = true)
 public class UserService implements IUserService {
 
     @Autowired
@@ -111,6 +111,7 @@ public class UserService implements IUserService {
         sysUser.setAge(user.getAge());
         sysUser.setNickname(user.getNickname());
         sysUser.setId(user.getId());
+        sysUser.setSex(user.getSex());
         sysUser.setIsDelete(user.getIsDelete());
         SysUserRole sysUserRole = new SysUserRole();
         sysUserRole.setSysRoleId(user.getRoleId());

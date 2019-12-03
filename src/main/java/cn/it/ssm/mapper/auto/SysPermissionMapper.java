@@ -4,7 +4,6 @@ package cn.it.ssm.mapper.auto;
 import cn.it.ssm.domain.auto.SysPermission;
 import cn.it.ssm.domain.auto.SysPermissionExample;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 

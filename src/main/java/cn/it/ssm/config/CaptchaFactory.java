@@ -4,7 +4,6 @@ import com.github.botaruibo.xvcode.generator.Gif2VCGenerator;
 import com.github.botaruibo.xvcode.generator.Gif3VCGenerator;
 import com.github.botaruibo.xvcode.generator.GifVCGenerator;
 import com.github.botaruibo.xvcode.generator.PngVCGenerator;
-import org.springframework.beans.factory.annotation.Value;
 
 public class CaptchaFactory {
     private Integer width;
