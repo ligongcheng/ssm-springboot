@@ -596,6 +596,7 @@ function loadapicount() {
     $.ajax({
         url: "/sys/apitimelist",
         type: "post",
+        async: false,
         success: function (data) {
             $.each(data, function (i, n) {
                 $("#apitime").append("<option>" + n + "</option>");
@@ -606,6 +607,7 @@ function loadapicount() {
     $.ajax({
         url: "/sys/apiurilist",
         type: "post",
+        async: false,
         success: function (data) {
             $.each(data, function (i, n) {
                 $("#apilist").append("<option>" + n + "</option>");
@@ -614,7 +616,7 @@ function loadapicount() {
     });
 
     var apiresult;
-    $("#btn-api").click(function () {
+    var api_click = function () {
         $.ajax({
             url: "/sys/apimonitor",
             type: "get",
@@ -641,7 +643,11 @@ function loadapicount() {
                 });
             }
         });
-    });
+    };
+    api_click();
+    $("#btn-api").click(
+        api_click()
+    );
 }
 
 function loadApiPage() {

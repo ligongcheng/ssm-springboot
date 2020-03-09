@@ -4,7 +4,6 @@ import cn.it.ssm.common.monitor.ApiEnum;
 import cn.it.ssm.common.vo.ApiMonitorVO;
 import cn.it.ssm.common.vo.RedisConstants;
 import cn.it.ssm.common.vo.RequestMappingDetail;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -141,7 +140,12 @@ public class MonitorController implements ApplicationContextAware {
     @ResponseBody
     public Integer[] getApiTime() {
         Integer[] times = RedisConstants.PRECISION;
-        ArrayUtils.reverse(times);
+        Arrays.sort(times, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2.compareTo(o1);
+            }
+        });
         return times;
 
     }

@@ -1,10 +1,11 @@
 package cn.it.ssm;
 
+import org.activiti.spring.boot.SecurityAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 public class AppWeb {
 
