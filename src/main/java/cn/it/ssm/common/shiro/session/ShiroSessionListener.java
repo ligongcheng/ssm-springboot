@@ -1,7 +1,7 @@
 package cn.it.ssm.common.shiro.session;
 
 import cn.it.ssm.common.shiro.util.ShiroConst;
-import cn.it.ssm.domain.auto.SysUser;
+import cn.it.ssm.sys.domain.auto.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.cache.Cache;

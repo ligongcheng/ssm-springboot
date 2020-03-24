@@ -1,7 +1,7 @@
 package cn.it.ssm.common.util;
 
-import cn.it.ssm.common.tree.PermNode;
-import cn.it.ssm.domain.auto.SysPermission;
+import cn.it.ssm.common.util.tree.PermNode;
+import cn.it.ssm.sys.domain.auto.SysPermission;
 
 import java.util.ArrayList;
 import java.util.List;

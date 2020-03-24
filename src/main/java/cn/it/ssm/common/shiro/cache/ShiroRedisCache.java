@@ -1,6 +1,6 @@
 package cn.it.ssm.common.shiro.cache;
 
-import cn.it.ssm.domain.auto.SysUser;
+import cn.it.ssm.sys.domain.auto.SysUser;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.subject.PrincipalCollection;

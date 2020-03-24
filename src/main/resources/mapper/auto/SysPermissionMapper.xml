@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.it.ssm.mapper.auto.SysPermissionMapper">
-    <resultMap id="BaseResultMap" type="cn.it.ssm.domain.auto.SysPermission">
+<mapper namespace="cn.it.ssm.sys.mapper.auto.SysPermissionMapper">
+    <resultMap id="BaseResultMap" type="cn.it.ssm.sys.domain.auto.SysPermission">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="type" jdbcType="INTEGER" property="type"/>
@@ -79,7 +79,7 @@
         id, name, type, url, percode, parentid, parentids, sort, available, description,
         create_time, update_time
     </sql>
-    <select id="selectByExample" parameterType="cn.it.ssm.domain.auto.SysPermissionExample" resultMap="BaseResultMap">
+    <select id="selectByExample" parameterType="cn.it.ssm.sys.domain.auto.SysPermissionExample" resultMap="BaseResultMap">
         select
         <if test="distinct">
             distinct
@@ -103,13 +103,13 @@
         DELETE FROM sys_permission
         WHERE id = #{id,jdbcType=INTEGER}
     </delete>
-    <delete id="deleteByExample" parameterType="cn.it.ssm.domain.auto.SysPermissionExample">
+    <delete id="deleteByExample" parameterType="cn.it.ssm.sys.domain.auto.SysPermissionExample">
         delete from sys_permission
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insert" parameterType="cn.it.ssm.domain.auto.SysPermission">
+    <insert id="insert" parameterType="cn.it.ssm.sys.domain.auto.SysPermission">
         INSERT INTO sys_permission (id, name, type,
                                     url, percode, parentid,
                                     parentids, sort, available,
@@ -124,7 +124,7 @@
                 #{updateTime,jdbcType=TIMESTAMP}
         )
     </insert>
-    <insert id="insertSelective" parameterType="cn.it.ssm.domain.auto.SysPermission">
+    <insert id="insertSelective" parameterType="cn.it.ssm.sys.domain.auto.SysPermission">
         insert into sys_permission
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -203,7 +203,7 @@
             </if>
         </trim>
     </insert>
-    <select id="countByExample" parameterType="cn.it.ssm.domain.auto.SysPermissionExample"
+    <select id="countByExample" parameterType="cn.it.ssm.sys.domain.auto.SysPermissionExample"
             resultType="java.lang.Integer">
         select count(*) from sys_permission
         <if test="_parameter != null">
@@ -272,7 +272,7 @@
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
     </update>
-    <update id="updateByPrimaryKeySelective" parameterType="cn.it.ssm.domain.auto.SysPermission">
+    <update id="updateByPrimaryKeySelective" parameterType="cn.it.ssm.sys.domain.auto.SysPermission">
         update sys_permission
         <set>
             <if test="name != null">
@@ -311,7 +311,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="cn.it.ssm.domain.auto.SysPermission">
+    <update id="updateByPrimaryKey" parameterType="cn.it.ssm.sys.domain.auto.SysPermission">
         UPDATE sys_permission
         SET name        = #{name,jdbcType=VARCHAR},
             type        = #{type,jdbcType=INTEGER},

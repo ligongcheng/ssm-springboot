@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.it.ssm.mapper.SysUserMapperFix">
+<mapper namespace="cn.it.ssm.sys.mapper.SysUserMapperFix">
 
-    <select id="findRolesByUsername" resultType="cn.it.ssm.domain.auto.SysRole">
+    <select id="findRolesByUsername" resultType="cn.it.ssm.sys.domain.auto.SysRole">
         SELECT r.id,
                r.name,
                r.available
@@ -15,7 +15,7 @@
                  AND u.username = #{username}
     </select>
 
-    <select id="findRolesByUserId" parameterType="string" resultType="cn.it.ssm.domain.auto.SysRole">
+    <select id="findRolesByUserId" parameterType="string" resultType="cn.it.ssm.sys.domain.auto.SysRole">
         SELECT r.id,
                r.name
         FROM sys_role r
@@ -26,7 +26,7 @@
 
     </select>
 
-    <select id="findPermissionsByRoleId" resultType="cn.it.ssm.domain.auto.SysPermission">
+    <select id="findPermissionsByRoleId" resultType="cn.it.ssm.sys.domain.auto.SysPermission">
         SELECT p.*
         FROM sys_permission p,sys_role_permission rp
         WHERE
@@ -40,7 +40,7 @@
     </select>
 
 
-    <select id="findUserWithRole" resultType="cn.it.ssm.domain.vo.SysUserWithRole">
+    <select id="findUserWithRole" resultType="cn.it.ssm.sys.domain.vo.SysUserWithRole">
         SELECT
         u.id,
         u.username,
@@ -67,7 +67,7 @@
         order by u.id
     </select>
 
-    <select id="findUserListWithRoles" resultType="cn.it.ssm.domain.vo.SysUserWithRole">
+    <select id="findUserListWithRoles" resultType="cn.it.ssm.sys.domain.vo.SysUserWithRole">
         SELECT
         u.id,
         u.username,

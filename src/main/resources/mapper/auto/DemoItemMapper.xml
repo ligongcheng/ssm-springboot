@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.it.ssm.mapper.auto.DemoItemMapper">
-    <resultMap id="BaseResultMap" type="cn.it.ssm.domain.auto.DemoItem">
+<mapper namespace="cn.it.ssm.sys.mapper.auto.DemoItemMapper">
+    <resultMap id="BaseResultMap" type="cn.it.ssm.sys.domain.auto.DemoItem">
         <id column="id" property="id" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="amount" property="amount" jdbcType="INTEGER"/>
@@ -69,7 +69,7 @@
     <sql id="Base_Column_List">
         id, name, amount
     </sql>
-    <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.it.ssm.domain.auto.DemoItemExample">
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.it.ssm.sys.domain.auto.DemoItemExample">
         select
         <if test="distinct">
             distinct
@@ -93,19 +93,19 @@
         DELETE FROM demo_item
         WHERE id = #{id,jdbcType=VARCHAR}
     </delete>
-    <delete id="deleteByExample" parameterType="cn.it.ssm.domain.auto.DemoItemExample">
+    <delete id="deleteByExample" parameterType="cn.it.ssm.sys.domain.auto.DemoItemExample">
         delete from demo_item
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insert" parameterType="cn.it.ssm.domain.auto.DemoItem">
+    <insert id="insert" parameterType="cn.it.ssm.sys.domain.auto.DemoItem">
         INSERT INTO demo_item (id, name, amount
         )
         VALUES (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{amount,jdbcType=INTEGER}
         )
     </insert>
-    <insert id="insertSelective" parameterType="cn.it.ssm.domain.auto.DemoItem">
+    <insert id="insertSelective" parameterType="cn.it.ssm.sys.domain.auto.DemoItem">
         insert into demo_item
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -130,7 +130,7 @@
             </if>
         </trim>
     </insert>
-    <select id="countByExample" parameterType="cn.it.ssm.domain.auto.DemoItemExample" resultType="java.lang.Integer">
+    <select id="countByExample" parameterType="cn.it.ssm.sys.domain.auto.DemoItemExample" resultType="java.lang.Integer">
         select count(*) from demo_item
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
@@ -162,7 +162,7 @@
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
     </update>
-    <update id="updateByPrimaryKeySelective" parameterType="cn.it.ssm.domain.auto.DemoItem">
+    <update id="updateByPrimaryKeySelective" parameterType="cn.it.ssm.sys.domain.auto.DemoItem">
         update demo_item
         <set>
             <if test="name != null">
@@ -174,7 +174,7 @@
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="cn.it.ssm.domain.auto.DemoItem">
+    <update id="updateByPrimaryKey" parameterType="cn.it.ssm.sys.domain.auto.DemoItem">
         UPDATE demo_item
         SET name   = #{name,jdbcType=VARCHAR},
             amount = #{amount,jdbcType=INTEGER}

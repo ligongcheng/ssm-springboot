@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.it.ssm.mapper.auto.SysUserRoleMapper">
-    <resultMap id="BaseResultMap" type="cn.it.ssm.domain.auto.SysUserRole">
+<mapper namespace="cn.it.ssm.sys.mapper.auto.SysUserRoleMapper">
+    <resultMap id="BaseResultMap" type="cn.it.ssm.sys.domain.auto.SysUserRole">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="sys_user_id" property="sysUserId" jdbcType="VARCHAR"/>
         <result column="sys_role_id" property="sysRoleId" jdbcType="INTEGER"/>
@@ -69,7 +69,7 @@
     <sql id="Base_Column_List">
         id, sys_user_id, sys_role_id
     </sql>
-    <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.it.ssm.domain.auto.SysUserRoleExample">
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.it.ssm.sys.domain.auto.SysUserRoleExample">
         select
         <if test="distinct">
             distinct
@@ -93,19 +93,19 @@
         DELETE FROM sys_user_role
         WHERE id = #{id,jdbcType=INTEGER}
     </delete>
-    <delete id="deleteByExample" parameterType="cn.it.ssm.domain.auto.SysUserRoleExample">
+    <delete id="deleteByExample" parameterType="cn.it.ssm.sys.domain.auto.SysUserRoleExample">
         delete from sys_user_role
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insert" parameterType="cn.it.ssm.domain.auto.SysUserRole">
+    <insert id="insert" parameterType="cn.it.ssm.sys.domain.auto.SysUserRole">
         INSERT INTO sys_user_role (id, sys_user_id, sys_role_id
         )
         VALUES (#{id,jdbcType=INTEGER}, #{sysUserId,jdbcType=VARCHAR}, #{sysRoleId,jdbcType=INTEGER}
         )
     </insert>
-    <insert id="insertSelective" parameterType="cn.it.ssm.domain.auto.SysUserRole">
+    <insert id="insertSelective" parameterType="cn.it.ssm.sys.domain.auto.SysUserRole">
         insert into sys_user_role
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -130,7 +130,7 @@
             </if>
         </trim>
     </insert>
-    <select id="countByExample" parameterType="cn.it.ssm.domain.auto.SysUserRoleExample" resultType="java.lang.Integer">
+    <select id="countByExample" parameterType="cn.it.ssm.sys.domain.auto.SysUserRoleExample" resultType="java.lang.Integer">
         select count(*) from sys_user_role
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
@@ -162,7 +162,7 @@
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
     </update>
-    <update id="updateByPrimaryKeySelective" parameterType="cn.it.ssm.domain.auto.SysUserRole">
+    <update id="updateByPrimaryKeySelective" parameterType="cn.it.ssm.sys.domain.auto.SysUserRole">
         update sys_user_role
         <set>
             <if test="sysUserId != null">
@@ -174,7 +174,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="cn.it.ssm.domain.auto.SysUserRole">
+    <update id="updateByPrimaryKey" parameterType="cn.it.ssm.sys.domain.auto.SysUserRole">
         UPDATE sys_user_role
         SET sys_user_id = #{sysUserId,jdbcType=VARCHAR},
             sys_role_id = #{sysRoleId,jdbcType=INTEGER}

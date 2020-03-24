@@ -2,7 +2,7 @@ package cn.it.ssm.common.shiro.filter;
 
 import cn.it.ssm.common.shiro.util.ShiroAjaxUtils;
 import cn.it.ssm.common.shiro.util.ShiroConst;
-import cn.it.ssm.domain.auto.SysUser;
+import cn.it.ssm.sys.domain.auto.SysUser;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.session.Session;

@@ -294,7 +294,7 @@
       change_skin($(this).data('skin'));
     });
 
-    //Add the layout manager
+    //Add the layout service
     $("[data-layout]").on('click', function () {
       change_layout($(this).data('layout'));
     });

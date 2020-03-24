@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = "cn.it.ssm.mapper")
+@MapperScan(basePackages = "cn.it.ssm.sys.mapper")
 @EnableTransactionManagement
 public class DataSourceConfig {
 

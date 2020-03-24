@@ -5,7 +5,7 @@ import cn.it.ssm.common.shiro.util.HttpContextUtils;
 import cn.it.ssm.common.shiro.util.IPUtils;
 import cn.it.ssm.common.shiro.util.ShiroUtils;
 import cn.it.ssm.common.shiro.util.SysLog;
-import cn.it.ssm.domain.auto.SysUser;
+import cn.it.ssm.sys.domain.auto.SysUser;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

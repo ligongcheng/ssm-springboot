@@ -3812,7 +3812,7 @@
         return 0;
     }
 
-    /* Date picker manager.
+    /* Date picker service.
    Use the singleton instance of this class, $.datepicker, to interact with the date picker.
    Settings for (groups of) date pickers are maintained in an instance object,
    allowing multiple different settings on the same page. */
@@ -3921,7 +3921,7 @@
 
         /* Override the default settings for all instances of the date picker.
 	 * @param  settings  object - the new settings to use as defaults (anonymous object)
-	 * @return the manager object
+	 * @return the service object
 	 */
         setDefaults: function (settings) {
             datepicker_extendRemove(this._defaults, settings || {});
@@ -4086,7 +4086,7 @@
 	 * @param  pos int[2] - coordinates for the dialog's position within the screen or
 	 *					event - with x/y coordinates or
 	 *					leave empty for default (screen centre)
-	 * @return the manager object
+	 * @return the service object
 	 */
         _dialogDatepicker: function (input, date, onSelect, settings, pos) {
             var id, browserWidth, browserHeight, scrollX, scrollY,
@@ -6091,7 +6091,7 @@
 
             this._mouseDrag(event, true); //Execute the drag once - this causes the helper not to be visible before getting its correct position
 
-            //If the ddmanager is used for droppables, inform the manager that dragging has started (see #5003)
+            //If the ddmanager is used for droppables, inform the service that dragging has started (see #5003)
             if ($.ui.ddmanager) {
                 $.ui.ddmanager.dragStart(this, event);
             }
@@ -6146,7 +6146,7 @@
 
         _mouseStop: function (event) {
 
-            //If we are using droppables, inform the manager about the drop
+            //If we are using droppables, inform the service about the drop
             var that = this,
                 dropped = false;
             if ($.ui.ddmanager && !this.options.dropBehaviour) {
@@ -6177,7 +6177,7 @@
         _mouseUp: function (event) {
             this._unblockFrames();
 
-            //If the ddmanager is used for droppables, inform the manager that dragging has stopped (see #5003)
+            //If the ddmanager is used for droppables, inform the service that dragging has stopped (see #5003)
             if ($.ui.ddmanager) {
                 $.ui.ddmanager.dragStop(this, event);
             }
@@ -9072,7 +9072,7 @@
         },
 
         _addToManager: function (scope) {
-            // Add the reference and positions to the manager
+            // Add the reference and positions to the service
             $.ui.ddmanager.droppables[scope] = $.ui.ddmanager.droppables[scope] || [];
             $.ui.ddmanager.droppables[scope].push(this);
         },
@@ -9266,7 +9266,7 @@
     })();
 
     /*
-	This manager tracks offsets of draggables and droppables
+	This service tracks offsets of draggables and droppables
 */
     $.ui.ddmanager = {
         current: null,
@@ -14003,7 +14003,7 @@
                 return;
             }
 
-            //If we are using droppables, inform the manager about the drop
+            //If we are using droppables, inform the service about the drop
             if ($.ui.ddmanager && !this.options.dropBehaviour) {
                 $.ui.ddmanager.drop(this, event);
             }
@@ -14285,7 +14285,7 @@
                 for (j = 0, queriesLength = _queries.length; j < queriesLength; j++) {
                     item = $(_queries[j]);
 
-                    item.data(this.widgetName + "-item", targetData); // Data for target checking (mouse manager)
+                    item.data(this.widgetName + "-item", targetData); // Data for target checking (mouse service)
 
                     items.push({
                         item: item,
