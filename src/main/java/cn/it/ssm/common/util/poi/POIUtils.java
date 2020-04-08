@@ -26,15 +26,15 @@ public class POIUtils {
     }
 
     public static SXSSFSheet newSXSSFSheet(SXSSFWorkbook wb, String sheetName) {
-        return (SXSSFSheet) wb.createSheet(sheetName);
+        return wb.createSheet(sheetName);
     }
 
     public static SXSSFRow newSXSSFRow(SXSSFSheet sheet, int index) {
-        return (SXSSFRow) sheet.createRow(index);
+        return sheet.createRow(index);
     }
 
     public static SXSSFCell newSXSSFCell(SXSSFRow row, int index) {
-        return (SXSSFCell) row.createCell(index);
+        return row.createCell(index);
     }
 
     /**
@@ -61,7 +61,7 @@ public class POIUtils {
             // response对象不为空,响应到浏览器下载
             response.setContentType(Constant.XLSX_CONTENT_TYPE);
             response.setHeader("Content-disposition", "attachment; filename="
-                    + URLEncoder.encode(String.format("%s%s", fileName, Constant.XLSX_SUFFIX), "UTF-8"));
+                + URLEncoder.encode(String.format("%s%s", fileName, Constant.XLSX_SUFFIX), "UTF-8"));
             if (out == null) {
                 out = response.getOutputStream();
             }

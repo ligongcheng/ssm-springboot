@@ -149,10 +149,10 @@ public class ExcelUtils {
             currentExcelExport = field.getAnnotation(ExcelExport.class);
             if (currentExcelExport != null) {
                 currentExportItem = new ExportItem().setField(field.getName())
-                        .setDisplay("field".equals(currentExcelExport.value()) ? field.getName()
-                                : currentExcelExport.value())
-                        .setWidth(currentExcelExport.width()).setConvert(currentExcelExport.convert())
-                        .setColor(currentExcelExport.color()).setReplace(currentExcelExport.replace());
+                    .setDisplay("field".equals(currentExcelExport.value()) ? field.getName()
+                        : currentExcelExport.value())
+                    .setWidth(currentExcelExport.width()).setConvert(currentExcelExport.convert())
+                    .setColor(currentExcelExport.color()).setReplace(currentExcelExport.replace());
                 exportItems.add(currentExportItem);
             }
 
@@ -251,9 +251,9 @@ public class ExcelUtils {
                 currentExcelExport = field.getAnnotation(ExcelExport.class);
                 if (currentExcelExport != null) {
                     currentExportItem = new ExportItem().setField(field.getName())
-                            .setDisplay("field".equals(currentExcelExport.value()) ? field.getName()
-                                    : currentExcelExport.value())
-                            .setConvert(currentExcelExport.convert()).setReplace(currentExcelExport.replace());
+                        .setDisplay("field".equals(currentExcelExport.value()) ? field.getName()
+                            : currentExcelExport.value())
+                        .setConvert(currentExcelExport.convert()).setReplace(currentExcelExport.replace());
                     exportItems.add(currentExportItem);
                 }
 
@@ -348,7 +348,7 @@ public class ExcelUtils {
     private void required$ExportParams() {
         if (mClass == null || mResponse == null) {
             throw new IllegalArgumentException(
-                    "请先使用ExcelUtils.$Export(Class<?>, HttpServletResponse)构造器初始化参数。");
+                "请先使用ExcelUtils.$Export(Class<?>, HttpServletResponse)构造器初始化参数。");
         }
 
     }

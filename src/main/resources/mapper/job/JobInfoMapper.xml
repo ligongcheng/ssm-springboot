@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.it.ssm.job.dao.JobInfoMapper">
+    <resultMap id="BaseResultMap" type="cn.it.ssm.job.entity.JobInfo">
+        <!--@mbg.generated-->
+        <!--@Table t_job_info-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="class_nmae" jdbcType="VARCHAR" property="classNmae"/>
+        <result column="desc" jdbcType="VARCHAR" property="desc"/>
+        <result column="cron_expression" jdbcType="VARCHAR" property="cronExpression"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, `name`, class_nmae, `desc`, cron_expression, `status`, creat_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from t_job_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        <!--@mbg.generated-->
+        delete from t_job_info
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.it.ssm.job.entity.JobInfo" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into t_job_info (`name`, class_nmae, `desc`,
+        cron_expression, `status`, creat_time
+        )
+        values (#{name,jdbcType=VARCHAR}, #{classNmae,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR},
+        #{cronExpression,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{creatTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.it.ssm.job.entity.JobInfo" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into t_job_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">
+                `name`,
+            </if>
+            <if test="classNmae != null and classNmae != ''">
+                class_nmae,
+            </if>
+            <if test="desc != null and desc != ''">
+                `desc`,
+            </if>
+            <if test="cronExpression != null and cronExpression != ''">
+                cron_expression,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="creatTime != null">
+                creat_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="classNmae != null and classNmae != ''">
+                #{classNmae,jdbcType=VARCHAR},
+            </if>
+            <if test="desc != null and desc != ''">
+                #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="cronExpression != null and cronExpression != ''">
+                #{cronExpression,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="creatTime != null">
+                #{creatTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.it.ssm.job.entity.JobInfo">
+        <!--@mbg.generated-->
+        update t_job_info
+        <set>
+            <if test="name != null and name != ''">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="classNmae != null and classNmae != ''">
+                class_nmae = #{classNmae,jdbcType=VARCHAR},
+            </if>
+            <if test="desc != null and desc != ''">
+                `desc` = #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="cronExpression != null and cronExpression != ''">
+                cron_expression = #{cronExpression,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="creatTime != null">
+                creat_time = #{creatTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.it.ssm.job.entity.JobInfo">
+        <!--@mbg.generated-->
+        update t_job_info
+        set `name` = #{name,jdbcType=VARCHAR},
+        class_nmae = #{classNmae,jdbcType=VARCHAR},
+        `desc` = #{desc,jdbcType=VARCHAR},
+        cron_expression = #{cronExpression,jdbcType=VARCHAR},
+        `status` = #{status,jdbcType=INTEGER},
+        creat_time = #{creatTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--auto generated by MybatisCodeHelper on 2020-03-24-->
+    <select id="selectByAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_job_info
+        <where>
+            <if test="id != null">
+                and id=#{id,jdbcType=INTEGER}
+            </if>
+            <if test="name != null and name != ''">
+                and `name`=#{name,jdbcType=VARCHAR}
+            </if>
+            <if test="classNmae != null and classNmae != ''">
+                and class_nmae=#{classNmae,jdbcType=VARCHAR}
+            </if>
+            <if test="desc != null and desc != ''">
+                and `desc`=#{desc,jdbcType=VARCHAR}
+            </if>
+            <if test="cronExpression != null and cronExpression != ''">
+                and cron_expression=#{cronExpression,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null">
+                and `status`=#{status,jdbcType=INTEGER}
+            </if>
+            <if test="creatTime != null">
+                and creat_time=#{creatTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+
+    <!--auto generated by MybatisCodeHelper on 2020-03-24-->
+    <update id="updateStatusById">
+        update t_job_info
+        set `status`=#{updatedStatus,jdbcType=INTEGER}
+        <where>
+            <if test="id != null">
+                and id=#{id,jdbcType=INTEGER}
+            </if>
+        </where>
+    </update>
+
+
+</mapper>

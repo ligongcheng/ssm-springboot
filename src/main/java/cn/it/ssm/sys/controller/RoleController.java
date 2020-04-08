@@ -1,11 +1,16 @@
 package cn.it.ssm.sys.controller;
 
 
+import cn.it.ssm.common.entity.ConResult;
 import cn.it.ssm.common.shiro.util.ShiroConst;
-import cn.it.ssm.common.vo.ConResult;
 import cn.it.ssm.sys.domain.auto.SysPermission;
 import cn.it.ssm.sys.domain.auto.SysRole;
 import cn.it.ssm.sys.service.RoleService;
+import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.ProcessEngines;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.runtime.Execution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +25,14 @@ public class RoleController extends BaseController {
 
     @GetMapping("sys/rolePage")
     public String role() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        List<Execution> executionList = runtimeService.createExecutionQuery().processInstanceId("2134").list();
+        for (Execution execution : executionList) {
+
+        }
+        TaskService taskService = processEngine.getTaskService();
+
         return "sys/role";
     }
 
@@ -40,6 +53,13 @@ public class RoleController extends BaseController {
         return ConResult.error();
     }
 
+    /**
+     * 修改角色的权限
+     *
+     * @param role        角色
+     * @param rolePermIds 权限id数组
+     * @return
+     */
     @PostMapping("sys/role")
     @ResponseBody
     public ConResult editRole(SysRole role, @RequestParam(required = false) Integer[] rolePermIds) {

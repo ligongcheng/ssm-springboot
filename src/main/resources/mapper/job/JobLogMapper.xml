@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.it.ssm.job.dao.JobLogMapper">
+    <resultMap id="BaseResultMap" type="cn.it.ssm.job.entity.JobLog">
+        <!--@mbg.generated-->
+        <!--@Table t_job_log-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="job_id" jdbcType="INTEGER" property="jobId"/>
+        <result column="class_name" jdbcType="VARCHAR" property="className"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="error" jdbcType="VARCHAR" property="error"/>
+        <result column="times" jdbcType="INTEGER" property="times"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="duration" jdbcType="INTEGER" property="duration"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, job_id, class_name, `status`, error, times, create_time, duration
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from t_job_log
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        <!--@mbg.generated-->
+        delete from t_job_log
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.it.ssm.job.entity.JobLog" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into t_job_log (job_id, class_name, `status`,
+        error, times, create_time,
+        duration)
+        values (#{jobId,jdbcType=INTEGER}, #{className,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+        #{error,jdbcType=VARCHAR}, #{times,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+        #{duration,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.it.ssm.job.entity.JobLog" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into t_job_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jobId != null">
+                job_id,
+            </if>
+            <if test="className != null and className != ''">
+                class_name,
+            </if>
+            <if test="status != null and status != ''">
+                `status`,
+            </if>
+            <if test="error != null and error != ''">
+                error,
+            </if>
+            <if test="times != null">
+                times,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="duration != null">
+                duration,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jobId != null">
+                #{jobId,jdbcType=INTEGER},
+            </if>
+            <if test="className != null and className != ''">
+                #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null and status != ''">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="error != null and error != ''">
+                #{error,jdbcType=VARCHAR},
+            </if>
+            <if test="times != null">
+                #{times,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="duration != null">
+                #{duration,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.it.ssm.job.entity.JobLog">
+        <!--@mbg.generated-->
+        update t_job_log
+        <set>
+            <if test="jobId != null">
+                job_id = #{jobId,jdbcType=INTEGER},
+            </if>
+            <if test="className != null and className != ''">
+                class_name = #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null and status != ''">
+                `status` = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="error != null and error != ''">
+                error = #{error,jdbcType=VARCHAR},
+            </if>
+            <if test="times != null">
+                times = #{times,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="duration != null">
+                duration = #{duration,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.it.ssm.job.entity.JobLog">
+        <!--@mbg.generated-->
+        update t_job_log
+        set job_id = #{jobId,jdbcType=INTEGER},
+        class_name = #{className,jdbcType=VARCHAR},
+        `status` = #{status,jdbcType=VARCHAR},
+        error = #{error,jdbcType=VARCHAR},
+        times = #{times,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        duration = #{duration,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateBatch" parameterType="java.util.List">
+        <!--@mbg.generated-->
+        update t_job_log
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="job_id = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=INTEGER} then #{item.jobId,jdbcType=INTEGER}
+                </foreach>
+            </trim>
+            <trim prefix="class_name = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=INTEGER} then #{item.className,jdbcType=VARCHAR}
+                </foreach>
+            </trim>
+            <trim prefix="`status` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=INTEGER} then #{item.status,jdbcType=VARCHAR}
+                </foreach>
+            </trim>
+            <trim prefix="error = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=INTEGER} then #{item.error,jdbcType=VARCHAR}
+                </foreach>
+            </trim>
+            <trim prefix="times = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=INTEGER} then #{item.times,jdbcType=INTEGER}
+                </foreach>
+            </trim>
+            <trim prefix="create_time = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=INTEGER} then #{item.createTime,jdbcType=TIMESTAMP}
+                </foreach>
+            </trim>
+            <trim prefix="duration = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=INTEGER} then #{item.duration,jdbcType=INTEGER}
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach close=")" collection="list" item="item" open="(" separator=", ">
+            #{item.id,jdbcType=INTEGER}
+        </foreach>
+    </update>
+    <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into t_job_log
+        (job_id, class_name, `status`, error, times, create_time, duration)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.jobId,jdbcType=INTEGER}, #{item.className,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR},
+            #{item.error,jdbcType=VARCHAR}, #{item.times,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.duration,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+    <insert id="insertOrUpdate" keyColumn="id" keyProperty="id" parameterType="cn.it.ssm.job.entity.JobLog" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into t_job_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            job_id,
+            class_name,
+            `status`,
+            error,
+            times,
+            create_time,
+            duration,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            #{jobId,jdbcType=INTEGER},
+            #{className,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR},
+            #{error,jdbcType=VARCHAR},
+            #{times,jdbcType=INTEGER},
+            #{createTime,jdbcType=TIMESTAMP},
+            #{duration,jdbcType=INTEGER},
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER},
+            </if>
+            job_id = #{jobId,jdbcType=INTEGER},
+            class_name = #{className,jdbcType=VARCHAR},
+            `status` = #{status,jdbcType=VARCHAR},
+            error = #{error,jdbcType=VARCHAR},
+            times = #{times,jdbcType=INTEGER},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            duration = #{duration,jdbcType=INTEGER},
+        </trim>
+    </insert>
+    <insert id="insertOrUpdateSelective" keyColumn="id" keyProperty="id" parameterType="cn.it.ssm.job.entity.JobLog" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into t_job_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="jobId != null">
+                job_id,
+            </if>
+            <if test="className != null">
+                class_name,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="error != null">
+                error,
+            </if>
+            <if test="times != null">
+                times,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="duration != null">
+                duration,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="jobId != null">
+                #{jobId,jdbcType=INTEGER},
+            </if>
+            <if test="className != null">
+                #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="error != null">
+                #{error,jdbcType=VARCHAR},
+            </if>
+            <if test="times != null">
+                #{times,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="duration != null">
+                #{duration,jdbcType=INTEGER},
+            </if>
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER},
+            </if>
+            <if test="jobId != null">
+                job_id = #{jobId,jdbcType=INTEGER},
+            </if>
+            <if test="className != null">
+                class_name = #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="error != null">
+                error = #{error,jdbcType=VARCHAR},
+            </if>
+            <if test="times != null">
+                times = #{times,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="duration != null">
+                duration = #{duration,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <!--auto generated by MybatisCodeHelper on 2020-03-25-->
+    <select id="selectAllById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_job_log
+        <where>
+            <if test="id != null">
+                and id=#{id,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <!--auto generated by MybatisCodeHelper on 2020-03-25-->
+    <select id="selectByJobIdOrderByIdDesc" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_job_log
+        <where>
+            <if test="jobId != null">
+                and job_id=#{jobId,jdbcType=INTEGER}
+            </if>
+        </where>
+        order by id desc
+    </select>
+    <delete id="deleteBatchByIds">
+        delete from t_job_log
+        <where>
+            id in
+            <foreach collection="ids" separator="," open="(" close=")" item="item">
+                #{item,jdbcType=INTEGER}
+            </foreach>
+        </where>
+    </delete>
+
+
+</mapper>

@@ -83,10 +83,8 @@ public class DateUtil {
 
         Calendar c = Calendar.getInstance(); // 获取当前日期
         int day = c.get(Calendar.DAY_OF_WEEK); // 获取当前日期星期，英国算法(周日为一周第一天)
-        if (day == 7 || day == 1) { // 如果是周六或周日就返回true
-            return true;
-        }
-        return false;
+        // 如果是周六或周日就返回true
+        return day == 7 || day == 1;
     }
 
     /**
@@ -158,13 +156,7 @@ public class DateUtil {
         } else if (firstStrDate.getTime() < secondStrDate.getTime()) {
 
             return false;
-        } else if (firstStrDate.getTime() == secondStrDate.getTime()) {
-
-            return true;
-        } else {
-
-            return false;
-        }
+        } else return firstStrDate.getTime() == secondStrDate.getTime();
     }
 
     /**
@@ -245,7 +237,7 @@ public class DateUtil {
 
         Date date = null;
         date = turnStrDateToJavaUtilDate(getTheFirstDayOfSpecifiedMonth(specifiedMonth, dateFormatType),
-                dateFormatType);
+            dateFormatType);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.MONTH, 1);
@@ -301,7 +293,7 @@ public class DateUtil {
         String srcDate = "";
         if (targetObj.getClass() == String.class) {
             srcDate = DateUtil.turnJavaUtilDateToStrDate(
-                    DateUtil.turnStrDateToJavaUtilDate(targetObj.toString(), "yyyy-MM-dd"), formtStr);
+                DateUtil.turnStrDateToJavaUtilDate(targetObj.toString(), "yyyy-MM-dd"), formtStr);
         } else if (targetObj.getClass() == Date.class) {
             srcDate = DateUtil.turnJavaUtilDateToStrDate((Date) targetObj, formtStr);
         } else {

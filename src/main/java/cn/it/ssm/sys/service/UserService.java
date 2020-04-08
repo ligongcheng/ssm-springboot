@@ -41,4 +41,6 @@ public interface UserService {
     int disableUser(String id);
 
     int enableUser(String id);
+
+    List<SysUser> findUserByRoleName(String roleName);
 }

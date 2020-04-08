@@ -12,8 +12,8 @@ public class PasswordUtil {
 
     public static final SecureRandomNumberGenerator GENERATOR = new SecureRandomNumberGenerator();
 
-    public static String generaterSalt() {
-        GENERATOR.setDefaultNextBytesSize(2);//2 bytes == 16 bits ，转为16进制有4位
+    public static String getSalt() {
+        GENERATOR.setDefaultNextBytesSize(2);//2 Bytes == 16 bits ，转为16进制有4位
         String salt = GENERATOR.nextBytes().toHex();
         return salt;
     }

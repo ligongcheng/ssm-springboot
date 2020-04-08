@@ -60,7 +60,7 @@ public class ExportExcelUtils {
 
             // 循环 将列名放进去
             for (int i = 0; i < columnNum; i++) {
-                HSSFCell cellRowName = rowRowName.createCell((int) i);
+                HSSFCell cellRowName = rowRowName.createCell(i);
                 cellRowName.setCellType(HSSFCell.CELL_TYPE_STRING); // 单元格类型
 
                 HSSFRichTextString text = new HSSFRichTextString(rowName[i]); // 得到列的值

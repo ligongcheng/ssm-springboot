@@ -1,5 +1,6 @@
 package cn.it.ssm.sys;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,5 +14,8 @@ public class AppWebTest {
         SpringApplication.run(AppWebTest.class, args);
     }
 
-
+    @Test
+    public void testWE() {
+        System.out.println("lll");
+    }
 }

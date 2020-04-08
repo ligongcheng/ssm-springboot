@@ -1,14 +1,14 @@
 package cn.it.ssm.sys.service.impl;
 
 
+import cn.it.ssm.common.ExceptionHandler.AccountChangeException;
 import cn.it.ssm.common.vo.PageListVO;
 import cn.it.ssm.common.vo.TableRequest;
+import cn.it.ssm.sys.dao.SysUserMapperFix;
+import cn.it.ssm.sys.dao.auto.SysUserMapper;
+import cn.it.ssm.sys.dao.auto.SysUserRoleMapper;
 import cn.it.ssm.sys.domain.auto.*;
 import cn.it.ssm.sys.domain.vo.SysUserWithRole;
-import cn.it.ssm.sys.mapper.SysUserMapperFix;
-import cn.it.ssm.sys.mapper.auto.SysUserMapper;
-import cn.it.ssm.sys.mapper.auto.SysUserRoleMapper;
-import cn.it.ssm.common.ExceptionHandler.AccountChangeException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -202,6 +202,11 @@ public class UserServiceLmpl implements cn.it.ssm.sys.service.UserService {
         user.setId(id);
         user.setIsDelete(0);
         return sysUserMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public List<SysUser> findUserByRoleName(String roleName) {
+        return sysUserMapperFix.findUserByRoleName(roleName);
     }
 
 

@@ -1,6 +1,6 @@
 package cn.it.ssm.common.monitor;
 
-import cn.it.ssm.common.vo.RedisConstants;
+import cn.it.ssm.common.entity.RedisConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

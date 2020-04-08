@@ -1,11 +1,11 @@
 package cn.it.ssm.common.aspect;
 
 
+import cn.it.ssm.common.ExceptionHandler.ApiLimitedException;
 import cn.it.ssm.common.annotation.ApiLimit;
 import cn.it.ssm.common.service.ApiLimitService;
 import cn.it.ssm.common.shiro.util.ShiroUtils;
 import cn.it.ssm.sys.domain.auto.SysUser;
-import cn.it.ssm.common.ExceptionHandler.ApiLimitedException;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -66,10 +66,10 @@ public class ApiLimitAspect {
                 List<String> keys = new ArrayList<>();
                 keys.add("apiLimit:" + className + ":" + methodName + ":" + user.getUsername());
                 //List<String> args = new ArrayList<>(Arrays.asList(split));
-                boolean isLimited = apiLimitService.isLimited(keys, args[0],args[1]);
+                boolean isLimited = apiLimitService.isLimited(keys, args[0], args[1]);
                 if (isLimited) {
                     logger.warn("用户: [{}] 调用: [{}] 超过 [{}] 的限制", user.getUsername()
-                            , className + "." + methodName, policy);
+                        , className + "." + methodName, policy);
                 } else {
                     logger.info("用户: [{}] 调用: [{}] 成功", user.getUsername(), className + "." + methodName);
                 }

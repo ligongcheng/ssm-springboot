@@ -8,9 +8,9 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="shortcut icon" type="image/x-icon" href="dist/img/favicon.ico">
     <!-- Bootstrap 3.3.6 -->
-    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
+    <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="dist/css/font-awesome.min.css">
+    <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- Ionicons -->
     <link rel="stylesheet" href="dist/css/ionicons.min.css">
     <!-- Theme style -->
@@ -157,6 +157,38 @@
                             角色管理</a>
                         </li>
                         <li shiro:hasPermission="sys:perm:list"><a target="navTab" href="sys/permPage"><i class="fa fa-circle-o"></i> 权限管理</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i>
+                        <span>定时任务</span>
+                        <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="job/jobUI" target="navTab"><i class="fa fa-circle-o"></i> 任务管理</a>
+                        </li>
+                        <li><a href="/joblog/joblogUI" target="navTab"><i class="fa fa-circle-o"></i>
+                            任务日志</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i>
+                        <span>流程中心</span>
+                        <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="act/leaveUI" target="navTab"><i class="fa fa-circle-o"></i> 请假管理</a>
+                        </li>
+                        <li><a href="act/taskUI" target="navTab"><i class="fa fa-circle-o"></i>
+                            我的待办任务</a>
                         </li>
                     </ul>
                 </li>
@@ -495,7 +527,7 @@
     <div class="box">
         <i class="fa fa-refresh fa-spin"></i>
         <span class="tip">
-       正在加载 · · ·    
+       正在加载 · · ·
     </span>
     </div>
 </div>

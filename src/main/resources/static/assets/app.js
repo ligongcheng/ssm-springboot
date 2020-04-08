@@ -11,10 +11,10 @@ $.ajaxSetup({
         }
         var status = XMLHttpRequest.status;
         //通过code取得操作状态，并提示
-        if (date != undefined){
+        if (date != undefined) {
             if (date.code == 200) {
                 toastr.success('操作成功');
-            } else if (date.code != undefined && date.msg != undefined){
+            } else if (date.code != undefined && date.msg != undefined) {
                 toastr.error(date.msg)
             }
         }
@@ -68,7 +68,7 @@ function loadUser() {
     var $userTable = $('#userTable');
     var settings = {
         url: "/sys/user",
-        singleSelect : true,
+        singleSelect: true,
         queryParams: function (params) {
             return {
                 pageSize: params.limit,
@@ -135,7 +135,7 @@ function loadUser() {
         var ids = getIdSelections("#userTable");
         var s = function () {
             $.ajax({
-                url: "/sys/user/" + ids[0] ,
+                url: "/sys/user/" + ids[0],
                 type: "delete",
                 success: function (da) {
                     $userTable.bootstrapTable("refresh");
@@ -211,6 +211,511 @@ function loadUser() {
 
 }
 
+function loadJob() {
+
+    function operateFormatter(value, row, index) {
+        return [
+            '<a class="start" href="javascript:void(0)" title="start">',
+            '<button type="button" class="btn btn-primary btn-sm">开始</button>',
+            '</a>  ',
+            '<a class="stop" href="javascript:void(0)" title="stop">',
+            '<button type="button" class="btn btn-warning btn-sm">暂停</button>',
+            '</a> ',
+            '<a class="remove" href="javascript:void(0)" title="remove">',
+            '<button type="button" class="btn btn-danger btn-sm">删除</button>',
+            '</a> '
+        ].join('')
+    }
+
+    window.operateEvents = {
+        'click .start': function (e, value, row, index) {
+            $.ajax({
+                url: "/job/status",
+                contentType: "application/json",
+                data: JSON.stringify({"id": row.id, "status": 1}),
+                type: "put",
+                success: function (res) {
+                    $jobTable.bootstrapTable("refresh");
+                }
+            })
+        },
+        'click .stop': function (e, value, row, index) {
+            $.ajax({
+                url: "/job/status",
+                contentType: "application/json",
+                data: JSON.stringify({"id": row.id, "status": 0}),
+                type: "put",
+                success: function (res) {
+                    $jobTable.bootstrapTable("refresh");
+                }
+            })
+        },
+        'click .remove': function (e, value, row, index) {
+            $.ajax({
+                url: "/job/" + row.id,
+                type: "delete",
+                success: function (res) {
+                    $jobTable.bootstrapTable("refresh");
+                }
+            })
+        }
+    }
+
+    var $jobTable = $('#jobTable');
+    var settings = {
+        url: "/job",
+        singleSelect: true,
+        search: false,
+        queryParams: function (params) {
+            return {
+                pageSize: params.limit,
+                pageNum: params.offset / params.limit + 1
+            };
+        },
+        columns: [{
+            checkbox: true,
+            align: 'center',
+            valign: 'middle'
+        }, {
+            field: 'name',
+            title: '任务名'
+        }, {
+            field: 'desc',
+            title: '任务描述'
+        }, {
+            field: 'classNmae',
+            title: '任务类'
+        }, {
+            field: 'cronExpression',
+            title: 'Cron表达式'
+        }, {
+            field: 'status',
+            title: '状态',
+            formatter: function (s) {
+                return s === 1 ? "<span class=\"label label-success\">运行</span>" : "<span class=\"label label-warning\">停止</span>"
+            }
+        }, {
+            field: 'id',
+            visible: false
+        }, {
+            field: 'operate',
+            title: '操作',
+            events: window.operateEvents,
+            formatter: operateFormatter
+        }]
+
+    };
+    $ExTable.initTable($jobTable, settings);
+    $(".fixed-table-toolbar").find(".search input").attr("placeholder", "搜索用户名");
+
+
+    var $add = $("#btn_add");
+    var $addJobModal = $("#addJobModal");
+
+    $add.click(function () {
+        $addJobModal.modal("show");
+    });
+
+    $addJobModal.find("#doAddJob").click(function () {
+        var t = $("#addJobForm").serializeArray();
+        var d = {}
+        $.each(t, function () {
+            d[this.name] = this.value;
+        });
+        $.ajax({
+            url: "/job",
+            data: JSON.stringify(d),
+            contentType: "application/json",
+            type: "post",
+            success: function (da) {
+                $addJobModal.modal("hide");
+                $jobTable.bootstrapTable("refresh");
+            }
+        });
+    })
+
+}
+
+function loadLeave() {
+
+    function operateFormatter(value, row, index) {
+        // 提交 编辑 取消 进度查询
+        var ls = [];
+        if (row.state === 0) {
+            ls.push('<a class="submit" href="javascript:void(0)" title="submit"><button type="button" class="btn btn-primary btn-sm">提交</button></a> ')
+            ls.push('<a class="edit" href="javascript:void(0)" title="edit"><button type="button" class="btn btn-primary btn-sm">编辑</button></a> ')
+        }
+        if (row.state === 1 || row.state === 2 || row.state === 4) {
+            ls.push('<a class="query" href="javascript:void(0)" title="query"><button type="button" class="btn btn-primary btn-sm">进度查询</button></a> ')
+        }
+        if (row.state === 1) {
+            ls.push('<a class="cancel" href="javascript:void(0)" title="cancel"><button type="button" class="btn btn-danger btn-sm">取消申请</button></a>')
+        }
+        return ls.join('')
+    }
+
+    window.operateEvents = {
+        'click .submit': function (e, value, row, index) {
+            $.ajax({
+                url: "/act/leave/submit",
+                data: row,
+                type: "post",
+                success: function (res) {
+                    $leaveTable.bootstrapTable("refresh");
+                }
+            })
+        },
+        'click .edit': function (e, value, row, index) {
+            console.log(JSON.stringify(row))
+        },
+        'click .cancel': function (e, value, row, index) {
+            $.ajax({
+                url: "/act/leave/cancel",
+                data: row,
+                type: "put",
+                success: function (res) {
+                    $leaveTable.bootstrapTable("refresh");
+                }
+            })
+        },
+        'click .query': function (e, value, row, index) {
+            $img.append('<img alt="" src="/act/leave/img?processInstanceId=' + row.processInstanceId + '"/>');
+            $imgModal.modal("show");
+        },
+    }
+    $('#img').on('hidden.bs.modal', function (e) {
+        $img.empty()
+    })
+
+    var $imgModal = $('#img');
+    var $img = $('#actimg');
+    var $leaveTable = $('#leaveTable');
+    var settings = {
+        url: "/act/leave/list",
+        singleSelect: true,
+        search: false,
+        queryParams: function (params) {
+            return {
+                pageSize: params.limit,
+                pageNum: params.offset / params.limit + 1
+            };
+        },
+        columns: [{
+            checkbox: true,
+            align: 'center',
+            valign: 'middle'
+        }, {
+            field: 'username',
+            title: '申请人'
+        }, {
+            field: 'leaveDay',
+            title: '请假天数'
+        }, {
+            field: 'startTime',
+            title: '开始时间'
+        }, {
+            field: 'endTime',
+            title: '结束时间'
+        }, {
+            field: 'reason',
+            title: '请假原因'
+        }, {
+            field: 'processInstanceId',
+            title: '流程实例Id'
+        }, {
+            field: 'state',
+            title: '状态',
+            formatter: function (s) {
+                var state = ''
+                if (s === 0) {
+                    state = "<span class=\"label label-default\">未提交</span>"
+                } else if (s === 1) {
+                    state = "<span class=\"label label-info\">审批中</span>"
+                } else if (s === 2) {
+                    state = "<span class=\"label label-success\">审批通过</span>"
+                } else if (s === 3) {
+                    state = "<span class=\"label label-danger\">未提交_已放弃</span>"
+                } else if (s === 4) {
+                    state = "<span class=\"label label-danger\">已提交_已放弃</span>"
+                }
+                return state
+            }
+        }, {
+            field: 'id',
+            visible: false
+        }, {
+            field: 'userId',
+            visible: false
+        }, {
+            field: 'operate',
+            title: '操作',
+            events: window.operateEvents,
+            formatter: operateFormatter
+        }]
+
+    };
+    $ExTable.initTable($leaveTable, settings);
+
+    var $add = $("#btn_add");
+    var $addLeaveModal = $("#addLeaveModal");
+
+    $add.click(function () {
+        $addLeaveModal.modal("show");
+    });
+
+    $addLeaveModal.find("#doAddLeave").click(function () {
+        var t = $("#addLeaveForm").serializeArray();
+        var d = {}
+        $.each(t, function () {
+            d[this.name] = this.value;
+        });
+        $.ajax({
+            url: "/act/leave/apply",
+            data: JSON.stringify(d),
+            contentType: "application/json",
+            type: "post",
+            success: function (da) {
+                $addLeaveModal.modal("hide");
+                $leaveTable.bootstrapTable("refresh");
+            }
+        });
+    })
+
+}
+
+function loadTask() {
+
+    function operateFormatter(value, row, index) {
+        // 提交 编辑 取消 进度查询
+        var ls = [];
+        if (row.assign) {
+            ls.push('<a class="deal" href="javascript:void(0)" title="submit"><button type="button" class="btn btn-primary btn-sm">处理</button></a> ')
+        } else {
+            ls.push('<a class="accept" href="javascript:void(0)" title="accept"><button type="button" class="btn btn-primary btn-sm">签收</button></a> ')
+        }
+        return ls.join('')
+    }
+
+    window.operateEvents = {
+        'click .deal': function (e, value, row, index) {
+            $.ajax({
+                url: "/act/leave/" + row.taskId,
+                type: "get",
+                success: function (res) {
+                    console.log(JSON.stringify(res))
+                    $('#username').val(res.data.leaveBill.username);
+                    $('#leaveDay').val(res.data.leaveBill.leaveDay);
+                    $('#startTime').val(res.data.leaveBill.startTime);
+                    $('#endTime').val(res.data.leaveBill.endTime);
+                    $('#reason').val(res.data.leaveBill.reason);
+                    $('#taskId').val(row.taskId);
+                    var comment = {
+                        data: res.data.leaveBillComment,
+                        pagination: false,
+                        sidePagination: 'client',
+                        toolbar: '',
+                        showColumns: false,
+                        showRefresh: false,
+                        singleSelect: true,
+                        search: false,
+                        queryParams: function (params) {
+                            return {
+                                pageSize: params.limit,
+                                pageNum: params.offset / params.limit + 1
+                            };
+                        },
+                        columns: [{
+                            field: 'taskName',
+                            title: '任务节点'
+                        }, {
+                            field: 'assignUser',
+                            title: '处理人'
+                        }, {
+                            field: 'approve',
+                            title: '是否同意',
+                            formatter: function (s) {
+                                return s ? "<span class=\"label label-success\">同意</span>" : "<span class=\"label label-warning\">不同意</span>"
+                            }
+                        }, {
+                            field: 'comment',
+                            title: '批注'
+                        }]
+
+                    };
+                    $ExTable.initTable($commentTable, comment);
+                    $dealModal.modal("show");
+                }
+            })
+        },
+
+        'click .accept': function (e, value, row, index) {
+            $.ajax({
+                url: "/act/accept",
+                data: row,
+                type: "get",
+                success: function (res) {
+                    $taskTable.bootstrapTable("refresh");
+                }
+            })
+        },
+    }
+
+    var $taskTable = $('#taskTable');
+    var $commentTable = $('#commentTable');
+    var settings = {
+        url: "/act/list",
+        singleSelect: true,
+        search: false,
+        queryParams: function (params) {
+            return {
+                pageSize: params.limit,
+                pageNum: params.offset / params.limit + 1
+            };
+        },
+        columns: [{
+            checkbox: true,
+            align: 'center',
+            valign: 'middle'
+        }, {
+            field: 'username',
+            title: '申请人'
+        }, {
+            field: 'deployName',
+            title: '类别'
+        }, {
+            field: 'taskId',
+            title: '任务Id'
+        }, {
+            field: 'assign',
+            visible: false
+        }, {
+            field: 'operate',
+            title: '操作',
+            events: window.operateEvents,
+            formatter: operateFormatter
+        }]
+
+    };
+
+    $ExTable.initTable($taskTable, settings);
+
+    var $dealModal = $("#dealModal");
+    $('#dealModal').on('hidden.bs.modal', function (e) {
+        $commentTable.bootstrapTable('destroy')
+    })
+    $dealModal.find("#doDeal").click(function () {
+        var t = $("#dealForm").serializeArray();
+        var d = {};
+        $.each(t, function () {
+            d[this.name] = this.value;
+        });
+        $.ajax({
+            url: "/act/leave/deal",
+            data: d,
+            type: "post",
+            success: function (da) {
+                $dealModal.modal("hide");
+                $taskTable.bootstrapTable("refresh");
+            }
+        });
+    })
+
+}
+
+function loadJoblog() {
+
+    function operateFormatter(value, row, index) {
+        return [
+            '<a class="remove" href="javascript:void(0)" title="remove">',
+            '<button type="button" class="btn btn-danger btn-sm">删除</button>',
+            '</a> '
+        ].join('')
+    }
+
+    window.operateEvents = {
+        'click .remove': function (e, value, row, index) {
+            $.ajax({
+                url: "/joblog",
+                type: "delete",
+                data: JSON.stringify([row.id]),
+                contentType: "application/json",
+                success: function (res) {
+                    jobTable.bootstrapTable("refresh");
+                }
+            })
+        }
+    }
+
+    var jobTable = $('#jobTable');
+    var settings = {
+        url: "/joblog",
+        singleSelect: false,
+        search: false,
+        queryParams: function (params) {
+            return {
+                pageSize: params.limit,
+                pageNum: params.offset / params.limit + 1
+            };
+        },
+        columns: [{
+            checkbox: true,
+            align: 'center',
+            valign: 'middle'
+        }, {
+            field: 'jobId',
+            title: '任务id'
+        }, {
+            field: 'className',
+            title: '任务类'
+        }, {
+            field: 'status',
+            title: '状态',
+        }, {
+            field: 'error',
+            title: '异常信息',
+        }, {
+            field: 'times',
+            title: '第几次执行',
+        }, {
+            field: 'duration',
+            title: '任务用时(毫秒)',
+        }, {
+            field: 'createTime',
+            title: '开始执行时间',
+            formatter: dateFormatter
+        }, {
+            field: 'id',
+            visible: false
+        }, {
+            field: 'operate',
+            title: '操作',
+            events: window.operateEvents,
+            formatter: operateFormatter
+        }]
+
+    };
+    $ExTable.initTable(jobTable, settings);
+
+    var $del = $("#btn_del");
+
+    $del.click(function () {
+        var rows = getRowSelections("#jobTable");
+        var ids = []
+        for (let row of rows) {
+            ids.push(row.id)
+        }
+        $.ajax({
+            url: "/joblog",
+            data: JSON.stringify(ids),
+            contentType: "application/json",
+            type: "delete",
+            success: function (da) {
+                jobTable.bootstrapTable("refresh");
+            }
+        });
+    });
+}
+
 function loadRoleList() {
     var roleList = [];
     $.ajax({
@@ -228,7 +733,7 @@ function loadPerm() {
     var $permTable = $('#permTable');
     var settings = {
         url: "/sys/perm",
-        singleSelect : true,
+        singleSelect: true,
         queryParams: function (params) {
             return {
                 pageSize: params.limit,
@@ -296,18 +801,18 @@ function loadPerm() {
             toastr.warning('请选择数据');
         }
     });
-    
+
     $add.click(function () {
         $("#permTitle").text("添加权限");
-        $("#permId").prop("disabled",true);
+        $("#permId").prop("disabled", true);
         var $parentid = $("#parentid");
         $parentid.empty();
         $parentid.append($('<option value="0">根节点</option>'));
         $.ajax({
-            url : "/sys/perm/menuList",
-            type : "get",
-            success : function (item) {
-                $.each(item,function (i, n) {
+            url: "/sys/perm/menuList",
+            type: "get",
+            success: function (item) {
+                $.each(item, function (i, n) {
                     $parentid.append($('<option value="' + n.id + '" >' + n.name + '</option>'))
                 })
             }
@@ -316,10 +821,10 @@ function loadPerm() {
     });
     $permModal.find("#submit").click(function () {
         $.ajax({
-            url : "/sys/perm",
-            type : "post",
-            data : $("#permForm").serialize(),
-            success : function () {
+            url: "/sys/perm",
+            type: "post",
+            data: $("#permForm").serialize(),
+            success: function () {
                 $permModal.modal("hide");
                 $permTable.bootstrapTable("refresh")
             }
@@ -328,28 +833,29 @@ function loadPerm() {
 
     $edit.click(function () {
         $("#editPermTitle").text("修改权限");
-        $("#editPermId").prop("disabled",false);
+        $("#editPermId").prop("disabled", false);
         var $editParentid = $("#editParentid");
         $editParentid.empty();
         var rows = getIdSelections($permTable);
-        if (rows.length>0) {
+        if (rows.length > 0) {
             $editParentid.append($('<option value="0">根节点</option>'));
             $.ajax({
-                url : "/sys/perm/menuList",
-                type : "get",
-                success : function (item) {
-                    $.each(item,function (i, n) {
-                        if (i != rows[0]) {
-                            $editParentid.append($('<option value="' + n.id + '" >' + n.name + '</option>'))
+                url: "/sys/perm/menuList",
+                type: "get",
+                async: false,
+                success: function (item) {
+                    $.each(item, function (i, n) {
+                        if (i !== rows[0]) {
+                            $editParentid.append($('<option>').val(n.id).text(n.name))
                         }
                     })
                 }
             });
             $.ajax({
-                url : "/sys/perm/" + rows[0],
-                type : "get",
-                success : function (res) {
-                    $("#editPermType").find('option[value="' + res.type + '"]').prop("selected",true);
+                url: "/sys/perm/" + rows[0],
+                type: "get",
+                success: function (res) {
+                    $("#editPermType").find('option[value="' + res.type + '"]').prop("selected", true);
                     $("#editPermId").val(res.id);
                     $("#editPermName").val(res.name);
                     $("#editPermUri").val(res.url);
@@ -367,10 +873,10 @@ function loadPerm() {
     $editPermModal.find("#editSubmit").click(function () {
         var rows = getIdSelections($permTable);
         $.ajax({
-            url : "/sys/perm/" + rows[0],
-            type : "put",
-            data : $("#editPermForm").serialize(),
-            success : function () {
+            url: "/sys/perm/" + rows[0],
+            type: "put",
+            data: $("#editPermForm").serialize(),
+            success: function () {
                 $editPermModal.modal("hide");
                 $permTable.bootstrapTable("refresh");
             }
@@ -382,7 +888,7 @@ function loadRole() {
     var $role = $('#roleTable');
     var settings = {
         url: "/sys/role",
-        singleSelect : true,
+        singleSelect: true,
         sidePagination: "client",
         queryParams: function (params) {
             return {
@@ -645,8 +1151,10 @@ function loadapicount() {
         });
     };
     api_click();
-    $("#btn-api").click(
-        api_click()
+    $("#btn-api-cli").click(
+        function () {
+            api_click()
+        }
     );
 }
 
@@ -865,8 +1373,8 @@ var $ExTable = (function () {
 
     function _initTable(id, settings) {
         var params = $.extend({}, bootstrapTable_default, settings);
-        if (typeof params.url == 'undefined') {
-            throw '初始化表格失败，请配置url参数！';
+        if (typeof params.url == 'undefined' && typeof params.data == 'undefined') {
+            throw '初始化表格失败，请配置url或data参数！';
         }
         if (typeof params.columns == 'undefined') {
             throw '初始化表格失败，请配置columns参数！';
@@ -884,9 +1392,9 @@ var $ExTable = (function () {
     }
 })($);
 
-var tip={};
+var tip = {};
 
-tip.confirm = function(oper) {
+tip.confirm = function (oper) {
     var operation = oper;
     bootbox.confirm({
         size: "small",

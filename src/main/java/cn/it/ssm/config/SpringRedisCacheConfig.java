@@ -18,7 +18,7 @@ public class SpringRedisCacheConfig {
     @Bean
     public RedisCacheManager redisCacheManager() {
         RedisCacheManager cacheManager = RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(redisConnectionFactory)
-                .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig()).build();
+            .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig()).build();
         return cacheManager;
     }
 

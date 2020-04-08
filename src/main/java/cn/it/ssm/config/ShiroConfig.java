@@ -9,6 +9,7 @@ import cn.it.ssm.common.shiro.realm.UserRealm;
 import cn.it.ssm.common.shiro.session.ShiroSessionListener;
 import cn.it.ssm.common.shiro.session.ShiroSessionManager;
 import cn.it.ssm.common.shiro.util.ShiroConst;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -75,6 +76,9 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/login", "anon");
         filterChainDefinitionMap.put("/sys/login", "anon");
         filterChainDefinitionMap.put("/kickout", "anon");
+        filterChainDefinitionMap.put("/job/**", "anon");
+        filterChainDefinitionMap.put("/joblog/**", "anon");
+        filterChainDefinitionMap.put("/act/**", "anon");
 
 
         filterChainDefinitionMap.put("/logout", "logout");
@@ -158,6 +162,7 @@ public class ShiroConfig {
         //securityManager.setCacheManager(ehCacheManager());
         securityManager.setCacheManager(shiroRedisCacheManager());
         securityManager.setSessionManager(sessionManager());
+        SecurityUtils.setSecurityManager(securityManager);
         return securityManager;
     }
 
@@ -170,7 +175,7 @@ public class ShiroConfig {
     @Bean
     public RetryLimitHashedCredentialsMatcher credentialsMatcher() {
         RetryLimitHashedCredentialsMatcher credentialsMatcher = new RetryLimitHashedCredentialsMatcher
-                (shiroRedisCacheManager());
+            (shiroRedisCacheManager());
         credentialsMatcher.setHashAlgorithmName("MD5");
         credentialsMatcher.setHashIterations(2);
         credentialsMatcher.setStoredCredentialsHexEncoded(true);

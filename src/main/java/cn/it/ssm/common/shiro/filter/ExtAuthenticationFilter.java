@@ -16,7 +16,6 @@ public class ExtAuthenticationFilter extends AuthenticationFilter {
 
     private static final Logger log = LoggerFactory.getLogger(ExtAuthenticationFilter.class);
 
-
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
 
@@ -25,20 +24,18 @@ public class ExtAuthenticationFilter extends AuthenticationFilter {
 
     /**
      * isAccessAllowed为false时会调用的方法
-     * @return true 放行，flase 拦截
      *
+     * @return true 放行，flase 拦截
      **/
     @Override
-    protected boolean onAccessDenied(ServletRequest request,
-                                     ServletResponse response) throws Exception {
-
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
 
         if (isLoginRequest(request, response)) {
             return true;
         } else {
             if (log.isTraceEnabled()) {
                 log.trace("Attempting to access a path which requires authentication.  Forwarding to the " +
-                        "Authentication url [" + getLoginUrl() + "]");
+                    "Authentication url [" + getLoginUrl() + "]");
             }
             if (!ShiroAjaxUtils.isAjax(request)) {
                 saveRequestAndRedirectToLogin(request, response);

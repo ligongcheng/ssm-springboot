@@ -24,10 +24,10 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
             return new byte[0];
         }
         return JSON.toJSONString(
-                t,
-                SerializerFeature.WriteClassName,
-                SerializerFeature.WriteMapNullValue,
-                SerializerFeature.DisableCircularReferenceDetect
+            t,
+            SerializerFeature.WriteClassName,
+            SerializerFeature.WriteMapNullValue,
+            SerializerFeature.DisableCircularReferenceDetect
         ).getBytes(DEFAULT_CHARSET);
     }
 
@@ -37,7 +37,7 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
             return null;
         }
         String str = new String(bytes, DEFAULT_CHARSET);
-        return (T) JSON.parseObject(str, clazz);
+        return JSON.parseObject(str, clazz);
     }
 
 }

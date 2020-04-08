@@ -1,6 +1,6 @@
 package cn.it.ssm.common.ExceptionHandler;
 
-import cn.it.ssm.common.vo.ConResult;
+import cn.it.ssm.common.entity.ConResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
 
     /**
      * 全局处理 系统自定义 未知异常
+     *
      * @param e
      * @return
      */
@@ -36,7 +37,7 @@ public class GlobalExceptionHandler {
 
 
     /**
-     * @return cn.it.ssm.common.vo.ConResult
+     * @return cn.it.ssm.common.entity.ConResult
      * @Author cheng tao
      * @Description //TODO
      * @Date 2019/3/15 12:16
@@ -64,6 +65,7 @@ public class GlobalExceptionHandler {
 
     /**
      * 处理 接口 限制异常
+     *
      * @param e
      * @return
      */
@@ -76,6 +78,7 @@ public class GlobalExceptionHandler {
 
     /**
      * 处理 参数 校验错误
+     *
      * @param e
      * @param bindingResult
      * @return

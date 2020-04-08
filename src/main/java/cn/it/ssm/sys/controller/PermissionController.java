@@ -1,8 +1,8 @@
 package cn.it.ssm.sys.controller;
 
-import cn.it.ssm.common.util.tree.PermNode;
+import cn.it.ssm.common.entity.ConResult;
 import cn.it.ssm.common.util.PermTreeUtils;
-import cn.it.ssm.common.vo.ConResult;
+import cn.it.ssm.common.util.tree.PermNode;
 import cn.it.ssm.common.vo.PageListVO;
 import cn.it.ssm.common.vo.TableRequest;
 import cn.it.ssm.sys.domain.auto.SysPermission;
@@ -78,12 +78,13 @@ public class PermissionController {
     @ResponseBody
     public PermNode permTree() {
         List<SysPermission> permissionList = permissionService.findPermissionList();
-        return PermTreeUtils.permTree(permissionList);
+        PermNode permTree = PermTreeUtils.permTree(permissionList);
+        return permTree;
     }
 
     @PostMapping("sys/perm")
     @ResponseBody
-    public ConResult addPerm(SysPermission permission){
+    public ConResult addPerm(SysPermission permission) {
         permission.setId(null);
         permission.setCreateTime(new Date());
         permission.setUpdateTime(new Date());

@@ -3,8 +3,9 @@ package cn.it.ssm.sys.controller;
 
 import cn.it.ssm.common.annotation.ApiLimit;
 import cn.it.ssm.common.annotation.Log;
+import cn.it.ssm.common.entity.ConResult;
+import cn.it.ssm.common.shiro.util.IPUtils;
 import cn.it.ssm.common.shiro.util.PasswordUtil;
-import cn.it.ssm.common.vo.ConResult;
 import cn.it.ssm.common.vo.OnlineUserVO;
 import cn.it.ssm.common.vo.PageListVO;
 import cn.it.ssm.common.vo.TableRequest;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Date;
@@ -68,17 +70,17 @@ public class UserController extends BaseController {
     }
 
     /**
+     * @return cn.it.ssm.common.entity.ConResult
      * @author cheng tao
      * @Description
      * @Date 2019/3/15 12:34
      * @Param [username, password, code]
-     * @return cn.it.ssm.common.vo.ConResult
      **/
 
     @Log("用户登录")
     @PostMapping("sys/login")
     @ResponseBody
-    public ConResult login(String username, String password, String code) {
+    public ConResult login(String username, String password, String code, HttpServletRequest request) {
         ConResult rs = ConResult.error();
         if (!StringUtils.isNotBlank(code)) {
             return rs.addMsg("验证码不能为空");
@@ -99,7 +101,7 @@ public class UserController extends BaseController {
             if (subject.isAuthenticated()) {
                 SysUser user = new SysUser();
                 user.setUsername(username);
-                user.setLastLoginIp(session.getHost());
+                user.setLastLoginIp(IPUtils.getIpAddr(request));
                 user.setLastLoginTime(session.getLastAccessTime());
                 userService.updateUserLoginInfo(user);
                 SysRole role = userService.findRoles(username).get(0);
@@ -157,10 +159,10 @@ public class UserController extends BaseController {
     @ResponseBody
     public ConResult register(@Valid SysUser user) {
         ConResult rs = ConResult.error();
-        if (userService.checkExistByUserName(user.getUsername())){
+        if (userService.checkExistByUserName(user.getUsername())) {
             return rs.addMsg("用户名已存在");
         }
-        user.setAuthSalt(PasswordUtil.generaterSalt());
+        user.setAuthSalt(PasswordUtil.getSalt());
         String id = UUID.randomUUID().toString().replace("-", "");
         String passwordEncypt = PasswordUtil.passwordEncypt(user.getPassword(), user.getAuthSalt());
         user.setId(id);
@@ -193,6 +195,7 @@ public class UserController extends BaseController {
 
     /**
      * 修改用户信息
+     *
      * @param user
      * @return
      */

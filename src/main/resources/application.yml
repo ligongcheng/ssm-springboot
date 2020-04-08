@@ -1,0 +1,116 @@
+server:
+    port: 8086
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+
+spring:
+    application:
+        name: web
+    profiles:
+        active: dev
+    aop:
+        proxy-target-class: true
+    #datasource
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        druid:
+            aop-patterns: cn.it.ssm.service
+            async-close-connection-enable: true
+            filter:
+                slf4j:
+                    data-source-log-enabled: true
+                    enabled: true
+                    statement-log-error-enabled: true
+                    statement-sql-pretty-format: true
+                stat:
+                    db-type: mysql
+                    enabled: true
+                    log-slow-sql: true
+                    merge-sql: true
+                    slow-sql-millis: 1000
+                wall:
+                    config:
+                        delete-allow: true
+                        drop-table-allow: false
+                    db-type: mysql
+                    enabled: true
+            filters: stat,wall,slf4j
+            initial-size: 10
+            max-active: 25
+            max-pool-prepared-statement-per-connection-size: 20
+            max-wait: 60000
+            min-evictable-idle-time-millis: 100000
+            min-idle: 10
+            pool-prepared-statements: true
+            stat-view-servlet:
+                enabled: true
+                reset-enable: false
+                url-pattern: /druid/*
+            time-between-eviction-runs-millis: 60000
+            validation-query: SELECT 1
+            validation-query-timeout: 60000
+            web-stat-filter:
+                enabled: true
+                exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
+                principal-session-name: user
+                profile-enable: true
+                session-stat-enable: true
+                session-stat-max-count: 1000
+                url-pattern: /*
+        type: com.alibaba.druid.pool.DruidDataSource
+    #quartz
+    quartz:
+        auto-startup: true
+        job-store-type: jdbc
+        jdbc:
+            initialize-schema: never
+        startup-delay: 10
+        properties:
+            org:
+                quartz:
+                    scheduler:
+                        instanceId: AUTO #默认主机名和时间戳生成实例ID,可以是任何字符串，但对于所有调度程序来说，必须是唯一的 对应qrtz_scheduler_state INSTANCE_NAME字段
+                        instanceName: quartzScheduler #quartzScheduler
+                        jobStore:
+                            acquireTriggersWithinLock: true
+                            class: org.quartz.impl.jdbcjobstore.JobStoreTX #持久化配置
+                            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate #我们仅为数据库制作了特定于数据库的代理
+                            useProperties: true #以指示JDBCJobStore将JobDataMaps中的所有值都作为字符串，因此可以作为名称 - 值对存储而不是在BLOB列中以其序列化形式存储更多复杂的对象。从长远来看，这是更安全的，因为您避免了将非String类序列化为BLOB的类版本问题。
+                            tablePrefix: qrtz_  #数据库表前缀
+                            misfireThreshold: 60000 #在被认为“失火”之前，调度程序将“容忍”一个Triggers将其下一个启动时间通过的毫秒数。默认值（如果您在配置中未输入此属性）为60000（60秒）。
+                            clusterCheckinInterval: 5000 #设置此实例“检入”*与群集的其他实例的频率（以毫秒为单位）。影响检测失败实例的速度。
+                            isClustered: false #打开群集功能,集群模式需要在多台服务器上做时间同步或者使用zookeeper去解决
+                        threadPool: #连接池
+                            class: org.quartz.simpl.SimpleThreadPool
+                            threadCount: 15
+                            threadPriority: 5
+                            threadsInheritContextClassLoaderOfInitializingThread: true
+    activiti:
+        history-level: full
+        check-process-definitions: false
+        database-schema-update: true
+
+
+mybatis:
+    configuration:
+        map-underscore-to-camel-case: true
+    mapper-locations: classpath:mapper/**/*.xml
+
+pagehelper:
+    helperDialect: mysql
+    params: count=countSql
+    reasonable: true
+    supportMethodsArguments: true
+
+captcha:
+    height: 33
+    len: 4
+    width: 150
+
+
+
+

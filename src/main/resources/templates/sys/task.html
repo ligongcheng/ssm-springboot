@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <title>任务列表</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link href="../dist/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <!-- Bootstrap 3.3.6 -->
+    <link href="../assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 以上为公共css -->
+
+    <!-- app css -->
+    <link href="../assets/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link href="../assets/toastr/toastr.min.css" rel="stylesheet"/>
+    <link href="../assets/jsTree/jstree.style.min.css" rel="stylesheet"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+<div class="panel-body" style="padding-bottom:0px;">
+    <table id="taskTable"></table>
+</div>
+
+<div class="modal fade" id="dealModal">
+    <div class="modal-dialog animated" style="width: 700px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+                <h4 class="modal-title text-center">处理任务</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form">
+                    <form id="dealForm">
+                        <div class="form-group">
+                            <label>请假人:</label>
+                            <input class="form-control" disabled id="username" name="username" placeholder="请假人" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>请假天数:</label>
+                            <input class="form-control" id="leaveDay" name="leaveDay" placeholder="请假天数" readonly type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>开始时间:</label>
+                            <input class="form-control" id="startTime" name="startTime" placeholder="开始时间" readonly type="text">
+
+                        </div>
+                        <div class="form-group">
+                            <label>结束时间:</label>
+                            <input class="form-control" id="endTime" name="endTime" placeholder="结束时间" readonly type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>请假原因:</label>
+                            <textarea class="form-control" id="reason" maxlength="100" name="reason" placeholder="请假原因" readonly></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>是否同意:</label>
+                            <label class="radio-inline">
+                                <input id="inlineRadio1" name="approve" type="radio" value="false"> 不同意
+                            </label>
+                            <label class="radio-inline">
+                                <input id="inlineRadio2" name="approve" type="radio" value="true"> 同意
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>审批意见:</label>
+                            <textarea class="form-control" id="comment" maxlength="100" name="comment" placeholder="审批意见"></textarea>
+                        </div>
+                        <input id="taskId" name="taskId" type="hidden"/>
+                    </form>
+                </div>
+                <a aria-controls="collapseExample" aria-expanded="false" data-toggle="collapse" href="#collapseExample">
+                    <h3 align="center">批注记录</h3>
+                </a>
+                <div class="collapse" id="collapseExample">
+                    <div>
+                        <table id="commentTable"></table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">关闭</button>
+                <button class="btn btn-primary" id="doDeal" type="button">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- jQuery 2.2.3 -->
+<script src="../assets/jquery-1.11.0.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+<!--app js -->
+<script src="../assets/bootstrap-table/bootstrap-table.js"></script>
+<script src="../assets/bootstrap-table/bootstrap-table-zh-CN.js"></script>
+<script src="../assets/toastr/toastr.min.js"></script>
+<script src="../assets/bootbox/bootbox.js"></script>
+<script src="../assets/ExTable.js"></script>
+<script src="../assets/app.js"></script>
+<script src="../assets/jsTree/jstree.js"></script>
+<script>
+    loadTask();
+</script>
+</body>
+</html>

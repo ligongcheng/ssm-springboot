@@ -27,8 +27,8 @@ public class RedisConfig {
      */
     @Bean
     public RedisTemplate<Object, Object> redisTemplate(
-            RedisConnectionFactory redisConnectionFactory,
-            StringRedisTemplate stringRedisTemplate) throws UnknownHostException {
+        RedisConnectionFactory redisConnectionFactory,
+        StringRedisTemplate stringRedisTemplate) throws UnknownHostException {
 
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
@@ -51,7 +51,7 @@ public class RedisConfig {
      */
     @Bean
     public RedisTemplate<Object, Object> shiroRedisTemplate(
-            RedisConnectionFactory redisConnectionFactory) throws UnknownHostException {
+        RedisConnectionFactory redisConnectionFactory) throws UnknownHostException {
 
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
@@ -64,7 +64,7 @@ public class RedisConfig {
 
     @Bean
     public RedisTemplate<Object, Object> redisJsonTemplate(
-            RedisConnectionFactory redisConnectionFactory) throws UnknownHostException {
+        RedisConnectionFactory redisConnectionFactory) throws UnknownHostException {
 
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);

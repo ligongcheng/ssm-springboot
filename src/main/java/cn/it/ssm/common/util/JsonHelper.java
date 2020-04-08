@@ -17,8 +17,8 @@ public class JsonHelper {
             return null;
         }
         return JSON.toJSONString(obj,
-                SerializerFeature.WriteClassName,
-                SerializerFeature.DisableCircularReferenceDetect
+            SerializerFeature.WriteClassName,
+            SerializerFeature.DisableCircularReferenceDetect
         );
     }
 

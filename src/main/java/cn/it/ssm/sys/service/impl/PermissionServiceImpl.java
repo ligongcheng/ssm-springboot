@@ -2,11 +2,11 @@ package cn.it.ssm.sys.service.impl;
 
 import cn.it.ssm.common.vo.PageListVO;
 import cn.it.ssm.common.vo.TableRequest;
+import cn.it.ssm.sys.dao.auto.SysPermissionMapper;
+import cn.it.ssm.sys.dao.auto.SysRolePermissionMapper;
 import cn.it.ssm.sys.domain.auto.SysPermission;
 import cn.it.ssm.sys.domain.auto.SysPermissionExample;
 import cn.it.ssm.sys.domain.auto.SysRolePermissionExample;
-import cn.it.ssm.sys.mapper.auto.SysPermissionMapper;
-import cn.it.ssm.sys.mapper.auto.SysRolePermissionMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;

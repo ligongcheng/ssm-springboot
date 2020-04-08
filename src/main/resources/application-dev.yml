@@ -1,0 +1,19 @@
+spring:
+    datasource:
+        druid:
+            stat-view-servlet:
+                login-password: ''
+                login-username: ''
+        password: root
+        url: jdbc:mysql://localhost:3306/ssm?serverTimezone=UTC&useSSL=false&nullCatalogMeansCurrent=true&characterEncoding=utf-8
+        username: root
+    redis:
+        database: 0
+        host: 192.168.200.131
+        password: redis
+        port: 6379
+        ssl: false
+        timeout: 3s
+        url: ''
+    thymeleaf:
+        cache: false

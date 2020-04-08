@@ -75,10 +75,10 @@ public class UserRealm extends AuthorizingRealm {
         String password = user.getPassword();
         user.setPassword(null);
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-                user, //用户
-                password, //密码
-                new MySimpleByteSource(user.getAuthSalt()),//salt=username+salt
-                getName()  //realm name
+            user, //用户
+            password, //密码
+            new MySimpleByteSource(user.getAuthSalt()),//salt=username+salt
+            getName()  //realm name
         );
         return authenticationInfo;
     }

@@ -104,8 +104,8 @@ public class IdWorker {
         this.workerId = workerId;
         this.datacenterId = datacenterId;
         logger.info(String.format("worker starting. timestamp left shift %d, datacenter id bits %d, worker id bits %d, sequence bits %d, workerid %d",
-                timestampLeftShift, datacenterIdBits, workerIdBits,
-                sequenceBits, workerId));
+            timestampLeftShift, datacenterIdBits, workerIdBits,
+            sequenceBits, workerId));
     }
 
     /**
@@ -136,7 +136,7 @@ public class IdWorker {
 
         // ID偏移组合生成最终的ID，并返回ID
         long id = ((timestamp - twepoch) << timestampLeftShift) | (datacenterId << datacenterIdShift) | (workerId << workerIdShift) | sequence;
-        return StringUtils.isNotEmpty(prefix) ? prefix + String.valueOf(id) : String.valueOf(id);
+        return StringUtils.isNotEmpty(prefix) ? prefix + id : String.valueOf(id);
     }
 
     public synchronized long nextId() {

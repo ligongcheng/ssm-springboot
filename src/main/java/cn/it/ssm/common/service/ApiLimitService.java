@@ -19,14 +19,15 @@ public class ApiLimitService {
     private DefaultRedisScript<Long> script = initScript();
     private RedisSerializer Ser = new StringRedisSerializer();
 
-    private DefaultRedisScript<Long> initScript(){
+    private DefaultRedisScript<Long> initScript() {
         DefaultRedisScript<Long> script = new DefaultRedisScript<Long>();
         script.setResultType(Long.class);
         script.setLocation(new ClassPathResource("script/apiLimit.lua"));
         return script;
     }
+
     public boolean isLimited(List<String> keys, String... args) {
-        Long aLong = redisTemplate.execute(script, keys, args[0],args[1]);
+        Long aLong = redisTemplate.execute(script, keys, args[0], args[1]);
         return aLong != 1;
     }
 

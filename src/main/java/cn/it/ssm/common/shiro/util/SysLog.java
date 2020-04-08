@@ -170,16 +170,16 @@ public class SysLog implements Serializable {
     @Override
     public String toString() {
         return "SysLog{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", operation='" + operation + '\'' +
-                ", time=" + time +
-                ", method='" + method + '\'' +
-                ", params='" + params + '\'' +
-                ", ip='" + ip + '\'' +
-                ", createTime=" + createTime +
-                ", location='" + location + '\'' +
-                ", timeField='" + timeField + '\'' +
-                '}';
+            "id=" + id +
+            ", username='" + username + '\'' +
+            ", operation='" + operation + '\'' +
+            ", time=" + time +
+            ", method='" + method + '\'' +
+            ", params='" + params + '\'' +
+            ", ip='" + ip + '\'' +
+            ", createTime=" + createTime +
+            ", location='" + location + '\'' +
+            ", timeField='" + timeField + '\'' +
+            '}';
     }
 }

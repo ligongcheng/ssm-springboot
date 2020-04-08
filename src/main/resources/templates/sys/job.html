@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <title>任务列表</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link href="../dist/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <!-- Bootstrap 3.3.6 -->
+    <link href="../plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../dist/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 以上为公共css -->
+
+    <!-- app css -->
+    <link href="../assets/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link href="../assets/toastr/toastr.min.css" rel="stylesheet"/>
+    <link href="../assets/jsTree/jstree.style.min.css" rel="stylesheet"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+<div class="panel-body" style="padding-bottom:0px;">
+
+    <div class="btn-group" id="toolbar">
+        <button class="btn btn-default" id="btn_add" type="button">
+            <span aria-hidden="true" class="glyphicon glyphicon-plus"></span> 新增
+        </button>
+    </div>
+    <table id="jobTable"></table>
+</div>
+
+<div class="modal fade" id="addJobModal">
+    <div class="modal-dialog animated" style="width: 500px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+                <h4 class="modal-title text-center">添加定时任务</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form">
+                    <form id="addJobForm">
+                        <div class="form-group">
+                            <label>任务名:</label>
+                            <input class="form-control" id="name" name="name" placeholder="任务名" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>任务描述:</label>
+                            <input class="form-control" id="desc" name="desc" placeholder="任务描述" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>任务类:</label>
+                            <input class="form-control" id="classNmae" name="classNmae" type="text" value="cn.it.ssm.job.task.SimpleJob">
+                        </div>
+                        <div class="form-group">
+                            <label>Cron表达式:</label>
+                            <input class="form-control" id="cronExpression" name="cronExpression" placeholder="Cron表达式" type="text">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">关闭</button>
+                <button class="btn btn-primary" id="doAddJob" type="button">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- jQuery 2.2.3 -->
+<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--app js -->
+<script src="../assets/bootstrap-table/bootstrap-table.js"></script>
+<script src="../assets/bootstrap-table/bootstrap-table-zh-CN.js"></script>
+<script src="../assets/toastr/toastr.min.js"></script>
+<script src="../assets/bootbox/bootbox.js"></script>
+<script src="../assets/ExTable.js"></script>
+<script src="../assets/app.js"></script>
+<script src="../assets/jsTree/jstree.js"></script>
+<script>
+    loadJob()
+</script>
+</body>
+</html>

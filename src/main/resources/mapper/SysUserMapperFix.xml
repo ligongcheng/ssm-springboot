@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.it.ssm.sys.mapper.SysUserMapperFix">
+<mapper namespace="cn.it.ssm.sys.dao.SysUserMapperFix">
+
 
     <select id="findRolesByUsername" resultType="cn.it.ssm.sys.domain.auto.SysRole">
         SELECT r.id,
@@ -30,7 +31,7 @@
         SELECT p.*
         FROM sys_permission p,sys_role_permission rp
         WHERE
-          rp.sys_permission_id=p.id
+        rp.sys_permission_id=p.id
         AND p.available=1
         AND rp.sys_role_id
         IN
@@ -89,6 +90,18 @@
             </if>
         </where>
         order by u.id
+    </select>
+    <select id="findUserByRoleName" resultType="cn.it.ssm.sys.domain.auto.SysUser">
+        select
+        u.id,
+        u.username
+        FROM
+        sys_user u
+        LEFT JOIN sys_user_role ur
+        ON (u.id = ur.sys_user_id)
+        LEFT JOIN sys_role r
+        ON (ur.sys_role_id = r.id)
+        where r.name = #{roleName,jdbcType=VARCHAR}
     </select>
 
 </mapper>

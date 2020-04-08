@@ -11,6 +11,8 @@ public class PermNode implements Serializable {
 
     private String state;
 
+    private Integer sort;
+
     private Integer parentId;
 
     private List<PermNode> children;
@@ -21,6 +23,14 @@ public class PermNode implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     public String getText() {

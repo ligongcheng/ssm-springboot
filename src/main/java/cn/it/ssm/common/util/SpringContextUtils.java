@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SpringContextUtils implements ApplicationContextAware {
-    public static ApplicationContext applicationContext;
+    private static ApplicationContext applicationContext;
 
     public static Object getBean(String name) {
         return applicationContext.getBean(name);
@@ -38,9 +38,12 @@ public class SpringContextUtils implements ApplicationContextAware {
         return applicationContext.getType(name);
     }
 
+    public ApplicationContext getApplicationContext() {
+        return SpringContextUtils.applicationContext;
+    }
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         SpringContextUtils.applicationContext = applicationContext;
     }
-
 }

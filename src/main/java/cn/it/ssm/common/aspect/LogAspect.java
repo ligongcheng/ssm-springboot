@@ -38,7 +38,7 @@ public class LogAspect {
 	private LogService logService;*/
 
 	/*@Autowired
-	ObjectMapper mapper;*/
+	ObjectMapper dao;*/
 
     @Pointcut("@annotation(cn.it.ssm.common.annotation.Log)")
     public void pointcut() {
@@ -81,7 +81,7 @@ public class LogAspect {
         log.setUsername(user.getUsername());
         log.setTime(time);
         log.setCreateTime(new Date());
-        //log.setLocation(AddressUtils.getRealAddressByIP(log.getIp(), mapper));
+        //log.setLocation(AddressUtils.getRealAddressByIP(log.getIp(), dao));
         //日志
         logger.debug(log.toString());
         //存入redis

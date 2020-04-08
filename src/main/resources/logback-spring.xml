@@ -49,14 +49,8 @@
         <appender-ref ref="console"/>
     </root>
 
-    <logger name="cn.it.ssm.sys.mapper" level="DEBUG" additivity="false">
+    <logger name="cn.it.ssm.act" level="DEBUG" additivity="false">
         <appender-ref ref="console"/>
-    </logger>
-
-    <logger name="com.alibaba.druid" level="DEBUG" additivity="false">
-        <appender-ref ref="console"/>
-        <appender-ref ref="file-info"/>
-        <appender-ref ref="file-warn"/>
     </logger>
 
     <logger name="cn.it.ssm" level="INFO" additivity="true">

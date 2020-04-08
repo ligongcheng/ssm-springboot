@@ -1,10 +1,10 @@
 package cn.it.ssm.sys.service.impl;
 
 
+import cn.it.ssm.sys.dao.auto.SysRoleMapper;
+import cn.it.ssm.sys.dao.auto.SysRolePermissionMapper;
+import cn.it.ssm.sys.dao.auto.SysUserRoleMapper;
 import cn.it.ssm.sys.domain.auto.*;
-import cn.it.ssm.sys.mapper.auto.SysRoleMapper;
-import cn.it.ssm.sys.mapper.auto.SysRolePermissionMapper;
-import cn.it.ssm.sys.mapper.auto.SysUserRoleMapper;
 import com.github.pagehelper.PageHelper;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

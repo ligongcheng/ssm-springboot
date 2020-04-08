@@ -1,56 +1,93 @@
 package cn.it.ssm.sys.domain.auto;
 
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 
 public class SysUser implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String id;
-
     @NotBlank(message = "用户名不能为空")
     @Pattern(regexp = "^\\w{4,12}$", message = "用户名必须为4-12位的字母、数字、下划线")
     private String username;
-
     @NotBlank(message = "密码不能为空")
     @Pattern(regexp = "^\\w{4,12}$", message = "密码必须为4-12位的字母、数字、下划线")
     private String password;
-
+    /**
+     * 昵称
+     */
     private String nickname;
-
+    /**
+     * 年龄
+     */
     private Integer age;
-
+    /**
+     * 性别
+     * 0：女
+     * 1：男
+     * 2：保密
+     */
     private Integer sex;
-
+    /**
+     * 职业类型：
+     * 1：Java开发
+     * 2：前端开发
+     * 3：大数据开发
+     * 4：ios开发
+     * 5：Android开发
+     * 6：Linux系统工程师
+     * 7：PHP开发
+     * 8：.net开发
+     * 9：C/C++
+     * 10：学生
+     * 11：其它
+     */
     private Integer job;
-
+    /**
+     * 头像地址
+     */
     private String faceImage;
-
+    /**
+     * 省
+     */
     private String province;
-
+    /**
+     * 市
+     */
     private String city;
-
+    /**
+     * 区
+     */
     private String district;
-
+    /**
+     * 详细地址
+     */
     private String address;
-
+    /**
+     * 用于权限的“盐”
+     */
     private String authSalt;
-
+    /**
+     * 最后一次登录IP
+     */
     private String lastLoginIp;
-
-    private Date lastLoginTime;
 
     private Integer isDelete;
 
     private Date registTime;
+    /**
+     * 最后一次登录时间
+     */
+    private Date lastLoginTime;
+    private Integer deptId;
 
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+        this.id = id;
     }
 
     public String getUsername() {
@@ -58,7 +95,7 @@ public class SysUser implements Serializable {
     }
 
     public void setUsername(String username) {
-        this.username = username == null ? null : username.trim();
+        this.username = username;
     }
 
     public String getPassword() {
@@ -66,7 +103,7 @@ public class SysUser implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password == null ? null : password.trim();
+        this.password = password;
     }
 
     public String getNickname() {
@@ -74,7 +111,7 @@ public class SysUser implements Serializable {
     }
 
     public void setNickname(String nickname) {
-        this.nickname = nickname == null ? null : nickname.trim();
+        this.nickname = nickname;
     }
 
     public Integer getAge() {
@@ -106,7 +143,7 @@ public class SysUser implements Serializable {
     }
 
     public void setFaceImage(String faceImage) {
-        this.faceImage = faceImage == null ? null : faceImage.trim();
+        this.faceImage = faceImage;
     }
 
     public String getProvince() {
@@ -114,7 +151,7 @@ public class SysUser implements Serializable {
     }
 
     public void setProvince(String province) {
-        this.province = province == null ? null : province.trim();
+        this.province = province;
     }
 
     public String getCity() {
@@ -122,7 +159,7 @@ public class SysUser implements Serializable {
     }
 
     public void setCity(String city) {
-        this.city = city == null ? null : city.trim();
+        this.city = city;
     }
 
     public String getDistrict() {
@@ -130,7 +167,7 @@ public class SysUser implements Serializable {
     }
 
     public void setDistrict(String district) {
-        this.district = district == null ? null : district.trim();
+        this.district = district;
     }
 
     public String getAddress() {
@@ -138,7 +175,7 @@ public class SysUser implements Serializable {
     }
 
     public void setAddress(String address) {
-        this.address = address == null ? null : address.trim();
+        this.address = address;
     }
 
     public String getAuthSalt() {
@@ -146,7 +183,7 @@ public class SysUser implements Serializable {
     }
 
     public void setAuthSalt(String authSalt) {
-        this.authSalt = authSalt == null ? null : authSalt.trim();
+        this.authSalt = authSalt;
     }
 
     public String getLastLoginIp() {
@@ -154,7 +191,7 @@ public class SysUser implements Serializable {
     }
 
     public void setLastLoginIp(String lastLoginIp) {
-        this.lastLoginIp = lastLoginIp == null ? null : lastLoginIp.trim();
+        this.lastLoginIp = lastLoginIp;
     }
 
     public Date getLastLoginTime() {
@@ -181,8 +218,39 @@ public class SysUser implements Serializable {
         this.registTime = registTime;
     }
 
+    public Integer getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Integer deptId) {
+        this.deptId = deptId;
+    }
+
     @Override
     public String toString() {
-        return username;
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", username=").append(username);
+        sb.append(", password=").append(password);
+        sb.append(", nickname=").append(nickname);
+        sb.append(", age=").append(age);
+        sb.append(", sex=").append(sex);
+        sb.append(", job=").append(job);
+        sb.append(", faceImage=").append(faceImage);
+        sb.append(", province=").append(province);
+        sb.append(", city=").append(city);
+        sb.append(", district=").append(district);
+        sb.append(", address=").append(address);
+        sb.append(", authSalt=").append(authSalt);
+        sb.append(", lastLoginIp=").append(lastLoginIp);
+        sb.append(", lastLoginTime=").append(lastLoginTime);
+        sb.append(", isDelete=").append(isDelete);
+        sb.append(", registTime=").append(registTime);
+        sb.append(", deptId=").append(deptId);
+        sb.append("]");
+        return sb.toString();
     }
 }

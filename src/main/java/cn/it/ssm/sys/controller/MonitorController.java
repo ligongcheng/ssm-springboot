@@ -1,9 +1,9 @@
 package cn.it.ssm.sys.controller;
 
+import cn.it.ssm.common.entity.RedisConstants;
+import cn.it.ssm.common.entity.RequestMappingDetail;
 import cn.it.ssm.common.monitor.ApiEnum;
 import cn.it.ssm.common.vo.ApiMonitorVO;
-import cn.it.ssm.common.vo.RedisConstants;
-import cn.it.ssm.common.vo.RequestMappingDetail;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -38,12 +38,12 @@ public class MonitorController implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
     @GetMapping("sys/apiCountPage")
-    public String apiCount(){
+    public String apiCount() {
         return "sys/apiCountPage";
     }
 
     @GetMapping("sys/apiInfoPage")
-    public String apiInfo(){
+    public String apiInfo() {
         return "sys/apiInfoPage";
     }
 
@@ -58,7 +58,7 @@ public class MonitorController implements ApplicationContextAware {
     public Set<String> getAllUrl(HttpServletRequest request) {
         final Set<String> result = new HashSet<String>();
         WebApplicationContext wc = (WebApplicationContext) request
-                .getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+            .getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         RequestMappingHandlerMapping bean = wc.getBean(RequestMappingHandlerMapping.class);
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = bean.getHandlerMethods();
         for (RequestMappingInfo rmi : handlerMethods.keySet()) {
@@ -89,7 +89,7 @@ public class MonitorController implements ApplicationContextAware {
     public ArrayList<RequestMappingDetail> getAllUrlMap(HttpServletRequest request) {
         ArrayList<RequestMappingDetail> requestMappingDetail = new ArrayList<RequestMappingDetail>();
         WebApplicationContext wc = (WebApplicationContext) request
-                .getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+            .getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         RequestMappingHandlerMapping bean = wc.getBean(RequestMappingHandlerMapping.class);
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = bean.getHandlerMethods();
         for (Map.Entry<RequestMappingInfo, HandlerMethod> rmi : handlerMethods.entrySet()) {
@@ -183,7 +183,7 @@ public class MonitorController implements ApplicationContextAware {
         //count:18000:/getAllUrlMap
         Map<Object, Object> map = stringRedisTemplate.opsForHash().entries(ApiEnum.API_COUNT_PREFIX.getApiValue() + apitime + ":" + apilist);
         for (Map.Entry entry :
-                map.entrySet()) {
+            map.entrySet()) {
             ApiMonitorVO apiMonitorVO = new ApiMonitorVO();
             //apiMonitorVO.setApiTime((String) entry.getKey());
             Long key = Long.valueOf((String) entry.getKey());
@@ -214,7 +214,7 @@ public class MonitorController implements ApplicationContextAware {
 
     @RequestMapping("sys/redisInfo")
     @ResponseBody
-    public Properties getRedisInfo(){
+    public Properties getRedisInfo() {
         Properties info = stringRedisTemplate.execute(new RedisCallback<Properties>() {
             @Override
             public Properties doInRedis(RedisConnection connection) throws DataAccessException {
