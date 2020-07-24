@@ -33,6 +33,7 @@ public class MonitorHelper {
         }
         final long seconds = System.currentTimeMillis() / 1000;
         stringRedisTemplate.executePipelined(new RedisCallback<Object>() {
+            @Override
             public Object doInRedis(RedisConnection connection) throws DataAccessException {
                 for (Integer prec : RedisConstants.PRECISION) {
                     long startSlice = seconds / prec * prec;

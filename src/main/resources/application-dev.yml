@@ -9,11 +9,20 @@ spring:
         username: root
     redis:
         database: 0
-        host: 192.168.200.131
+        host: 127.0.0.1 #192.168.200.134
         password: redis
         port: 6379
         ssl: false
-        timeout: 3s
-        url: ''
+        timeout: 5s
+        lettuce:
+            pool:
+                min-idle: 4
+                time-between-eviction-runs: 60s
+                max-wait: 5s
+
     thymeleaf:
         cache: false
+
+mybatis:
+    configuration:
+        log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl

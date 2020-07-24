@@ -6,6 +6,8 @@ import java.io.Serializable;
 
 public class LoginUser implements Serializable {
 
+    private static final long serialVersionUID = -5542440924026890369L;
+
     @NotBlank(message = "用户名或密码不能为空")
     @Pattern(regexp = "^\\w{4,12}$", message = "用户名必须为4-12位的字母、数字、下划线")
     private String username;

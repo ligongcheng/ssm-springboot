@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * springbenJobfactory实现了AutowireCapableBeanFactory 可以实现ioc功能
+ * SpringBeanJobFactory 实现了AutowireCapableBeanFactory 可以实现ioc功能
  */
 @DisallowConcurrentExecution
 @Slf4j

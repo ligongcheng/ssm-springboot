@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
     <contextName>ssm</contextName>
+
+    <springProperty scop="context" name="appid" source="app.trace.id" defaultValue="app"/>
+
     <property name="log.path" value="log"/>
+    <property name="appid" value="${appid}"/>
+    <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%contextName] [%thread] [%-5level] [%logger{50}] %msg%n"/>
     <!--日志级别：TRACE < DEBUG < INFO < WARN < ERROR-->
     <!--输出到控制台-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
@@ -9,39 +14,43 @@
                      <level>ERROR</level>
                  </filter>-->
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <!--输出到文件 包含warn-->
+    <!--输出到文件 包含warn error-->
     <appender name="file-warn" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${log.path}/warn_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>50MB</maxFileSize>
-            <maxHistory>30</maxHistory>
+            <maxHistory>2</maxHistory>
         </rollingPolicy>
+        <!-- ThresholdFilter 过滤掉低于指定临界值的事件 -->
+        <!--接收 warn error 级别-->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>WARN</level>
         </filter>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <!--输出到文件 包含info-->
+    <!--输出到文件 info-->
     <appender name="file-info" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${log.path}/info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>50MB</maxFileSize>
-            <maxHistory>30</maxHistory>
+            <maxHistory>2</maxHistory>
         </rollingPolicy>
+        <!--LevelFilter 根据记录级别对记录事件进行过滤。如果事件的级别等于配置的级别，过滤器会根据 onMatch 和 onMismatch 属性接受或拒绝事件-->
+        <!--只接收info级别日志-->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
@@ -49,7 +58,7 @@
         <appender-ref ref="console"/>
     </root>
 
-    <logger name="cn.it.ssm.act" level="DEBUG" additivity="false">
+    <logger name="io.lettuce.core.protocol.CommandHandler" level="info" additivity="false">
         <appender-ref ref="console"/>
     </logger>
 

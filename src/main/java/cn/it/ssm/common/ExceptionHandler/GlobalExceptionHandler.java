@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AppException.class)
     //@ResponseStatus(HttpStatus.BAD_REQUEST)
     public ConResult handleAppException(Exception e) {
-        log.error(e.getMessage(), e);
+        log.error(e.getMessage());
         String msg = "应用错误";
         if (StringUtils.isNotBlank(e.getMessage())) {
             msg = e.getMessage();
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ConResult handleUnauthorizedException(Exception e) {
-        log.error(e.getMessage(), e);
+        log.error(e.getMessage());
         return ConResult.error().addMsg("没有权限！");
     }
 
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(AccountChangeException.class)
     public ConResult handleAccountChangeException(Exception e) {
-        log.error(e.getMessage(), e);
+        log.error(e.getMessage());
         return ConResult.error().addMsg(e.getMessage());
     }
 
@@ -105,8 +105,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     //@ResponseStatus(HttpStatus.BAD_REQUEST)
     public ConResult handleException(Exception e) {
-        log.error(e.getMessage(), e);
-        return ConResult.error().addMsg("系统异常");
+        log.error(e.getMessage());
+        return ConResult.error().addMsg(e.getMessage());
     }
 
 }

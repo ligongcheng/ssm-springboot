@@ -59,8 +59,9 @@ public class SessionServiceImpl implements cn.it.ssm.sys.service.SessionService 
         Session session = null;
         try {
             session = sessionDAO.readSession(id);
-            session.setAttribute("kickout", true);
-            sessionDAO.update(session);
+            //session.setAttribute("kickout", true);
+            //sessionDAO.update(session);
+            sessionDAO.delete(session);
         } catch (Exception e) {
         }//ignore error
     }

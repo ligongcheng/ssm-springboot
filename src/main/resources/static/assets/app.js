@@ -503,14 +503,14 @@ function loadTask() {
                 type: "get",
                 success: function (res) {
                     console.log(JSON.stringify(res))
-                    $('#username').val(res.data.leaveBill.username);
-                    $('#leaveDay').val(res.data.leaveBill.leaveDay);
-                    $('#startTime').val(res.data.leaveBill.startTime);
-                    $('#endTime').val(res.data.leaveBill.endTime);
-                    $('#reason').val(res.data.leaveBill.reason);
+                    $('#username').val(res.data.username);
+                    $('#leaveDay').val(res.data.leaveDay);
+                    $('#startTime').val(res.data.startTime);
+                    $('#endTime').val(res.data.endTime);
+                    $('#reason').val(res.data.reason);
                     $('#taskId').val(row.taskId);
                     var comment = {
-                        data: res.data.leaveBillComment,
+                        data: res.data.comments,
                         pagination: false,
                         sidePagination: 'client',
                         toolbar: '',
@@ -1080,7 +1080,7 @@ function loadOnline() {
                     $("#online").bootstrapTable('refresh')
                 }
             });
-            $remove.prop('disabled', true);
+            //$remove.prop('disabled', true);
         }
 
         //alert(ids);

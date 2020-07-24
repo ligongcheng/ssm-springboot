@@ -9,7 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -20,13 +23,11 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
     private static final Logger log = LoggerFactory.getLogger(ShiroRedisCache.class);
 
     private RedisTemplate<String, Object> redisTemplate;
-    private ValueOperations<String, Object> ops;
     private String prefix;
     private long timeout;
 
     public ShiroRedisCache(RedisTemplate redisTemplate, String prefix, long timeout) {
         this.redisTemplate = redisTemplate;
-        this.ops = redisTemplate.opsForValue();
         this.prefix = prefix;
         this.timeout = timeout;
     }
@@ -39,7 +40,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
             return null;
         }
         Object cacheKey = getRedisCacheKey(key);
-        V vl = (V) ops.get(cacheKey);
+        V vl = (V) redisTemplate.opsForValue().get(cacheKey);
         return vl;
     }
 
@@ -50,7 +51,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
             return null;
         }
         String cacheKey = getRedisCacheKey(key);
-        ops.set(cacheKey, value, timeout, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(cacheKey, value, timeout, TimeUnit.SECONDS);
         return value;
     }
 
@@ -63,7 +64,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
         }
         String cacheKey = getRedisCacheKey(key);
         V v = get(key);
-        ops.getOperations().delete(cacheKey);
+        redisTemplate.opsForValue().getOperations().delete(cacheKey);
         return v;
     }
 
@@ -122,7 +123,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
         log.debug("session values");
         List<V> values = null;
         try {
-            values = (List<V>) ops.multiGet((Collection<String>) keys());
+            values = (List<V>) redisTemplate.opsForValue().multiGet((Collection<String>) keys());
         } catch (Exception e) {
             log.debug("values: {} ,error", prefix);
         }

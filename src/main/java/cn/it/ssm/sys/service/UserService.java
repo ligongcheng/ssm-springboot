@@ -8,6 +8,7 @@ import cn.it.ssm.sys.domain.auto.SysUser;
 import cn.it.ssm.sys.domain.vo.SysUserWithRole;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -43,4 +44,6 @@ public interface UserService {
     int enableUser(String id);
 
     List<SysUser> findUserByRoleName(String roleName);
+
+    Map<String, String> findUserFilterMap();
 }

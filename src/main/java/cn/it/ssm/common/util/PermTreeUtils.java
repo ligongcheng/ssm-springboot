@@ -11,32 +11,30 @@ public class PermTreeUtils {
 
     public static PermNode permTree(List<SysPermission> permissionList) {
         // root node
-        PermNode topRoot = new PermNode();
-        topRoot.setId(0);
-        topRoot.setText("top");
-        Integer parentId = 0;
-        PermTreeUtils.childTree(topRoot, permissionList, parentId);
-        return topRoot;
+        PermNode root = new PermNode();
+        root.setId(0);
+        root.setText("top");
+        root.setChildren(PermTreeUtils.getChildren(root, permissionList));
+        return root;
     }
 
-    private static List<PermNode> childTree(PermNode topRoot, List<SysPermission> permissionList, Integer parentId) {
+    private static List<PermNode> getChildren(PermNode root, List<SysPermission> permissionList) {
         List<PermNode> permNodes = new ArrayList<PermNode>();
         for (SysPermission p : permissionList) {
             // 加载本层节点
-            if (p.getParentid().equals(parentId)) {
+            if (p.getParentid().equals(root.getId())) {
                 PermNode node = new PermNode();
                 node.setId(p.getId());
                 node.setText(p.getName());
                 node.setSort(p.getSort());
                 node.setParentId(p.getParentid());
                 // 设置children
-                node.setChildren(childTree(node, permissionList, node.getId()));
+                node.setChildren(getChildren(node, permissionList));
                 permNodes.add(node);
-
             }
         }
+        // 排序
         permNodes.sort(Comparator.comparingInt(PermNode::getSort));
-        topRoot.setChildren(permNodes);
         return permNodes;
     }
 }

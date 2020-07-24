@@ -43,8 +43,12 @@ public class PermissionController {
         if (tableRequest == null) {
             tableRequest = new TableRequest(5, 1, null);
         } else {
-            if (tableRequest.getPageNum() == null) tableRequest.setPageNum(1);
-            if (tableRequest.getPageSize() == null) tableRequest.setPageSize(5);
+            if (tableRequest.getPageNum() == null) {
+                tableRequest.setPageNum(1);
+            }
+            if (tableRequest.getPageSize() == null) {
+                tableRequest.setPageSize(5);
+            }
         }
         PageListVO pageListVO = permissionService.findPermissionList(tableRequest);
         return pageListVO;

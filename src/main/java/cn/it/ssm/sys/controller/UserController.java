@@ -23,6 +23,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,10 +34,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * 用户控制器
+ *
+ * @author chengtao
+ * @date 2020/07/18 10:34:52
+ */
 @Controller
 @Slf4j
 //@CacheConfig(cacheNames = "spring-cache",keyGenerator = "kg")
 public class UserController extends BaseController {
+
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
 
     @Autowired
     SessionService sessionService;
@@ -69,14 +79,16 @@ public class UserController extends BaseController {
         return "sys/user";
     }
 
-    /**
-     * @return cn.it.ssm.common.entity.ConResult
-     * @author cheng tao
-     * @Description
-     * @Date 2019/3/15 12:34
-     * @Param [username, password, code]
-     **/
 
+    /**
+     * 登录
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @param code     代码
+     * @param request  请求
+     * @return {@link ConResult}
+     */
     @Log("用户登录")
     @PostMapping("sys/login")
     @ResponseBody
@@ -204,10 +216,18 @@ public class UserController extends BaseController {
     @PutMapping("sys/user")
     @ResponseBody
     public ConResult editUserInfo(SysUserWithRole user) {
-        if (userService.editUserInfo(user)) return ConResult.success();
+        if (userService.editUserInfo(user)) {
+            return ConResult.success();
+        }
         return ConResult.error();
     }
 
+    /**
+     * 删除用户
+     *
+     * @param id id
+     * @return {@link ConResult}
+     */
     @DeleteMapping("sys/user/{id}")
     @RequiresPermissions("sys:user:delete")
     @ApiLimit("10,2") //每个用户，5秒，只能调用6次
@@ -217,6 +237,12 @@ public class UserController extends BaseController {
         return ConResult.success();
     }
 
+    /**
+     * 禁用用户
+     *
+     * @param id id
+     * @return {@link ConResult}
+     */
     @PutMapping("sys/user/{id}/disable")
     @RequiresPermissions("sys:user:update")
     @ResponseBody
@@ -225,6 +251,12 @@ public class UserController extends BaseController {
         return ConResult.success();
     }
 
+    /**
+     * 启用用户
+     *
+     * @param id id
+     * @return {@link ConResult}
+     */
     @PutMapping("sys/user/{id}/enable")
     @RequiresPermissions("sys:user:update")
     @ResponseBody
@@ -255,11 +287,11 @@ public class UserController extends BaseController {
      *
      * @param id
      */
-    @RequestMapping("sys/forcelogout")
+    @PostMapping("sys/forcelogout")
     @ResponseBody
-    public void forcelogout(String id) {
-
+    public ConResult forcelogout(String id) {
         sessionService.kickOut(id);
+        return ConResult.success();
     }
 
     /**
@@ -272,8 +304,9 @@ public class UserController extends BaseController {
     @ApiLimit("3,1") //每个用户，5秒，只能调用6次
     @GetMapping("sys/user")
     @ResponseBody
-    public PageListVO getUserWithRoleList(TableRequest tableRequest) {
+    public PageListVO getUserWithRole(TableRequest tableRequest) {
         PageListVO pageListVO = userService.findUserWithRoleList(tableRequest);
+        redisConnectionFactory.getClass();
         return pageListVO;
     }
 

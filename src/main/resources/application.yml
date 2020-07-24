@@ -1,15 +1,25 @@
 server:
     port: 8086
 
+app:
+    trace:
+        id: app100
+
 management:
     endpoints:
         web:
             exposure:
                 include: '*'
+    endpoint:
+        shutdown:
+            enabled: true
 
 spring:
     application:
         name: web
+    mvc:
+        servlet:
+            load-on-startup: 1
     profiles:
         active: dev
     aop:
@@ -40,7 +50,7 @@ spring:
                     enabled: true
             filters: stat,wall,slf4j
             initial-size: 10
-            max-active: 25
+            max-active: 50
             max-pool-prepared-statement-per-connection-size: 20
             max-wait: 60000
             min-evictable-idle-time-millis: 100000
@@ -94,7 +104,6 @@ spring:
         check-process-definitions: false
         database-schema-update: true
 
-
 mybatis:
     configuration:
         map-underscore-to-camel-case: true
@@ -109,7 +118,8 @@ pagehelper:
 captcha:
     height: 33
     len: 4
-    width: 150
+    width: 155
+
 
 
 

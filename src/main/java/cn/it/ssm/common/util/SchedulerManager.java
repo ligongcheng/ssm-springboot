@@ -14,7 +14,7 @@ public class SchedulerManager {
 
     // 任务调度
     @Autowired
-    private Scheduler scheduler;
+    private Scheduler scheduler; //注入了SchedulerFactoryBean
 
     public boolean addJob(JobInfo jobInfo) {
         try {

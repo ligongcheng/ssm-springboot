@@ -1,24 +1,23 @@
 package cn.it.ssm.common.entity;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 返回响应数据
  *
  * @author Jacky
  */
-public class ConResult implements Serializable {
+public class ConResult<T> implements Serializable {
+
+    private static final long serialVersionUID = -5533008635619163790L;
 
     private int code;
 
     private String msg;
 
-    private Map<String, Object> data = new HashMap<>();
+    private T data;
 
     public ConResult() {
-        super();
     }
 
     public ConResult(int code, String msg) {
@@ -27,7 +26,7 @@ public class ConResult implements Serializable {
         this.msg = msg;
     }
 
-    public ConResult(int code, String msg, Map<String, Object> data) {
+    public ConResult(int code, String msg, T data) {
         super();
         this.code = code;
         this.msg = msg;
@@ -42,8 +41,8 @@ public class ConResult implements Serializable {
         return new ConResult(400, "error");
     }
 
-    public ConResult addData(String key, Object value) {
-        this.getData().put(key, value);
+    public ConResult<T> addData(T value) {
+        this.setData(value);
         return this;
     }
 
@@ -68,11 +67,11 @@ public class ConResult implements Serializable {
         this.msg = msg;
     }
 
-    public Map<String, Object> getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Map<String, Object> data) {
+    public void setData(T data) {
         this.data = data;
     }
 

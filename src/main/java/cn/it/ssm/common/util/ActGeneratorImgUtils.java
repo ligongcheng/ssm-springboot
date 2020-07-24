@@ -34,7 +34,7 @@ public class ActGeneratorImgUtils {
     private static ProcessEngine processEngine = SpringContextUtils.getBean(ProcessEngine.class);
 
     /**
-     * 根据流程实例Id,获取实时流程图片
+     * 根据流程实例Id,获取实时流程图片 activiti6
      *
      * @param processInstanceId 实例ID
      * @param outputStream      输出流
@@ -152,7 +152,7 @@ public class ActGeneratorImgUtils {
     }
 
     /**
-     * 根据流程实例Id,获取实时流程图片
+     * 根据流程实例Id,获取实时流程图片 activiti5
      *
      * @param processInstanceId
      * @return

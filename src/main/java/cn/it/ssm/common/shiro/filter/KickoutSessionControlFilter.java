@@ -6,7 +6,6 @@ import cn.it.ssm.sys.domain.auto.SysUser;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.session.Session;
-import org.apache.shiro.session.mgt.DefaultSessionKey;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.subject.Subject;
@@ -16,8 +15,8 @@ import org.apache.shiro.web.util.WebUtils;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.Serializable;
-import java.util.Deque;
 import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <p>User: Zhang Kaitao
@@ -32,7 +31,7 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
     private CacheManager cacheManager;
     private SessionDAO sessionDAO;
     private SessionManager sessionManager;
-    private Cache<String, Deque<Serializable>> cache;
+    private Cache<String, LinkedList<Serializable>> cache;
 
     public void setKickoutUrl(String kickoutUrl) {
         this.kickoutUrl = kickoutUrl;
@@ -67,62 +66,59 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         Subject subject = getSubject(request, response);
+        //如果没有登录也不是记住我的话，直接进行之后的流程
         if (!subject.isAuthenticated() && !subject.isRemembered()) {
-            //如果没有登录，直接进行之后的流程
             return true;
         }
-
 
         Session session = subject.getSession();
         SysUser sysUser = (SysUser) subject.getPrincipal();
         Serializable sessionId = session.getId();
 
         //TODO 同步控制
-        Deque<Serializable> deque = cache.get(sysUser.getUsername());
-        if (deque == null) {
+        LinkedList<Serializable> currentSessions = cache.get(sysUser.getUsername());
+        if (currentSessions == null) {
             synchronized (this) {
-                deque = new LinkedList<Serializable>();
+                currentSessions = new LinkedList<>();
             }
         }
 
-        //Collection<Session> activeSessions = sessionDAO.getActiveSessions();
-        //如果队列里没有此sessionId，且用户没有被踢出；放入队列
-        if (!deque.contains(sessionId) && session.getAttribute("kickout") == null) {
-            deque.push(sessionId);
+        //如果队列里没有此sessionId,放入队列
+        if (!currentSessions.contains(sessionId)) {
+            currentSessions.push(sessionId);
         }
-
+        AtomicBoolean kick = new AtomicBoolean(false);
         //如果队列里的sessionId数超出最大会话数，开始踢人
-        while (deque.size() > maxSession) {
-            Serializable kickoutSessionId = null;
-            if (kickoutAfter) { //如果踢出后者
-                kickoutSessionId = deque.removeFirst();
-            } else { //否则踢出前者
-                kickoutSessionId = deque.removeLast();
+        while (currentSessions.size() > maxSession) {
+            kick.set(true);
+            Serializable kickoutSessionId;
+            //如果踢出后登录
+            if (kickoutAfter) {
+                kickoutSessionId = currentSessions.removeFirst();
+                subject.logout();
+                //否则踢出前者
+            } else {
+                kickoutSessionId = currentSessions.removeLast();
             }
             try {
-                Session kickoutSession = sessionManager.getSession(new DefaultSessionKey(kickoutSessionId));
-                if (kickoutSession != null) {
-                    //设置会话的kickout属性表示踢出了
-
-                    kickoutSession.setAttribute("kickout", true);
-                }
-            } catch (Exception e) {//ignore exception
+                Session kickoutSession = sessionDAO.readSession(kickoutSessionId);
+                sessionDAO.delete(kickoutSession);
+            } catch (Exception e) {
+                //e.printStackTrace();
             }
         }
-        cache.put(sysUser.getUsername(), deque);
-        //如果被踢出了，直接退出，重定向到踢出后的地址
-        if (session.getAttribute("kickout") != null) {
-            //会话被踢出了
-            try {
-                subject.logout();
-            } catch (Exception e) { //ignore
-            }
-            if (!ShiroAjaxUtils.isAjax(request)) {// 不是ajax请求
-                saveRequest(request);
-
-                WebUtils.issueRedirect(request, response, kickoutUrl);
-            } else {
-                ShiroAjaxUtils.outAndRedirect(response, kickoutUrl);
+        // 保存用户登录session信息
+        cache.put(sysUser.getUsername(), currentSessions);
+        // 已经踢出用户
+        if (kick.get()) {
+            if (kickoutAfter) {
+                // 不是ajax请求
+                if (!ShiroAjaxUtils.isAjax(request)) {
+                    saveRequest(request);
+                    WebUtils.issueRedirect(request, response, kickoutUrl);
+                } else {
+                    ShiroAjaxUtils.outAndRedirect(response, kickoutUrl);
+                }
             }
             return false;
         }

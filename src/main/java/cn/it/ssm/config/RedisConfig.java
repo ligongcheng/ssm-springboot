@@ -1,5 +1,6 @@
 package cn.it.ssm.config;
 
+import cn.it.ssm.common.redislock.RedisLock;
 import cn.it.ssm.common.util.FastJsonRedisSerializer;
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -20,6 +21,7 @@ import java.net.UnknownHostException;
 @Configuration
 public class RedisConfig {
 
+
     /**
      * 覆盖自动配置的redisTemplate，修改serializer
      *
@@ -29,7 +31,6 @@ public class RedisConfig {
     public RedisTemplate<Object, Object> redisTemplate(
         RedisConnectionFactory redisConnectionFactory,
         StringRedisTemplate stringRedisTemplate) throws UnknownHostException {
-
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         FastJsonRedisSerializer<Object> serializer = new FastJsonRedisSerializer<>(Object.class);
@@ -72,11 +73,17 @@ public class RedisConfig {
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);// 创建只输出非Null且非Empty(如List.isEmpty)的属性到Json字符串的Mapper
         GenericJackson2JsonRedisSerializer jackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer(om);
         template.setValueSerializer(jackson2JsonRedisSerializer);
         RedisHolder.setRedisJsonTemplate(template);
         return template;
     }
+
+    @Bean
+    public RedisLock redisLock(StringRedisTemplate stringRedisTemplate) {
+        RedisLock.setStringRedisTemplate(stringRedisTemplate);
+        return RedisLock.instance();
+    }
+
 }

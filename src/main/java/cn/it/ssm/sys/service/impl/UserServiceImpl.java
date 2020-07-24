@@ -2,6 +2,7 @@ package cn.it.ssm.sys.service.impl;
 
 
 import cn.it.ssm.common.ExceptionHandler.AccountChangeException;
+import cn.it.ssm.common.shiro.util.ShiroConst;
 import cn.it.ssm.common.vo.PageListVO;
 import cn.it.ssm.common.vo.TableRequest;
 import cn.it.ssm.sys.dao.SysUserMapperFix;
@@ -9,9 +10,12 @@ import cn.it.ssm.sys.dao.auto.SysUserMapper;
 import cn.it.ssm.sys.dao.auto.SysUserRoleMapper;
 import cn.it.ssm.sys.domain.auto.*;
 import cn.it.ssm.sys.domain.vo.SysUserWithRole;
+import cn.it.ssm.sys.service.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.cache.CacheManager;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -19,10 +23,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class, readOnly = true)
-public class UserServiceLmpl implements cn.it.ssm.sys.service.UserService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private SysUserMapper sysUserMapper;
@@ -35,6 +40,9 @@ public class UserServiceLmpl implements cn.it.ssm.sys.service.UserService {
 
     @Autowired
     private SysUserRoleMapper sysUserRoleMapper;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @Override
     public SysUser findByUserId(String id) {
@@ -106,16 +114,12 @@ public class UserServiceLmpl implements cn.it.ssm.sys.service.UserService {
     @Transactional(readOnly = false)
     public boolean editUserInfo(SysUserWithRole user) {
         SysUser sysUser = new SysUser();
-        sysUser.setUsername(user.getUsername());
-        sysUser.setAge(user.getAge());
-        sysUser.setNickname(user.getNickname());
-        sysUser.setId(user.getId());
-        sysUser.setSex(user.getSex());
-        sysUser.setIsDelete(user.getIsDelete());
+        BeanUtils.copyProperties(user, sysUser);
         SysUserRole sysUserRole = new SysUserRole();
         sysUserRole.setSysRoleId(user.getRoleId());
         sysUserRole.setSysUserId(user.getId());
         int count = sysUserMapper.updateByPrimaryKeySelective(sysUser);
+        boolean modify = false;
         if (user.getRoleId() != null) {
             //更新角色信息
             SysUserRoleExample sysUserRoleExample = new SysUserRoleExample();
@@ -126,11 +130,18 @@ public class UserServiceLmpl implements cn.it.ssm.sys.service.UserService {
             if (sysUserRoles.size() == 0) {
                 //该用户还没有角色信息，插入角色信息
                 sysUserRoleMapper.insertSelective(sysUserRole);
+                modify = true;
             } else {
-                //更新角色信息
-                sysUserRoleMapper.updateByExampleSelective(sysUserRole, sysUserRoleExample);
+                //角色id改变则更新角色信息
+                if (sysUserRoles.get(0).getSysRoleId().equals(user.getRoleId())) {
+                    sysUserRoleMapper.updateByExampleSelective(sysUserRole, sysUserRoleExample);
+                    modify = true;
+                }
             }
-
+        }
+        // 角色信息已修改，清除权限缓存
+        if (modify) {
+            cacheManager.getCache(ShiroConst.AUTHENTIZATION_CACHE).remove(user.getUsername());
         }
         return count != 0;
     }
@@ -146,8 +157,12 @@ public class UserServiceLmpl implements cn.it.ssm.sys.service.UserService {
         if (tableRequest == null) {
             tableRequest = new TableRequest(5, 1, null);
         } else {
-            if (tableRequest.getPageNum() == null) tableRequest.setPageNum(1);
-            if (tableRequest.getPageSize() == null) tableRequest.setPageSize(5);
+            if (tableRequest.getPageNum() == null) {
+                tableRequest.setPageNum(1);
+            }
+            if (tableRequest.getPageSize() == null) {
+                tableRequest.setPageSize(5);
+            }
         }
         PageHelper.startPage(tableRequest.getPageNum(), tableRequest.getPageSize());
         List<SysUserWithRole> userWithRoleList = sysUserMapperFix.findUserListWithRoles(tableRequest.getSearch());
@@ -207,6 +222,11 @@ public class UserServiceLmpl implements cn.it.ssm.sys.service.UserService {
     @Override
     public List<SysUser> findUserByRoleName(String roleName) {
         return sysUserMapperFix.findUserByRoleName(roleName);
+    }
+
+    @Override
+    public Map<String, String> findUserFilterMap() {
+        return null;
     }
 
 

@@ -89,4 +89,9 @@ public class RoleServiceImpl implements cn.it.ssm.sys.service.RoleService {
         }
         return true;
     }
+
+    @Override
+    public List<SysUser> findUsersByRoleId(Integer roleId) {
+        return sysRoleMapper.findUsersByRoleId(roleId);
+    }
 }

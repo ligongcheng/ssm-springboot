@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class ShiroAjaxUtils {
 
-    final static Class<? extends ShiroAjaxUtils> CLAZZ = ShiroAjaxUtils.class;
+    //final static Class<? extends ShiroAjaxUtils> CLAZZ = ShiroAjaxUtils.class;
     //登录页面
     static final String LOGIN_URL = "/login.html";
     //没有授权提醒

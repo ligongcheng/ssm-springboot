@@ -2,7 +2,7 @@ package cn.it.ssm.act.controller;
 
 import cn.it.ssm.common.util.SpringContextUtils;
 import cn.it.ssm.sys.domain.auto.SysUser;
-import cn.it.ssm.sys.service.impl.UserServiceLmpl;
+import cn.it.ssm.sys.service.impl.UserServiceImpl;
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class LeaveBillListener implements TaskListener {
         if ("领导审批".equals(taskName)) query = "部门主管";
         if ("HR审批".equals(taskName)) query = "HR";
         Map<String, Object> map = new HashMap<>();
-        UserServiceLmpl userService = SpringContextUtils.getBean(UserServiceLmpl.class);
+        UserServiceImpl userService = SpringContextUtils.getBean(UserServiceImpl.class);
         List<SysUser> userList = userService.findUserByRoleName(query.equals("") ? taskName : query);
         List<String> stringList = userList.stream().map(SysUser::getUsername).collect(Collectors.toList());
         delegateTask.addCandidateUsers(stringList);

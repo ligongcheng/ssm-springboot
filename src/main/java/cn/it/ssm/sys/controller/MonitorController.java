@@ -4,10 +4,8 @@ import cn.it.ssm.common.entity.RedisConstants;
 import cn.it.ssm.common.entity.RequestMappingDetail;
 import cn.it.ssm.common.monitor.ApiEnum;
 import cn.it.ssm.common.vo.ApiMonitorVO;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
@@ -30,11 +28,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
-public class MonitorController implements ApplicationContextAware {
+public class MonitorController {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
     private ApplicationContext applicationContext;
 
     @GetMapping("sys/apiCountPage")
@@ -68,6 +67,7 @@ public class MonitorController implements ApplicationContextAware {
         }
 
         stringRedisTemplate.executePipelined(new RedisCallback<Object>() {
+            @Override
             public Object doInRedis(RedisConnection connection) throws DataAccessException {
                 for (String url : result) {
                     connection.zAdd(ApiEnum.API_URI.getApiValue().getBytes(), 0, url.getBytes());
@@ -177,7 +177,7 @@ public class MonitorController implements ApplicationContextAware {
         if (apitime == null || apilist == null) {
             return null;
         }
-        ArrayList<ApiMonitorVO> monitorVOArrayList = new ArrayList<>();
+        ArrayList<ApiMonitorVO> monitorVOS = new ArrayList<>();
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         //count:18000:/getAllUrlMap
@@ -192,9 +192,9 @@ public class MonitorController implements ApplicationContextAware {
             String format = simpleDateFormat.format(new Date(key * 1000));
             apiMonitorVO.setApiTime(format);
             apiMonitorVO.setApiList((String) entry.getValue());
-            monitorVOArrayList.add(apiMonitorVO);
+            monitorVOS.add(apiMonitorVO);
         }
-        monitorVOArrayList.sort(new Comparator<ApiMonitorVO>() {
+        monitorVOS.sort(new Comparator<ApiMonitorVO>() {
             @Override
             public int compare(ApiMonitorVO o1, ApiMonitorVO o2) {
                 int res = 0;
@@ -208,7 +208,7 @@ public class MonitorController implements ApplicationContextAware {
                 return res;
             }
         });
-        return monitorVOArrayList;
+        return monitorVOS;
 
     }
 
@@ -226,11 +226,6 @@ public class MonitorController implements ApplicationContextAware {
         return info;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
     @PostConstruct
     public void init() {
         final Set<String> result = new HashSet<String>();
@@ -243,6 +238,7 @@ public class MonitorController implements ApplicationContextAware {
         }
 
         stringRedisTemplate.executePipelined(new RedisCallback<Object>() {
+            @Override
             public Object doInRedis(RedisConnection connection) throws DataAccessException {
                 for (String url : result) {
                     connection.zAdd(ApiEnum.API_URI.getApiValue().getBytes(), 0, url.getBytes());

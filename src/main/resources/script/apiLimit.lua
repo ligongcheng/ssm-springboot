@@ -1,9 +1,8 @@
 --
--- Created by IntelliJ IDEA.
--- User: Jacky
+-- Created by chengtao
 -- Date: 2018/8/19
 -- Time: 16:00
--- To change this template use File | Settings | File Templates.
+-- lua 限流脚本
 --
 local num = redis.call('incr', KEYS[1])
 if num == 1 then

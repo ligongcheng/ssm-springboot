@@ -6,18 +6,19 @@ import cn.it.ssm.common.shiro.filter.ExtAuthenticationFilter;
 import cn.it.ssm.common.shiro.filter.KickoutSessionControlFilter;
 import cn.it.ssm.common.shiro.realm.RetryLimitHashedCredentialsMatcher;
 import cn.it.ssm.common.shiro.realm.UserRealm;
+import cn.it.ssm.common.shiro.session.RedisSessionDao;
 import cn.it.ssm.common.shiro.session.ShiroSessionListener;
-import cn.it.ssm.common.shiro.session.ShiroSessionManager;
 import cn.it.ssm.common.shiro.util.ShiroConst;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.mgt.SessionManager;
-import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.Cookie;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -75,17 +76,18 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/gifCode", "anon");
         filterChainDefinitionMap.put("/login", "anon");
         filterChainDefinitionMap.put("/sys/login", "anon");
-        filterChainDefinitionMap.put("/kickout", "anon");
+        //filterChainDefinitionMap.put("/kickout.html", "anon");
         filterChainDefinitionMap.put("/job/**", "anon");
         filterChainDefinitionMap.put("/joblog/**", "anon");
         filterChainDefinitionMap.put("/act/**", "anon");
+        filterChainDefinitionMap.put("/test/**", "anon");
 
 
         filterChainDefinitionMap.put("/logout", "logout");
 
         //过滤链定义，从上向下顺序执行，一般将/**放在最为下边 :这是一个坑呢，一不小心代码就不好使了;
         //authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
-        filterChainDefinitionMap.put("/login/**", "kickOut");
+        filterChainDefinitionMap.put("/login/**", "anon");
         filterChainDefinitionMap.put("/**", "kickOut,extAuthc");
 
         // 登录url，如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
@@ -202,11 +204,12 @@ public class ShiroConfig {
      * 若securityManager配置了cacheManager 则会替代默认的ConcurrentHashMap
      */
     @Bean
-    public EnterpriseCacheSessionDAO sessionDAO() {
-        EnterpriseCacheSessionDAO enterpriseCacheSessionDAO = new EnterpriseCacheSessionDAO();
+    public SessionDAO sessionDAO() {
+        //EnterpriseCacheSessionDAO sessionDao = new EnterpriseCacheSessionDAO();
         //添加ehcache活跃缓存名称（必须和ehcache缓存名称一致）
-        enterpriseCacheSessionDAO.setActiveSessionsCacheName(ShiroConst.SESSION_CACHE);
-        return enterpriseCacheSessionDAO;
+        RedisSessionDao sessionDao = new RedisSessionDao();
+        sessionDao.setActiveSessionsCacheName(ShiroConst.SESSION_CACHE);
+        return sessionDao;
     }
 
     /**
@@ -216,8 +219,8 @@ public class ShiroConfig {
      */
     @Bean
     public SessionManager sessionManager() {
-        //DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-        ShiroSessionManager sessionManager = new ShiroSessionManager();
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        //ShiroSessionManager sessionManager = new ShiroSessionManager();
         ShiroSessionListener sessionListener = new ShiroSessionListener(shiroRedisCacheManager());
         sessionManager.setSessionListeners(Collections.singleton(sessionListener));
         sessionManager.setSessionIdCookie(sessionIdCookie());
@@ -246,13 +249,13 @@ public class ShiroConfig {
         filter.setCacheManager(shiroRedisCacheManager());
         //用于根据会话ID，获取会话进行踢出操作的；
         filter.setSessionManager(sessionManager());
-        //是否踢出后来登录的，默认是false；即后者登录的用户踢出前者登录的用户；踢出顺序。
+        //是否踢出后来登录的，默认是false；即后者登录的用户顶替前者登录的用户；踢出顺序。
         filter.setKickoutAfter(false);
         //同一个用户最大的会话数，默认1；比如2的意思是同一个用户允许最多同时两个人登录；
-        filter.setKickoutUrl("/kickout.html");
+        filter.setKickoutUrl("/");
         //被踢出后重定向到的地址；
         filter.setSessionDAO(sessionDAO());
-        filter.setMaxSession(5);
+        filter.setMaxSession(1);
         return filter;
     }
 

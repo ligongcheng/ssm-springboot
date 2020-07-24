@@ -32,7 +32,6 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         SysUser sysUser = (SysUser) principals.getPrimaryPrincipal();
-
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         List<SysRole> roleList = userService.findRoles(sysUser.getUsername());
         HashSet<String> roles = new HashSet<>();

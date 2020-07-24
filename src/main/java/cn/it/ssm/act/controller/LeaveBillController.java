@@ -6,6 +6,7 @@ import cn.it.ssm.act.service.LeaveBillCommentService;
 import cn.it.ssm.act.service.LeaveBillService;
 import cn.it.ssm.common.entity.ConResult;
 import cn.it.ssm.common.entity.LeaveBillCommentState;
+import cn.it.ssm.common.entity.LeaveBillEntity;
 import cn.it.ssm.common.entity.LeaveBillState;
 import cn.it.ssm.common.util.ActGeneratorImgUtils;
 import cn.it.ssm.common.vo.LeaveBillVo;
@@ -21,8 +22,8 @@ import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -71,7 +72,8 @@ public class LeaveBillController extends BaseController {
     public ConResult startLeaveBill(@RequestBody LeaveBillVo leaveBillVo) throws InvocationTargetException, IllegalAccessException {
         SysUser user = getCurrentUser();
         LeaveBill leaveBill = new LeaveBill();
-        BeanUtils.copyProperties(leaveBill, leaveBillVo);
+        //BeanUtils.copyProperties(leaveBill, leaveBillVo);
+        BeanUtils.copyProperties(leaveBillVo, leaveBill);
         leaveBill.setUesrId(user.getId());
         leaveBill.setUsername(user.getUsername());
         leaveBill.setState(LeaveBillState.NOT_COMMIT);
@@ -93,11 +95,14 @@ public class LeaveBillController extends BaseController {
 
     @GetMapping("leave/{id}")
     @ResponseBody
-    public ConResult findLeaveBillByTaskId(@PathVariable String id) {
+    public ConResult<LeaveBillEntity> findLeaveBillByTaskId(@PathVariable String id) {
         Task task = taskService.createTaskQuery().taskId(id).singleResult();
         LeaveBill bill = leaveBillService.findByProcessInstanceId(task.getProcessInstanceId());
         List<LeaveBillComment> leaveBillComments = leaveBillCommentService.findByProcessInstanceIdOrderByTaskIdDesc(task.getProcessInstanceId());
-        return ConResult.success().addData("leaveBill", bill).addData("leaveBillComment", leaveBillComments);
+        LeaveBillEntity entity = new LeaveBillEntity();
+        BeanUtils.copyProperties(bill, entity);
+        entity.setComments(leaveBillComments);
+        return ConResult.success().addData(entity);
     }
 
     @PostMapping("leave/submit")
@@ -155,7 +160,7 @@ public class LeaveBillController extends BaseController {
             }
 
             LeaveBillComment comment = new LeaveBillComment();
-            BeanUtils.copyProperties(comment, leaveBillVo);
+            BeanUtils.copyProperties(leaveBillVo, comment);
             comment.setTaskName(task.getName());
             comment.setApprove(leaveBillVo.getApprove() ? LeaveBillCommentState.AGREE : LeaveBillCommentState.DISAGREE);
             comment.setProcessInstanceId(task.getProcessInstanceId());

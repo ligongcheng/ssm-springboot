@@ -67,7 +67,9 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-        id, name, available
+        id,
+        name,
+        available
     </sql>
     <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.it.ssm.sys.domain.auto.SysRoleExample">
         select
@@ -90,20 +92,20 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-        DELETE FROM sys_role
+        DELETE
+        FROM sys_role
         WHERE id = #{id,jdbcType=INTEGER}
     </delete>
     <delete id="deleteByExample" parameterType="cn.it.ssm.sys.domain.auto.SysRoleExample">
-        delete from sys_role
+        delete
+        from sys_role
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
     <insert id="insert" parameterType="cn.it.ssm.sys.domain.auto.SysRole">
-        INSERT INTO sys_role (id, name, available
-        )
-        VALUES (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{available,jdbcType=INTEGER}
-        )
+        INSERT INTO sys_role (id, name, available)
+        VALUES (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{available,jdbcType=INTEGER})
     </insert>
     <insert id="insertSelective" parameterType="cn.it.ssm.sys.domain.auto.SysRole">
         insert into sys_role
@@ -131,7 +133,8 @@
         </trim>
     </insert>
     <select id="countByExample" parameterType="cn.it.ssm.sys.domain.auto.SysRoleExample" resultType="java.lang.Integer">
-        select count(*) from sys_role
+        select count(*)
+        from sys_role
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
@@ -155,9 +158,9 @@
     </update>
     <update id="updateByExample" parameterType="map">
         update sys_role
-        set id = #{record.id,jdbcType=INTEGER},
-        name = #{record.name,jdbcType=VARCHAR},
-        available = #{record.available,jdbcType=INTEGER}
+        set id        = #{record.id,jdbcType=INTEGER},
+            name      = #{record.name,jdbcType=VARCHAR},
+            available = #{record.available,jdbcType=INTEGER}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -181,12 +184,30 @@
         WHERE id = #{id,jdbcType=INTEGER}
     </update>
     <select id="findRolePermsByRoleId" resultType="cn.it.ssm.sys.domain.auto.SysPermission">
-        SELECT
-        p.*
-        FROM
-        sys_role_permission rp
-        LEFT JOIN sys_permission p
-        ON rp.sys_permission_id = p.id
-        WHERE rp.sys_role_id = #{id} AND p.id IS NOT NULL
+        SELECT p.*
+        FROM sys_role_permission rp
+                 LEFT JOIN sys_permission p
+            ON rp.sys_permission_id = p.id
+        WHERE rp.sys_role_id = #{id}
+          AND p.id IS NOT NULL
+    </select>
+
+    <insert id="saveRolePermsByPermId" parameterType="map">
+        INSERT INTO sys_role_permission (sys_role_id, sys_permission_id)
+        VALUES (#{roleId}, #{permId})
+    </insert>
+
+    <delete id="deleteRolePermsByRoleId" parameterType="integer">
+        DELETE
+        FROM sys_role_permission
+        WHERE sys_role_id = #{roleId}
+    </delete>
+
+    <select id="findUsersByRoleId" resultType="cn.it.ssm.sys.domain.auto.SysUser">
+        select su.id, username, nickname, age, sex, job, face_image, province, city, district, address, last_login_ip, last_login_time, is_delete, regist_time, dept_id
+        from sys_user su
+        left join sys_user_role sur on su.id = sur.sys_user_id
+        left join sys_role sr on sur.sys_role_id = sr.id
+        where sr.id = #{roleId,jdbcType=INTEGER}
     </select>
 </mapper>

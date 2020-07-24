@@ -4,8 +4,7 @@ package cn.it.ssm.sys.dao.auto;
 import cn.it.ssm.sys.domain.auto.SysPermission;
 import cn.it.ssm.sys.domain.auto.SysRole;
 import cn.it.ssm.sys.domain.auto.SysRoleExample;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
+import cn.it.ssm.sys.domain.auto.SysUser;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -35,14 +34,9 @@ public interface SysRoleMapper {
 
     List<SysPermission> findRolePermsByRoleId(SysRole sysRole);
 
-    @Delete("DELETE \n" +
-        "FROM\n" +
-        "  sys_role_permission \n" +
-        "WHERE sys_role_id = #{roleId} ")
-    int deleteRolePermsByRoleId(Integer roleId);
+    int deleteRolePermsByRoleId(@Param("roleId") Integer roleId);
 
-    @Insert("INSERT INTO sys_role_permission (sys_role_id, sys_permission_id) \n" +
-        "VALUES\n" +
-        "  (#{roleId}, #{permId})")
     int saveRolePermsByPermId(@Param("roleId") Integer roleId, @Param("permId") Integer permId);
+
+    List<SysUser> findUsersByRoleId(@Param("roleId") Integer roleId);
 }
